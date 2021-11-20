@@ -484,7 +484,7 @@ class MainCog(commands.Cog):
             await ctx.reply(embed=em34)
         elif arg1 == 'shop':
             em35 = discord.Embed(title='\'Shop\' command use', description='Shows the items in shop\nAvailabiliy: beta only\nUsage: `.shop`', color=rndcol)
-            em35.set_footer(text=f'WARNING: when new shop items are added, the database is wiped. To restore your money DM to {owner}')
+            em35.set_footer(text=f'WARNING: this command is under developmen')
             await ctx.reply(embed=em35)
         elif arg1 == 'inventory' or arg1 == 'inv':
             em36 = discord.Embed(title='\'Inventory\' command use', description='Shows a user\'s inventory\nAvailability: beta only\nUsage: `.inventory|.inv [@user]', color=rndcol)
@@ -511,7 +511,7 @@ class MainCog(commands.Cog):
             em41.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em41)
         elif arg1 == 'play':
-            em42 = discord.Embed(title='\'Play\' command use', description='Plays a song in a voice channel\nUsage: `.play|.p <song_name/url>`', color=rndcol)
+            em42 = discord.Embed(title='\'Play\' command use', description='Plays a song in a voice channel\nUsage: `.play|.p <song_name/url>`\n**This command is under development**', color=rndcol)
             em42.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em42)
         elif arg1 == 'join':

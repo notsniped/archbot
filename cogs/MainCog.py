@@ -360,7 +360,7 @@ class MainCog(commands.Cog):
     ]
         rndcol = 0xff0000
         if arg1 == None:
-            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, hunt, balance, daily, weekly, monthly, postmeme, fish, work, guess, give, deposit, withdraw\n\nModeration\nban, kick, purge, nuke, snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, edit_snipe, 8ball\n\nMusic\nplay, join, summon, now, pause, resume, stop, skip, queue, shuffle, remove, loop')
+            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, hunt, balance, daily, weekly, monthly, postmeme, fish, work, guess, give, deposit, withdraw\n\nModeration\nban, kick, purge, nuke, snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, edit_snipe, 8ball\n\nMusic (under development)\nplay, join, summon, now, pause, resume, stop, skip, queue, shuffle, remove, loop')
             helpMain.set_footer(text='*type .help command to get more info about a command*')
             await ctx.reply(embed = helpMain)
         elif arg1 == 'beg':
@@ -1084,6 +1084,8 @@ class MainCog(commands.Cog):
             return
         else:
             if arg1 == 'all' or arg1 == 'max':
+                await ctx.reply("An error occoured. Please try again using `.deposit <amount`")
+                return
                 if wallet[ctx.message.author.id] == 0:
                     await ctx.send('You don\'t have any coins in your wallet')
                     return
@@ -1118,6 +1120,8 @@ class MainCog(commands.Cog):
             return
         else:
             if arg1 == 'all' or arg1 == 'max':
+                await ctx.reply("An error occoured. Please try again using `.withdraw <amount>`")
+                return
                 if bank[ctx.message.author.id] == 0:
                     await ctx.send('You don\'t have any coins in your bank')
                     return

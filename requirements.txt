@@ -36,6 +36,7 @@ ply==3.11
 praw==7.4.0
 prawcore==2.3.0
 progress==1.6
+ffmpeg-python==0.2.0
 pycparser==2.20
 pycryptodomex==3.10.1
 PyNaCl==1.4.0

@@ -1163,9 +1163,6 @@ class MainCog(commands.Cog):
         if ctx.message.author.id == user.id:
             await ctx.send('you cant rob yourself xd')
             return
-        elif user.id == 705462972415213588:
-            await ctx.send('You can\'t rob the bot developer')
-            return
         else:
             if user.id not in wallet:
                 wallet[user.id] = 0

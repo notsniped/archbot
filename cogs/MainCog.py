@@ -1168,7 +1168,7 @@ class MainCog(commands.Cog):
                 wallet[user.id] = 0
             if user.id not in passiveUsers:
                 passiveUsers[user.id] = 0
-            if passiveMode[ctx.message.author.id] == 1:
+            if passiveUsers[ctx.message.author.id] == 1:
                 await ctx.reply(f"You are on passive mode. You can\'t rob other people")
                 return
             if passiveUsers[user.id] == 1:

@@ -577,11 +577,6 @@ class MainCog(commands.Cog):
     blStroke = True
     @commands.command()
     async def stroke(self, ctx, *, arg1):
-        if blStroke:
-            pass
-        else:
-            await ctx.reply("This command is disabled")
-            return
         if arg1.isdigit:
             if int(arg1) > 750:
                 return
@@ -595,11 +590,6 @@ class MainCog(commands.Cog):
     bl8ball = True
     @commands.command(aliases=['8ball'])
     async def _8ball(self, ctx, *, question):
-        if bl8ball:
-            pass
-        else:
-            await ctx.reply("This command is disabled")
-            return
         responses = [
                 "no?????.",
                 "when you grow a braincell, yes",
@@ -618,19 +608,13 @@ class MainCog(commands.Cog):
                 "My sources say no.",
                 "Outlook not so good."
         ]
-        ballEmbed= discord.Embed(title=f'{question}', description=f'{random.choice(responses)}')
-        ballEmbed.set_footer(f'this question was asked by {ctx.message.author.display_name}')
-        await ctx.send(embed=ballEmbed)
+        e = discord.Embed(title=f'{question}', description=f'{random.choice(responses)}')
+        await ctx.send(embed=e)
 
     blNuke = True
     @commands.command()
     @commands.has_permissions(manage_channels=True)
     async def nuke(self, ctx, channel: discord.TextChannel = None):
-        if blNuke:
-            pass
-        else:
-            await ctx.reply("This command is disabled")
-            return
         if channel == None: 
             await ctx.send("You did not mention a channel!")
             return
@@ -657,11 +641,6 @@ class MainCog(commands.Cog):
     blInvites = True
     @commands.command()
     async def invites(self, ctx, *, user : discord.User=None):
-        if blInvites:
-            pass
-        else:
-            await ctx.reply("This command is disabled")
-            return
         totalInvites = 0
         if user == None:
             for i in await ctx.guild.invites():
@@ -683,11 +662,6 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.has_permissions(manage_channels=True)
     async def purge(self, ctx, amount:int):
-        if blPurge:
-            pass
-        else:
-            await ctx.reply("This command is disabled")
-            return
         if int(amount) == 0:
             await ctx.reply("You can\'t purge 0 messages **dood**")
             return
@@ -707,11 +681,6 @@ class MainCog(commands.Cog):
     blMeme = True
     @commands.command()
     async def meme(self, ctx):
-        if blMeme:
-            pass
-        else:
-            await ctx.reply("This command is disabled")
-            return
         memes_submissions = reddit.subreddit('memes').hot()
         post_to_pick = random.randint(1, 100)
         for i in range(0, post_to_pick):
@@ -723,11 +692,6 @@ class MainCog(commands.Cog):
     blRstroke = True
     @commands.command()
     async def ihadastroke(self, ctx):
-        if blRstroke:
-            pass
-        else:
-            await ctx.reply("This command is disabled")
-            return
         memes_submissions = reddit.subreddit('ihadastroke').hot()
         post_to_pick = random.randint(1, 100)
         for i in range(0, post_to_pick):
@@ -924,11 +888,6 @@ class MainCog(commands.Cog):
     @commands.command(aliases=['pm'])
     @commands.cooldown(1, 40, commands.BucketType.user)
     async def postmeme(self, ctx):
-        if bool(currency) == False:
-            await ctx.send('Currency is disabled')
-            return
-        else:
-            pass
         if int(wallet[ctx.message.author.id]) >= value:
             await ctx.reply(f'You have reached max value for your wallet ({value})')
             return
@@ -1028,11 +987,6 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 1800, commands.BucketType.user)
     async def work(self, ctx):
-        if bool(currency) == False:
-            await message.channel.send('Currency is disabled')
-            return
-        else:
-            pass
         now = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
         coins = randint(1000, 50000)
@@ -1047,11 +1001,6 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def beg(self, ctx):
-        if bool(currency) == False:
-            await ctx.send('Currency is disabled')
-            return
-        else:
-            pass
         now = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
         coins = randint(1, 500)
@@ -1084,7 +1033,7 @@ class MainCog(commands.Cog):
             return
         else:
             if arg1 == 'all' or arg1 == 'max':
-                await ctx.reply("An error occoured. Please try again using `.deposit <amount`")
+                await ctx.reply("An error occoured. Please try again using `.deposit <amount>`")
                 return
                 if wallet[ctx.message.author.id] == 0:
                     await ctx.send('You don\'t have any coins in your wallet')

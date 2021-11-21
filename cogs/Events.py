@@ -60,13 +60,5 @@ class Events(commands.Cog):
         else:
             pass
 
-    @commands.Cog.listener()
-    async def on_guild_join(self, guild):
-        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds | .help"))
-
-    @commands.Cog.listener()
-    async def on_guild_remove(self, guild):
-        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds | .help"))
-
 def setup(client):
-    client.add_cog(Events(client))
+    clent.add_cog(Events(client))

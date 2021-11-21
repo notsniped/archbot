@@ -49,6 +49,9 @@ data_filename = f"{cwd}/data.db"
 currency = True
 client = commands.Bot
 log = True
+reddit = praw.Reddit(client_id='_pazwWZHi9JldA',
+                     client_secret='1tq1HM7UMEGIro6LlwtlmQYJ1jB4vQ',
+                     user_agent='idk', check_for_async=False)
 with open(f'{cwd}/database/wallet.json', 'r') as f:
     global wallet
     wallet = json.load(f)
@@ -360,7 +363,7 @@ class MainCog(commands.Cog):
     ]
         rndcol = 0xff0000
         if arg1 == None:
-            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, hunt, balance, daily, weekly, monthly, postmeme, fish, work, guess, give, deposit, withdraw\n\nModeration\nban, kick, purge, nuke, snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, edit_snipe, 8ball\n\nMusic (under development)\nplay, join, summon, now, pause, resume, stop, skip, queue, shuffle, remove, loop')
+            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, hunt, balance, daily, weekly, monthly, postmeme, fish, work, guess, give, deposit, withdraw\n\nModeration\nban, kick, purge, nuke, snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, edit_snipe, 8ball\n\nMusic (under development)\nplay, join, summon, pause, resume, stop, skip')
             helpMain.set_footer(text='*type .help command to get more info about a command*')
             await ctx.reply(embed = helpMain)
         elif arg1 == 'beg':

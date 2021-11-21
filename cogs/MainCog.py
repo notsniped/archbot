@@ -487,22 +487,6 @@ class MainCog(commands.Cog):
         uptime = str(datetime.timedelta(seconds=int(round(time.time()-startTime))))
         await ctx.send(uptime)
 
-    blSnipe = True
-    @commands.command()
-    async def snipe(self, ctx):
-        channel = ctx.channel
-        try:
-            if any(x in snipe_message_content[channel.id].lower() for x in bad):
-                em = discord.Embed(name = f"Last deleted message in #{channel.name}", description =f"||{snipe_message_content[channel.id]}||")
-                em.set_footer(text = f"This message was sent by {snipe_message_author[channel.id]}\nWarning: this message contains banned words")
-                await ctx.send(embed = em)
-            else:
-                em = discord.Embed(name = f"Last deleted message in #{channel.name}", description = snipe_message_content[channel.id])
-                em.set_footer(text = f"This message was sent by {snipe_message_author[channel.id]}")
-                await ctx.send(embed = em)
-        except:
-            await ctx.send(f"There are no recently deleted messages in #{channel.name}")
-
     @commands.command()
     async def ping(self, ctx):
         now = datetime.datetime.now()

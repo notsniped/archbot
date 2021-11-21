@@ -1081,7 +1081,7 @@ class MainCog(commands.Cog):
                 if passiveUsers[ctx.message.author.id] == 1:
                     await ctx.reply("You have passive mode enabled, you can\'t give momey to other users", mention_author=False)
                     return
-                if passiveUsers[user.id] = 1:
+                if passiveUsers[user.id] == 1:
                     await ctx.reply("This user has passive mode enabled. Leave them alone!", mention_author=False)
                     return
                 if wallet[ctx.message.author.id] < int(arg1):

@@ -954,10 +954,10 @@ class MainCog(commands.Cog):
             await ctx.send('Ok you are dead, please tag someone else to kill')
         else:
             responses2 = [
-                f"<@{user.id}> died from a dang baguette",
-                f"<@{ctx.message.author.id}> strikes <@{user.id}> with the killing curse... *Avada Kedavra!*",
-                f"<@{user.id}> dies from dabbing too hard",
-                f"<@{user.id}> ripped their own heart out to show their love for <@{ctx.message.author.id}>"
+                f"**{user.display_name}** died from a dang baguette",
+                f"<@{ctx.message.author.id}> strikes **{user.display_name}** with the killing curse... *Avada Kedavra!*",
+                f"**{user.display_name} dies from dabbing too hard",
+                f"**{user.display_name}** ripped their own heart out to show their love for <@{ctx.message.author.id}>"
             ]
             await ctx.send(f'{random.choice(responses2)}')
 

@@ -235,12 +235,12 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def sweartoggle(self, ctx):
-        if swearfilter[ctx.guild.id] == 0:
-            swearfilter[ctx.guild.id] = 1
+        if int(swearfilter[ctx.message.guild.id]) == 0:
+            swearfilter[ctx.message.guild.id] = 1
             self.save()
             await ctx.reply("Enabled swear filter for this server")
-        elif swearfilter[ctx.guild.id] == 1:
-            swearfilter[ctx.guild.id] = 0
+        elif int(swearfilter[ctx.message.guild.id]) == 1:
+            swearfilter[ctx.message.guild.id] = 0
             self.save()
             await ctx.reply("Disabled swear filter for this server")
 

@@ -272,10 +272,14 @@ class MainCog(commands.Cog):
                 return
             else:
                 a = 69420 * amount
-                await ctx.reply(f"You bought {amount} windows 10 keys for {a} coins. Now you have {wallet[ctx.message.author.id] - a} coins in your wallet")
-                wallet[ctx.message.author.id] -= a
-                windows10[ctx.message.author.id] += amount
-                self.save()
+                if wallet[ctx.message.author.id] < a:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[ctx.message.author.id]} more coins")
+                    return
+                else:
+                    await ctx.reply(f"You bought {amount} windows 10 keys for {a} coins. Now you have {wallet[ctx.message.author.id] - a} coins in your wallet")
+                    wallet[ctx.message.author.id] -= a
+                    windows10[ctx.message.author.id] += amount
+                    self.save()
         else:
             await ctx.reply(f"No item {item} found. Type `.shop` to get the list of items")
             return

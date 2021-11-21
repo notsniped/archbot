@@ -513,8 +513,8 @@ class MainCog(commands.Cog):
     ]
         rndcol = 0xff0000
         if arg1 == None:
-            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, hunt, balance, daily, weekly, monthly, postmeme, fish, work, guess, give, deposit, withdraw\n\nModeration\nban, kick, purge, nuke, snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, edit_snipe, 8ball\n\nMusic (under development)\nplay, join, summon, pause, resume, stop, skip')
-            helpMain.set_footer(text='*type .help command to get more info about a command*')
+            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory\n\nModeration\nban, kick, purge, nuke, snipe, warns\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, edit_snipe, 8ball, lbin, auctionhouse')
+            helpMain.set_footer(text='*type .help [command] to get more info about a command*')
             await ctx.reply(embed = helpMain)
         elif arg1 == 'beg':
             em1 = discord.Embed(title='\'Beg\' command use', description='Gives an amount of coins to the user.\nCooldown: 30 seconds\nUsage: `.beg`', color=rndcol)
@@ -636,11 +636,10 @@ class MainCog(commands.Cog):
             em34.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em34)
         elif arg1 == 'shop':
-            em35 = discord.Embed(title='\'Shop\' command use', description='Shows the items in shop\nAvailabiliy: beta only\nUsage: `.shop`', color=rndcol)
-            em35.set_footer(text=f'WARNING: this command is under developmen')
+            em35 = discord.Embed(title='\'Shop\' command use', description='Shows the items in shop\nUsage: `.shop`', color=rndcol)
             await ctx.reply(embed=em35)
         elif arg1 == 'inventory' or arg1 == 'inv':
-            em36 = discord.Embed(title='\'Inventory\' command use', description='Shows a user\'s inventory\nAvailability: beta only\nUsage: `.inventory|.inv [@user]', color=rndcol)
+            em36 = discord.Embed(title='\'Inventory\' command use', description='Shows a user\'s inventory\nUsage: `.inventory|.inv [@user]', color=rndcol)
             em36.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em36)
         elif arg1 == 'rob':
@@ -700,6 +699,9 @@ class MainCog(commands.Cog):
         elif arg1 == 'queue':
             em53 = discord.Embed(title='\'Queue\' command use', description='Shows songs in queue')
             await ctx.reply(embed=em53)
+        elif arg1 == 'buy':
+            em54 = discord.Embed(title='\'Buy\' command use', description='Buys an item from the shop (`.shop`)\nUsage: `.buy <item> [amount]`')
+            await ctx.reply(embed=em54)
         elif arg1 == 'help':
             await ctx.reply('You want help for help command?')
             def check(msg):

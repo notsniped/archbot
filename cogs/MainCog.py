@@ -356,7 +356,7 @@ class MainCog(commands.Cog):
                 await ctx.reply("Here you go, 0 gold coins for 0 coins!")
                 return
             else:
-                a = 50000 * amount
+                a = 1000000 * amount
                 if wallet[ctx.message.author.id] < a:
                     await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[ctx.message.author.id]} more coins")
                     return

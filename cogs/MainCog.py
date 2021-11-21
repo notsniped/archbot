@@ -45,8 +45,6 @@ global startTime
 startTime = time.time()
 owner = 'thatOneArchUser#5794'
 cwd = os.getcwd()  
-snipe_message_author = {}
-snipe_message_content = {}
 data_filename = f"{cwd}/data.db"
 currency = True
 client = commands.Bot
@@ -148,24 +146,7 @@ class MainCog(commands.Cog):
     #     with open(data_filename, "wb") as file:
     #         pickle.dump(data, file)
 
-    @commands.Cog.listener()
-    async def on_message_delete(self, message):
-        if message.content.startswith(".say"):
-            return
-        else:
-            pass
-        if not message.author.bot:
-            pass
-        else:
-            return
-        now = datetime.datetime.now()
-        current_time = now.strftime("%H:%M:%S")
-        guild = client.guilds[0]
-        channel = message.channel
-        snipe_message_author[message.channel.id] = message.author
-        snipe_message_content[message.channel.id] = message.content
-
-    @commands.Cog.listener()
+   @commmands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):
         global author
         author = message_before.author

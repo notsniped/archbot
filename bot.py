@@ -69,6 +69,7 @@ async def on_ready():
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
             client.load_extension(f'cogs.{filename[:-3]}')
+    client.unload_extension("cogs.Events")
     if os.name == 'nt':
         os.system('cls')
     else:

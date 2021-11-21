@@ -1041,11 +1041,6 @@ class MainCog(commands.Cog):
     @commands.command(aliases=['pm'])
     @commands.cooldown(1, 40, commands.BucketType.user)
     async def postmeme(self, ctx):
-        if int(wallet[ctx.message.author.id]) >= value:
-            await ctx.reply(f'You have reached max value for your wallet ({value})')
-            return
-        else:
-            pass
         now = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
         await ctx.send(f'{ctx.message.author.mention} What type of meme you want to post?\n`f` Fresh meme\n`d` Dank meme\n`c` Copypasta\n*more comming soon*')

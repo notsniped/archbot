@@ -146,7 +146,7 @@ class MainCog(commands.Cog):
     #     with open(data_filename, "wb") as file:
     #         pickle.dump(data, file)
 
-    @commmands.Cog.listener()
+    @commands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):
         global author
         author = message_before.author

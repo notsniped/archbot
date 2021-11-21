@@ -255,7 +255,7 @@ class MainCog(commands.Cog):
     @commands.command()
     async def buy(self, ctx, item:str, amount:int=None):
         if str(item) == "windows10":
-            if int(amount) == None or int(amount) == 1:
+            if amount == None or int(amount) == 1:
                 if wallet[ctx.message.author.id] < 69420:
                     await ctx.reply(f"You don\'t have enough coins to buy this. You need {round(69420 - wallet[ctx.message.author.id])} more coins to buy this.", mention_author=False)
                     return

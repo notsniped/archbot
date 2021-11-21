@@ -779,33 +779,36 @@ class MainCog(commands.Cog):
     blMeme = True
     @commands.command()
     async def meme(self, ctx):
-        memes_submissions = reddit.subreddit('memes').hot()
-        post_to_pick = random.randint(1, 100)
-        for i in range(0, post_to_pick):
-            submission = next(x for x in memes_submissions if not x.stickied)
-        embed = discord.Embed(title = submission.title)
-        embed.set_image(url=submission.url)
+        async with ctx.typing():
+            memes_submissions = reddit.subreddit('memes').hot()
+            post_to_pick = random.randint(1, 100)
+            for i in range(0, post_to_pick):
+                submission = next(x for x in memes_submissions if not x.stickied)
+            embed = discord.Embed(title = submission.title)
+            embed.set_image(url=submission.url)
         await ctx.send(embed = embed)
 
     blRstroke = True
     @commands.command()
     async def ihadastroke(self, ctx):
-        memes_submissions = reddit.subreddit('ihadastroke').hot()
-        post_to_pick = random.randint(1, 100)
-        for i in range(0, post_to_pick):
-            submission = next(x for x in memes_submissions if not x.stickied)
-        embed = discord.Embed(title = submission.title)
-        embed.set_image(url=submission.url)
+        async with ctx.typing():
+            memes_submissions = reddit.subreddit('ihadastroke').hot()
+            post_to_pick = random.randint(1, 100)
+            for i in range(0, post_to_pick):
+                submission = next(x for x in memes_submissions if not x.stickied)
+            embed = discord.Embed(title = submission.title)
+            embed.set_image(url=submission.url)
         await ctx.send(embed = embed)
 
     @commands.command(aliases=['mh'])
     async def masterhacker(self, ctx):
-        memes_submissions = reddit.subreddit('masterhacker').hot()
-        post_to_pick = random.randint(1, 100)
-        for i in range(0, post_to_pick):
-            submission = next(x for x in memes_submissions if not x.stickied)
-        embed = discord.Embed(title = submission.title)
-        embed.set_image(url=submission.url)
+        async with ctx.typing():
+            memes_submissions = reddit.subreddit('masterhacker').hot()
+            post_to_pick = random.randint(1, 100)
+            for i in range(0, post_to_pick):
+                submission = next(x for x in memes_submissions if not x.stickied)
+            embed = discord.Embed(title = submission.title)
+            embed.set_image(url=submission.url)
         await ctx.send(embed = embed)
 
     @commands.command()
@@ -884,12 +887,7 @@ class MainCog(commands.Cog):
 
     blKill = True
     @commands.command()
-    async def kill(self, ctx, user : discord.User):
-        if blKill:
-            pass
-        else:
-            await ctx.reply("This command is disabled")
-            return
+    async def kill(self, ctx, user : discord.User=None):
         if user == None:
             await ctx.send('Please tag someone to kill')
         elif user.id == ctx.message.author.id:
@@ -1297,12 +1295,13 @@ class MainCog(commands.Cog):
 
     @commands.command(aliases=["lm"])
     async def linuxmeme(self, ctx):
-        memes_submissions = reddit.subreddit('linuxmemes').hot()
-        post_to_pick = random.randint(1, 100)
-        for i in range(0, post_to_pick):
-            submission = next(x for x in memes_submissions if not x.stickied)
-        embed = discord.Embed(title = submission.title)
-        embed.set_image(url=submission.url)
+        async with ctx.typing():
+            memes_submissions = reddit.subreddit('linuxmemes').hot()
+            post_to_pick = random.randint(1, 100)
+            for i in range(0, post_to_pick):
+                submission = next(x for x in memes_submissions if not x.stickied)
+            embed = discord.Embed(title = submission.title)
+            embed.set_image(url=submission.url)
         await ctx.send(embed = embed)
 
     key = '7afe43ee-bfb5-494e-9506-b92a914e39f8'

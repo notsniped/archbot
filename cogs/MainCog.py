@@ -126,6 +126,13 @@ class MainCog(commands.Cog):
 
     #     with open(data_filename, "wb") as file:
     #         pickle.dump(data, file)
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild):
+        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(guilds))} guilds | .help"))
+
+    @commands.Cog.listener()
+    async def on_guild_remove(self, guild):
+        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(guilds))} guilds | .help"))
 
     @commands.Cog.listener()
     async def on_message(self, message): 

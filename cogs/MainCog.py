@@ -164,19 +164,6 @@ class MainCog(commands.Cog):
         channel = message.channel
         snipe_message_author[message.channel.id] = message.author
         snipe_message_content[message.channel.id] = message.content
-        if bool(log) == True:
-        # with open('F:\\bot\\logs\\log.txt', 'a') as f:
-        #     f.write(f'[{current_time}]Message deleted by {snipe_message_author[channel.id]}.\n   Content:{snipe_message_content[channel.id]}\n')
-        #     f.close()
-            if message.guild.id == 876826249207640096:
-                c = client.get_channel(881181406582165525)
-                em = discord.Embed(name = f"Last deleted message in #{channel.name}", description = snipe_message_content[channel.id])
-                em.set_footer(text = f"This message was sent by {snipe_message_author[channel.id]}")
-                await c.send(embed = em)
-            else:
-                pass
-        else:
-            pass
 
     @commands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):
@@ -188,16 +175,6 @@ class MainCog(commands.Cog):
         before = message_before.content
         global after
         after = message_after.content
-        if bool(log):
-            if guild == 876826249207640096:
-                c = client.get_channel(881199227190013992)
-                em = discord.Embed(description = f"**Message before**: {message_before.content}\n**Message after**: {message_after.content}")
-                em.set_footer(text = f"This message was edited by {message_before.author}")
-                await c.send(embed = em)
-            else:
-                pass
-        else:
-            pass
 
     @commands.Cog.listener()
     async def on_message(self, message): 
@@ -287,8 +264,11 @@ class MainCog(commands.Cog):
                     wallet[ctx.message.author.id] -= 69420
                     windows10[ctx.message.author.id] += 1
                     self.save()
-            elif int(amount) =< 0:
+            elif int(amount) < 0:
                 await ctx.reply("Don\'t try to break me **dood**")
+                return
+            elif int(amount) == 0:
+                await ctx.reply("Here you go, 0 windows 10 keys for 0 coins!")
                 return
             else:
                 a = 69420 * amount

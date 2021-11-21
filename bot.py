@@ -51,6 +51,9 @@ global startTime
 startTime = time.time()
 client.remove_command('help')
 cwd = os.getcwd()
+os.system("wget http://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz")
+os.system("tar xf ffmpeg-release-amd64-static.tar.xz")
+os.system(f"export PATH=\"{cwd}/ffmpeg-release-amd64-static:$PATH\")
 
 class Data: 
     def __init__(self, wallet, bank, xp, level, warnings, swearFilter, isBlacklisted, passiveMode):

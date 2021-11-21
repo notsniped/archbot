@@ -51,10 +51,6 @@ global startTime
 startTime = time.time()
 client.remove_command('help')
 cwd = os.getcwd()
-os.system("wget http://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz")
-os.system("tar xf ffmpeg-release-amd64-static.tar.xz")
-os.system(f"export PATH=\"{cwd}/ffmpeg-release-amd64-static:$PATH\"")
-
 class Data: 
     def __init__(self, wallet, bank, xp, level, warnings, swearFilter, isBlacklisted, passiveMode):
         self.wallet = wallet        
@@ -73,6 +69,8 @@ async def on_ready():
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
             if filename == "Events.py":
+                pass
+            elif filename == "Music.py":
                 pass
             else:
                 client.load_extension(f'cogs.{filename[:-3]}')

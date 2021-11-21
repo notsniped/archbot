@@ -1002,10 +1002,11 @@ class MainCog(commands.Cog):
 
     @commands.command(aliases=['sg'])
     async def softwaregore(self, ctx):
-        sg_submissions = reddit.subreddit('softwaregore').hot()
-        post_to_pick = random.randint(1, 100)
-        for i in range(0, post_to_pick):
-            submission = next(x for x in sg_submissions if not x.stickied)
+        async with ctx.typing():
+            sg_submissions = reddit.subreddit('softwaregore').hot()
+            post_to_pick = random.randint(1, 100)
+            for i in range(0, post_to_pick):
+                submission = next(x for x in sg_submissions if not x.stickied)
         embed = discord.Embed(title = submission.title)
         embed.set_image(url=submission.url)
         await ctx.send(embed = embed)

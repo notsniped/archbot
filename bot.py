@@ -136,6 +136,15 @@ async def on_message_edit(message_before, message_after):
                 pass
         else:
             pass
+
+
+@client.event
+async def on_guild_join(guild):
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds | .help"))
+
+@client.event
+async def on_guild_remove(guild):
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds | .help"))
 ### Events end ###
 
 # cwd = os.getcwd()                                          

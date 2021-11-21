@@ -1226,7 +1226,7 @@ class MainCog(commands.Cog):
                     if wallet[ctx.message.author.id] == 1:
                         await ctx.reply(f'You deposited 1 coin')
                     else:
-                        await ctx.reply(f'You deposited {wallet[ctx.message.author.id] coins')    
+                        await ctx.reply(f'You deposited {wallet[ctx.message.author.id]} coins')    
                     bank[ctx.message.author.id] += int(wallet[ctx.message.author.id])
                     wallet[ctx.message.author.id] -= int(wallet[ctx.message.author.id])
                     self.save()

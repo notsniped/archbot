@@ -168,6 +168,15 @@ async def on_guild_remove(guild):
 
 @client.command()
 async def snipe(ctx):
+    bad = [
+    "fuck",
+    "dick",
+    "nigga",
+    "nigger",
+    "cock",
+    "asshole",
+    "bitch"
+    ]
     channel = ctx.channel
     try:
         if any(x in snipe_message_content[channel.id].lower() for x in bad):

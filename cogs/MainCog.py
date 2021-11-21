@@ -218,6 +218,14 @@ class MainCog(commands.Cog):
                 bank[message.author.id] = 0
             if message.author.id not in passiveUsers:
                 passiveUsers[message.author.id] = 0
+            if message.author.id not in windows10:
+                windows10[message.author.id] = 0
+            if message.author.id not in bronzecoin:
+                bronzecoin[message.author.id] = 0
+            if message.author.id not in silvercoin:
+                silvercoin[message.author.id] = 0
+            if message.author.id not in goldcoin:
+                goldcoin[message.author.id] = 0
             xpreq = 0
             if levels[message.author.id] == 1:
                 xpreq = 25

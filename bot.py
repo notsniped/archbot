@@ -50,10 +50,6 @@ slash = SlashCommand(client, sync_commands=False)
 global startTime
 startTime = time.time()
 client.remove_command('help')
-reddit = praw.Reddit(client_id='_pazwWZHi9JldA',
-                     client_secret='1tq1HM7UMEGIro6LlwtlmQYJ1jB4vQ',
-                     user_agent='idk', check_for_async=False)
-
 cwd = os.getcwd()
 
 class Data: 

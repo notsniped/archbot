@@ -264,6 +264,7 @@ class MainCog(commands.Cog):
                     wallet[ctx.message.author.id] -= 69420
                     windows10[ctx.message.author.id] += 1
                     self.save()
+                    return
             elif int(amount) < 0:
                 await ctx.reply("Don\'t try to break me **dood**")
                 return
@@ -280,6 +281,7 @@ class MainCog(commands.Cog):
                     wallet[ctx.message.author.id] -= a
                     windows10[ctx.message.author.id] += amount
                     self.save()
+                    return
         if str(item) == "bronzecoin":
             if amount == None or int(amount) == 1:
                 if wallet[ctx.message.author.id] < 50000:
@@ -290,6 +292,7 @@ class MainCog(commands.Cog):
                     wallet[ctx.message.author.id] -= 50000
                     bronzecoin[ctx.message.author.id] += 1
                     self.save()
+                    return
             elif int(amount) < 0:
                 await ctx.reply("Don\'t try to break me **dood**")
                 return
@@ -306,6 +309,7 @@ class MainCog(commands.Cog):
                     wallet[ctx.message.author.id] -= a
                     bronzecoin[ctx.message.author.id] += amount
                     self.save()
+                    return
         if str(item) == "silvercoin":
             if amount == None or int(amount) == 1:
                 if wallet[ctx.message.author.id] < 250000:
@@ -316,6 +320,7 @@ class MainCog(commands.Cog):
                     wallet[ctx.message.author.id] -= 250000
                     bronzecoin[ctx.message.author.id] += 1
                     self.save()
+                    return
             elif int(amount) < 0:
                 await ctx.reply("Don\'t try to break me **dood**")
                 return
@@ -332,6 +337,7 @@ class MainCog(commands.Cog):
                     wallet[ctx.message.author.id] -= a
                     silvercoin[ctx.message.author.id] += amount
                     self.save()
+                    return
         if str(item) == "goldcoin":
             if amount == None or int(amount) == 1:
                 if wallet[ctx.message.author.id] < 1000000:
@@ -342,6 +348,7 @@ class MainCog(commands.Cog):
                     wallet[ctx.message.author.id] -= 1000000
                     goldcoin[ctx.message.author.id] += 1
                     self.save()
+                    return
             elif int(amount) < 0:
                 await ctx.reply("Don\'t try to break me **dood**")
                 return
@@ -358,6 +365,7 @@ class MainCog(commands.Cog):
                     wallet[ctx.message.author.id] -= a
                     goldcoin[ctx.message.author.id] += amount
                     self.save()
+                    return
         else:
             await ctx.reply(f"No item {item} found. Type `.shop` to get the list of items")
             return

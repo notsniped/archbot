@@ -344,7 +344,7 @@ class MainCog(commands.Cog):
                     await ctx.reply(f"You don\'t have enough coins to buy this. You need {1000000 - wallet[ctx.message.author.id]} more coins to buy this.", mention_author=False)
                     return
                 else:
-                    await ctx.reply(f"You bought a windows 10 key! Now you have {wallet[ctx.message.author.id] - 1000000} coins in your wallet.", mention_author=False)
+                    await ctx.reply(f"You bought gold coin! Now you have {wallet[ctx.message.author.id] - 1000000} coins in your wallet.", mention_author=False)
                     wallet[ctx.message.author.id] -= 1000000
                     goldcoin[ctx.message.author.id] += 1
                     self.save()
@@ -361,7 +361,7 @@ class MainCog(commands.Cog):
                     await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[ctx.message.author.id]} more coins")
                     return
                 else:
-                    await ctx.reply(f"You bought {amount} bronze coins for {a} coins. Now you have {wallet[ctx.message.author.id] - a} coins in your wallet")
+                    await ctx.reply(f"You bought {amount} gold coins for {a} coins. Now you have {wallet[ctx.message.author.id] - a} coins in your wallet")
                     wallet[ctx.message.author.id] -= a
                     goldcoin[ctx.message.author.id] += amount
                     self.save()

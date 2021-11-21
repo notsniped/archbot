@@ -66,15 +66,17 @@ class Data:
 ## Events ###
 @client.event
 async def on_ready():
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds | .help"))
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
-            client.load_extension(f'cogs.{filename[:-3]}')
-    client.unload_extension("cogs.Events")
+            if filename == "Events.py":
+                pass
+            else:
+                client.load_extension(f'cogs.{filename[:-3]}')
     if os.name == 'nt':
         os.system('cls')
     else:
         os.system('clear')
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds | .help"))
     print('Bot is online')
     print('==================')
     print('Bot config:')

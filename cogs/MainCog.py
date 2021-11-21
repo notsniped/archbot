@@ -277,16 +277,28 @@ class MainCog(commands.Cog):
                   
     @commands.command()
     async def buy(self, ctx, item:str, amount:int=None):
-    if str(item) == "windows10":
-        if int(amount) == None or int(amount) == 1:
-            if wallet[ctx.message.author.id] < 69420:
-                await ctx.reply(f"You don\'t have enough coins to buy this. You need {round(69420 - wallet[ctx.message.author.id])} more coins to buy this.", mention_author=False)
+        if str(item) == "windows10":
+            if int(amount) == None or int(amount) == 1:
+                if wallet[ctx.message.author.id] < 69420:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {round(69420 - wallet[ctx.message.author.id])} more coins to buy this.", mention_author=False)
+                    return
+                else:
+                    await ctx.reply(f"You bought a windows 10 key! Now you have {round(wallet[ctx.message.author.id] - 69420)} coins in your wallet.", mention_author=False)
+                    wallet[ctx.message.author.id] -= 69420
+                    windows10[ctx.message.author.id] += 1
+                    self.save()
+            elif int(amount) =< 0:
+                await ctx.reply("Don\'t try to break me **dood**")
                 return
             else:
-                await ctx.reply(f"You bought a windows 10 key! Now you have {round(wallet[ctx.message.author.id] - 69420)} coins in your wallet.", mention_author=False)
-                wallet[ctx.message.author.id] -= 69420
-                windows10[ctx.message.author.id] += 1
+                a = 69420 * amount
+                await ctx.reply(f"You bought {amount} windows 10 keys for {a} coins. Now you have {wallet[ctx.message.author.id] - a} coins in your wallet")
+                wallet[ctx.message.author.id] -= a
+                windows10[ctx.message.author.id] += amount
                 self.save()
+        else:
+            await ctx.reply(f"No item {item} found. Type `.shop` to get the list of items")
+            return
                   
     @commands.command()
     @commands.has_permissions(administrator=True)

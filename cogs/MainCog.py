@@ -44,7 +44,9 @@ bad = [
 global startTime
 startTime = time.time()
 owner = 'thatOneArchUser#5794'
-cwd = os.getcwd()                                          
+cwd = os.getcwd()  
+snipe_message_author = {}
+snipe_message_content = {}
 data_filename = f"{cwd}/data.db"
 currency = True
 client = commands.Bot
@@ -73,7 +75,6 @@ with open(f'{cwd}/database/levels.json', 'r') as f:
 with open(f'{cwd}/database/xp.json', 'r') as f:
     global xp
     xp = json.load(f)
-
 
 class colors: 
     cyan = '\033[96m'

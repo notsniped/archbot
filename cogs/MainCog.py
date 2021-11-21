@@ -233,7 +233,7 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def sweartoggle(self, ctx):
-        if swearfilter[ctx.guild.id] not in swearfilter:
+        if ctx.guild.id not in swearfilter:
             swearfilter[ctx.guild.id] = 0
         if swearfilter[ctx.guild.id] == 0:
             swearfilter[ctx.guild.id] = 1

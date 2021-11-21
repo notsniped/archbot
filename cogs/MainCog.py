@@ -255,7 +255,7 @@ class MainCog(commands.Cog):
     @commands.command()
     async def shop(self, ctx):
         em = discord.Embed(title=f"Arch bot shop", description=f"Windows 10 key\nDescription: Windows 10 lisence key, too expensive for an os\nCost: 69420\nId: `windows10`\n\nBronze coin\nCost: 50000 coins\nId: `bronzecoin`\n\nSilver coin\nCost: 250000 coins\nId: `silvercoin`\n\nGold coin\nCost: 1000000 coins\nId: `goldcoin`", color=0xff0000)
-        em.set_footer(text="Tip: type .buy <item_id> to buy an item")
+        em.set_footer(text="Tip: type .buy <item_id> [amount] to buy an item")
         await ctx.reply(embed=em, mention_author=False)
              
     @commands.command(aliases=['inv'])
@@ -266,6 +266,19 @@ class MainCog(commands.Cog):
         else:
             em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[user.id]}\nBronze coins: {bronzecoin[user.id]}\nSilver coins: {silvercoin[user.id]}\nGold coins: {goldcoin[user.id]}", color=0xff0000)
             await ctx.reply(embed=em, mention_author=False)
+                  
+    @commands.command()
+    async def buy(self, ctx, item:str, amount:int=None):
+    if str(item) == "windows10":
+        if int(amount) == None or int(amount) == 1:
+            if wallet[ctx.message.author.id] < 69420:
+                await ctx.reply(f"You don\'t have enough coins to buy this. You need {round(69420 - wallet[ctx.message.author.id])} more coins to buy this.", mention_author=False)
+                return
+            else:
+                await ctx.reply(f"You bought a windows 10 key! Now you have {round(wallet[ctx.message.author.id] - 69420)} coins in your wallet.", mention_author=False)
+                wallet[ctx.message.author.id] -= 69420
+                windows10[ctx.message.author.id] += 1
+                self.save()
                   
     @commands.command()
     @commands.has_permissions(administrator=True)

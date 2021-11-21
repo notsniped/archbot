@@ -1219,18 +1219,17 @@ class MainCog(commands.Cog):
             return
         else:
             if arg1 == 'all' or arg1 == 'max':
-                await ctx.reply("An error occoured. Please try again using `.deposit <amount>`")
-                return
                 if wallet[ctx.message.author.id] == 0:
                     await ctx.send('You don\'t have any coins in your wallet')
                     return
                 else:
                     if wallet[ctx.message.author.id] == 1:
-                        await ctx.reply(f'You deposited {member_data.wallet} coin')
+                        await ctx.reply(f'You deposited 1 coin')
                     else:
-                        await ctx.reply(f'You deposited {member_data.wallet} coins')    
+                        await ctx.reply(f'You deposited {wallet[ctx.message.author.id] coins')    
                     bank[ctx.message.author.id] += int(wallet[ctx.message.author.id])
                     wallet[ctx.message.author.id] -= int(wallet[ctx.message.author.id])
+                    self.save()
                     return
             elif arg1.isdigit:
                 if int(arg1) > wallet[ctx.message.author.id]:
@@ -1243,7 +1242,7 @@ class MainCog(commands.Cog):
                     await ctx.send(f'You deposited {arg1} coins')
                     wallet[ctx.message.author.id] -= int(arg1)
                     bank[ctx.message.author.id] += int(arg1)
-                    self.self()
+                    self.save()
                     return
             else:
                 raise BadArgument
@@ -1255,8 +1254,6 @@ class MainCog(commands.Cog):
             return
         else:
             if arg1 == 'all' or arg1 == 'max':
-                await ctx.reply("An error occoured. Please try again using `.withdraw <amount>`")
-                return
                 if bank[ctx.message.author.id] == 0:
                     await ctx.send('You don\'t have any coins in your bank')
                     return

@@ -1078,6 +1078,12 @@ class MainCog(commands.Cog):
             return
         else:
             if arg1.isdigit:
+                if passiveUsers[ctx.message.author.id] == 1:
+                    await ctx.reply("You have passive mode enabled, you can\'t give momey to other users", mention_author=False)
+                    return
+                if passiveUsers[user.id] = 1:
+                    await ctx.reply("This user has passive mode enabled. Leave them alone!", mention_author=False)
+                    return
                 if wallet[ctx.message.author.id] < int(arg1):
                     await ctx.reply('You don\'t have that many coins in your wallet')
                     return

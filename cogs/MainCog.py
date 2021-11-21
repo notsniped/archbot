@@ -116,7 +116,7 @@ class MainCog(commands.Cog):
             json.dump(wallet, f)
         with open(f'{cwd}/database/swearfilter.json', 'w+') as f:
             json.dump(swearfilter, f)
-        with open(f'{cwd}/database/windows10.json', 'w+) as f:
+        with open(f'{cwd}/database/windows10.json', 'w+') as f:
             json.dump(windows10, f)
         with open(f'{cwd}/database/bronzecoin.json', 'w+') as f:
             json.dump(bronzecoin, f)

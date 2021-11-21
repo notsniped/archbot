@@ -182,6 +182,8 @@ class MainCog(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message): 
         if not message.author.bot:
+            if message.guild.id not in swearfilter:
+                swearfilter[message.guild.id] = 0
             #member_data = self.load_member_data(message.author.id)
             #member_data.xp += 1
             if message.author.id not in xp:
@@ -233,8 +235,6 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def sweartoggle(self, ctx):
-        if ctx.guild.id not in swearfilter:
-            swearfilter[ctx.guild.id] = 0
         if swearfilter[ctx.guild.id] == 0:
             swearfilter[ctx.guild.id] = 1
             self.save()
@@ -319,17 +319,12 @@ class MainCog(commands.Cog):
 
     blEdit_snipe = True
     @commands.command()
-    async def edit_snipe(self, ctx):
-        if blEdit_snipe:
-            pass
-        else:
-            await ctx.reply('This command is disabled')
-            return
+    async def edit_snipe(self, ctx): 
         try:
             if any(x in after.lower() for x in bad):
                 r = lambda: random.randint(0,255)
                 col = '#%02X%02X%02X' % (r(),r(),r())
-                em = discord.Embed(description=f'**Message before**: {before}\n**Message after**:||{after}||', color=col)
+                em = discord.Embed(description=f'**Message before**: {before}\n**Message after**:||{after}||', color=0xff0000)
                 em.set_footer(text=f'This message was edited by {author}\nWARNING: this message contains banned text')
             else:
                 em = discord.Embed(description=f'**Message before**: {before}\n**Message after**:{after}')

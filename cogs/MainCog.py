@@ -75,6 +75,18 @@ with open(f'{cwd}/database/levels.json', 'r') as f:
 with open(f'{cwd}/database/xp.json', 'r') as f:
     global xp
     xp = json.load(f)
+with open(f'{cwd}/database/windows10.json', 'r') as f:
+    global windows10
+    windows10 = json.load(f)
+with open(f'{cwd}/database/bronzecoin.json', 'r') as f:
+    global bronzecoin
+    bronzecoin = json.load(f)
+with open(f'{cwd}/database/silvercoin.json', 'r') as f:
+    global silvercoin
+    silvercoin = json.load(f)
+with open(f'{cwd}/database/goldcoin.json', 'r') as f:
+    global goldcoin
+    goldcoin = json.load(f)
 
 class colors: 
     cyan = '\033[96m'
@@ -104,6 +116,14 @@ class MainCog(commands.Cog):
             json.dump(wallet, f)
         with open(f'{cwd}/database/swearfilter.json', 'w+') as f:
             json.dump(swearfilter, f)
+        with open(f'{cwd}/database/windows10.json', 'w+) as f:
+            json.dump(windows10, f)
+        with open(f'{cwd}/database/bronzecoin.json', 'w+') as f:
+            json.dump(bronzecoin, f)
+        with open(f'{cwd}/database/silvercoin.json', 'w+') as f:
+            json.dump(silvercoin, f)
+        with open(f'{cwd}/database/goldcoin.json', 'w+') as f:
+            json.dump(goldcoin, f)
     
     # def load_data(self):
     #     if os.path.isfile(data_filename):                     

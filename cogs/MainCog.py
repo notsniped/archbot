@@ -280,6 +280,84 @@ class MainCog(commands.Cog):
                     wallet[ctx.message.author.id] -= a
                     windows10[ctx.message.author.id] += amount
                     self.save()
+        if str(item) == "bronzecoin":
+            if amount == None or int(amount) == 1:
+                if wallet[ctx.message.author.id] < 50000:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {50000 - wallet[ctx.message.author.id]} more coins to buy this.", mention_author=False)
+                    return
+                else:
+                    await ctx.reply(f"You bought a bronze coin! Now you have {wallet[ctx.message.author.id] - 50000} coins in your wallet.", mention_author=False)
+                    wallet[ctx.message.author.id] -= 50000
+                    bronzecoin[ctx.message.author.id] += 1
+                    self.save()
+            elif int(amount) < 0:
+                await ctx.reply("Don\'t try to break me **dood**")
+                return
+            elif int(amount) == 0:
+                await ctx.reply("Here you go, 0 bronze coins for 0 coins!")
+                return
+            else:
+                a = 50000 * amount
+                if wallet[ctx.message.author.id] < a:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[ctx.message.author.id]} more coins")
+                    return
+                else:
+                    await ctx.reply(f"You bought {amount} bronze coins for {a} coins. Now you have {wallet[ctx.message.author.id] - a} coins in your wallet")
+                    wallet[ctx.message.author.id] -= a
+                    bronzecoin[ctx.message.author.id] += amount
+                    self.save()
+        if str(item) == "silvercoin":
+            if amount == None or int(amount) == 1:
+                if wallet[ctx.message.author.id] < 250000:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {250000 - wallet[ctx.message.author.id]} more coins to buy this.", mention_author=False)
+                    return
+                else:
+                    await ctx.reply(f"You bought a silver coin! Now you have {wallet[ctx.message.author.id] - 250000} coins in your wallet.", mention_author=False)
+                    wallet[ctx.message.author.id] -= 250000
+                    bronzecoin[ctx.message.author.id] += 1
+                    self.save()
+            elif int(amount) < 0:
+                await ctx.reply("Don\'t try to break me **dood**")
+                return
+            elif int(amount) == 0:
+                await ctx.reply("Here you go, 0 silver coins for 0 coins!")
+                return
+            else:
+                a = 250000 * amount
+                if wallet[ctx.message.author.id] < a:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[ctx.message.author.id]} more coins")
+                    return
+                else:
+                    await ctx.reply(f"You bought {amount} silver coins for {a} coins. Now you have {wallet[ctx.message.author.id] - a} coins in your wallet")
+                    wallet[ctx.message.author.id] -= a
+                    silvercoin[ctx.message.author.id] += amount
+                    self.save()
+        if str(item) == "goldcoin":
+            if amount == None or int(amount) == 1:
+                if wallet[ctx.message.author.id] < 1000000:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {1000000 - wallet[ctx.message.author.id]} more coins to buy this.", mention_author=False)
+                    return
+                else:
+                    await ctx.reply(f"You bought a windows 10 key! Now you have {wallet[ctx.message.author.id] - 1000000} coins in your wallet.", mention_author=False)
+                    wallet[ctx.message.author.id] -= 1000000
+                    goldcoin[ctx.message.author.id] += 1
+                    self.save()
+            elif int(amount) < 0:
+                await ctx.reply("Don\'t try to break me **dood**")
+                return
+            elif int(amount) == 0:
+                await ctx.reply("Here you go, 0 gold coins for 0 coins!")
+                return
+            else:
+                a = 50000 * amount
+                if wallet[ctx.message.author.id] < a:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[ctx.message.author.id]} more coins")
+                    return
+                else:
+                    await ctx.reply(f"You bought {amount} bronze coins for {a} coins. Now you have {wallet[ctx.message.author.id] - a} coins in your wallet")
+                    wallet[ctx.message.author.id] -= a
+                    goldcoin[ctx.message.author.id] += amount
+                    self.save()
         else:
             await ctx.reply(f"No item {item} found. Type `.shop` to get the list of items")
             return

@@ -253,6 +253,21 @@ class MainCog(commands.Cog):
         #await self.client.process_commands(message)
 
     @commands.command()
+    async def shop(self, ctx):
+        em = discord.Embed(title=f"Arch bot shop", description=f"Windows 10 key\nDescription: Windows 10 lisence key, too expensive for an os\nCost: 69420\nId: `windows10`\n\nBronze coin\nCost: 50000 coins\nId: `bronzecoin`\n\nSilver coin\nCost: 250000 coins\nId: `silvercoin`\n\nGold coin\nCost: 1000000 coins\nId: `goldcoin`", color=0xff0000)
+        em.set_footer(text="Tip: type .buy <item_id> to buy an item")
+        await ctx.reply(embed=em, mention_author=False)
+             
+    @commands.command(aliases=['inv'])
+    async def inventory(self, ctx, user : discord.User=None):
+        if user == None:
+            em = discord.Embed(title=f"{ctx.message.author.display_name}'s inventory", description=f"Windows 10 keys: {windows10[ctx.message.author.id]}\nBronze coins: {bronzecoin[ctx.message.author.id]}\nSilver coins: {silvercoin[ctx.message.author.id]}\nGold coins: {goldcoin[ctx.message.author.id]}", color=0xff0000)
+            await ctx.reply(embed=em, mention_author=False)
+        else:
+            em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[user.id]}\nBronze coins: {bronzecoin[user.id]}\nSilver coins: {silvercoin[user.id]}\nGold coins: {goldcoin[user.id]}", color=0xff0000)
+            await ctx.reply(embed=em, mention_author=False)
+                  
+    @commands.command()
     @commands.has_permissions(administrator=True)
     async def sweartoggle(self, ctx):
         if int(swearfilter[ctx.message.guild.id]) == 0:

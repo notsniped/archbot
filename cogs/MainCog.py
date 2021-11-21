@@ -513,7 +513,7 @@ class MainCog(commands.Cog):
     ]
         rndcol = 0xff0000
         if arg1 == None:
-            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, edit_snipe, 8ball')
+            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, edit_snipe, rank, isSus, kill, slap, 8ball')
             helpMain.set_footer(text='*type .help [command] to get more info about a command*')
             await ctx.reply(embed = helpMain)
         elif arg1 == 'beg':
@@ -702,6 +702,9 @@ class MainCog(commands.Cog):
         elif arg1 == 'buy':
             em54 = discord.Embed(title='\'Buy\' command use', description='Buys an item from the shop (`.shop`)\nUsage: `.buy <item> [amount]`')
             await ctx.reply(embed=em54)
+        elif arg1 == 'rank' or arg1 == 'xp':
+            em55 = discord.Embed(title='\'Rank\' command use', description='Shows user activity with levels and xp\nUsage: `.rank|.xp [user]`')
+            await ctx.reply(embed=em55)
         elif arg1 == 'help':
             await ctx.reply('You want help for help command?')
             def check(msg):

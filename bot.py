@@ -143,6 +143,25 @@ async def on_message_edit(message_before, message_after):
         else:
             pass
 
+snipe_message_author = {}
+snipe_message_content = {}
+
+@client.event
+async def on_message_delete(message):
+if message.content.startswith(".say"):
+    return
+    else:
+        pass
+   if not message.author.bot:
+       pass
+   else:
+       return
+       now = datetime.datetime.now()
+       current_time = now.strftime("%H:%M:%S")
+       guild = client.guilds[0]
+       channel = message.channel
+       snipe_message_author[message.channel.id] = message.author
+       snipe_message_content[message.channel.id] = message.content
 
 @client.event
 async def on_guild_join(guild):

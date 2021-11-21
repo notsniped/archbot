@@ -975,7 +975,7 @@ class MainCog(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(ban_members=True)
-    async def ban(self, ctx, *, member=discord.Member):
+    async def ban(self, ctx, *, member : discord.Member):
         now = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
         if member == ctx.message.author:

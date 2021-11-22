@@ -858,14 +858,14 @@ class MainCog(commands.Cog):
     @commands.is_nsfw()
     async def nudes(self, ctx):
         async with ctx.typing():
-            posts = reddit.subreddit('Nude_Selfie').hot()
-            post_pick = random.randint(1, 200)
-            for i in range(0, post_pick):
-                sub = next(x for x in posts if not x.sticked)
-            em = discord.Embed(title=sub.title)
-            em.set_image(url=sub.url)
-            em.set_footer(text="guess who is horny")
-            await ctx.send(embed=em)
+            memes_submissions = reddit.subreddit('Nude_Selfie').hot()
+            post_to_pick = random.randint(1, 100)
+            for i in range(0, post_to_pick):
+                submission = next(x for x in memes_submissions if not x.stickied)
+            embed = discord.Embed(title = submission.title)
+            embed.set_image(url=submission.url)
+            embed.set_footer(text="guess who is horny")
+        await ctx.send(embed = embed)
 
     blRstroke = True
     @commands.command()

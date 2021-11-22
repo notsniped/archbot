@@ -508,7 +508,7 @@ class MainCog(commands.Cog):
 
     @commands.command()
     @commands.is_nsfw()
-    async def nsfw(ctx):
+    async def nsfw(self, ctx):
         embed = discord.Embed(title="nsfw") 
         async with aiohttp.ClientSession() as cs:
             async with cs.get('https://www.reddit.com/r/nsfw/new.json?sort=hot') as r:

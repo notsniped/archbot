@@ -13,6 +13,7 @@ import asyncio
 import datetime
 import json
 import requests
+import aiohttp
 import traceback
 import youtube_dl
 from time import sleep
@@ -508,13 +509,13 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.is_nsfw()
     async def nsfw(ctx):
-    embed = discord.Embed(title="nsfw") 
-    async with aiohttp.ClientSession() as cs:
-        async with cs.get('https://www.reddit.com/r/nsfw/new.json?sort=hot') as r:
-            res = await r.json()
-            embed.set_image(url=res['data']['children'] [random.randint(0, 25)]['data']['url'])
-            embed.set_footer(text="guess who is horny")
-            await ctx.send(embed=embed)
+        embed = discord.Embed(title="nsfw") 
+        async with aiohttp.ClientSession() as cs:
+            async with cs.get('https://www.reddit.com/r/nsfw/new.json?sort=hot') as r:
+                res = await r.json()
+                embed.set_image(url=res['data']['children'] [random.randint(0, 25)]['data']['url'])
+                embed.set_footer(text="guess who is horny")
+                await ctx.send(embed=embed)
 
     @commands.command()
     async def help(self, ctx, *, arg1=None):

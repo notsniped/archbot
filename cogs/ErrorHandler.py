@@ -18,7 +18,7 @@ class ErrorHandler(commands.Cog):
         if cog:
             if cog._get_overridden_method(cog.cog_command_error) is not None:
                 return
-        ignored = (commands.CommandNotFound, )
+        ignored = (commands.CommandNotFound)
         error = getattr(error, 'original', error)
         if isinstance(error, ignored):
             return
@@ -53,6 +53,8 @@ class ErrorHandler(commands.Cog):
             await ctx.reply("You can\'t use this")
         elif isinstance(error, commands.BotMissingPermissions):
             await ctx.reply("I don\'t have permissions to use this")
+        elif isinstance(error, commands.errors.NSFWChannelRequired):
+            await ctx.reply("This command only works in a nsfw channel")
         else:
             print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)

@@ -1230,7 +1230,7 @@ class MainCog(commands.Cog):
                     await ctx.send('You don\'t have any coins in your bank')
                     return
                 else:
-                    if member_data.bank == 1:
+                    if bank[ctx.message.author.id] == 1:
                         await ctx.reply(f'You withdrawn {bank[ctx.message.author.id]} coin')
                     else:
                         await ctx.reply(f'You withdrawn {bank[ctx.message.author.id]} coins')    

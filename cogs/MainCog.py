@@ -858,7 +858,7 @@ class MainCog(commands.Cog):
     @commands.is_nsfw()
     async def nudes(self, ctx):
         async with ctx.typing():
-            posts = reddit.subteddit('Nude_Selfie').hot()
+            posts = reddit.subreddit('Nude_Selfie').hot()
             post_pick = random.randint(1, 200)
             for i in range(0, post_pick):
                 sub = next(x for x in posts if not x.sticked)

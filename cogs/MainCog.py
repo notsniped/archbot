@@ -238,7 +238,32 @@ class MainCog(commands.Cog):
         else:
             em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[user.id]}\nBronze coins: {bronzecoin[user.id]}\nSilver coins: {silvercoin[user.id]}\nGold coins: {goldcoin[user.id]}", color=0xff0000)
             await ctx.reply(embed=em, mention_author=False)
-                  
+     
+    @commands.command()
+    async def add_item(self, ctx, user : discord.User, *, item:str, amount:int=None):
+        if ctx.message.author.id == 705462972415213588:
+            if item == "windows10":
+                if amount == None or int(amount) == 1:
+                    if user.id not in windows10:
+                        windows10[user.id] = 0
+                        self.save()
+                    windows10[user.id] += 1
+                    self.save()
+                    await ctx.reply(f"Added 1 `windows10` to {user.display_name}", mention_author=False)
+                    return
+                elif int(amount) == 0:
+                    await ctx.reply(f"You don\'t need to run the command to give 0 items", mention_author=False)
+                    return
+                elif int(amount) > 0:
+                    if user.id not in windows10:
+                         windows10[user.id] = 0
+                         self.save()
+                    windows10[user.id] += amount
+                    self.save()
+                    return
+               elif int(amount).startswith("-"):
+                    int(amount).replace("-", "")
+                    a =            
     @commands.command()
     async def buy(self, ctx, item:str, amount:int=None):
         if str(item) == "windows10":

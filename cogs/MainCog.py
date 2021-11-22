@@ -504,7 +504,9 @@ class MainCog(commands.Cog):
             pass
         else:
             return
+
     @commands.command()
+    @commands.is_nsfw()
     async def nsfw(ctx):
     embed = discord.Embed(title="nsfw") 
     async with aiohttp.ClientSession() as cs:

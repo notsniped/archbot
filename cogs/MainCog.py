@@ -217,6 +217,11 @@ class MainCog(commands.Cog):
             else:   
                 pass
         #await self.client.process_commands(message)
+    
+    @commands.command(aliases=["vs"])
+    async def viewsettings(self, ctx):
+        em = discord.Embed(description=f"Passive mode: {passiveUsers[ctx.message.author.id]}\nSwear filter: {swearfilter[ctx.message.guild.id]}")
+        await ctx.reply(embed=em, mention_author=False)
 
     @commands.command()
     async def shop(self, ctx):

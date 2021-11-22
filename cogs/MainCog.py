@@ -507,17 +507,6 @@ class MainCog(commands.Cog):
             return
 
     @commands.command()
-    @commands.is_nsfw()
-    async def nsfw(self, ctx):
-        embed = discord.Embed(title="nsfw") 
-        async with aiohttp.ClientSession() as cs:
-            async with cs.get('https://www.reddit.com/r/nsfw/new.json?sort=hot') as r:
-                res = await r.json()
-                embed.set_image(url=res['data']['children'] [random.randint(0, 25)]['data']['url'])
-                embed.set_footer(text="guess who is horny")
-                await ctx.send(embed=embed)
-
-    @commands.command()
     async def help(self, ctx, *, arg1=None):
         colors = [
         0x000000,
@@ -530,7 +519,7 @@ class MainCog(commands.Cog):
     ]
         rndcol = 0xff0000
         if arg1 == None:
-            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle, viewsettings, edit_snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, rank, isSus, kill, slap, 8ball, nsfw')
+            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle, viewsettings, edit_snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, rank, isSus, kill, slap, 8ball, nudes')
             helpMain.set_footer(text='*type .help [command] to get more info about a command*')
             await ctx.reply(embed = helpMain)
         elif arg1 == 'beg':
@@ -864,6 +853,19 @@ class MainCog(commands.Cog):
             embed = discord.Embed(title = submission.title)
             embed.set_image(url=submission.url)
         await ctx.send(embed = embed)
+
+    @commands.command()
+    @commands.is_nsfw()
+    async def nudes(self, ctx):
+        async with ctx.typing():
+            posts = reddit.subteddit('Nude_Selfie').hot()
+            post_pick = random.randint(1, 200)
+            for i in range(0, post_pick):
+                sub = next(x for x in posts if not x.sticked)
+            em = discord.Embed(title=sub.title)
+            em.set_image(url=sub.url)
+            em.set_footer(text="guess who is horny")
+            await ctx.send(embed=em)
 
     blRstroke = True
     @commands.command()

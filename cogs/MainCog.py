@@ -1274,7 +1274,7 @@ class MainCog(commands.Cog):
                       on_cooldown[ctx.message.author.id] = datetime.now()
                       pass
                 else:
-                      await ctx.reply(f"This command is on cooldown. Please retry after {datetime.timedelta(seconds=int(datetime.now()-on_cooldown[ctx.message.author.id]))} seconds.")
+                      await ctx.reply(f"This command is on cooldown. Please retry after {timedelta(seconds=int(datetime.now()-on_cooldown[ctx.message.author.id]))} seconds.")
                       return
                 if j == "mod":
                     await ctx.reply("You earned 5000 coins from Discord Moderator job")

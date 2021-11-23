@@ -244,9 +244,9 @@ class MainCog(commands.Cog):
         if ctx.message.author.id == 705462972415213588:
             if str(item) == "windows10":
                 if amount == None or int(amount) == 1:
-                        if user.id not in windows10:
-                            windows10[user.id] = 0
-                            self.save()
+                    if user.id not in windows10:
+                        windows10[user.id] = 0
+                        self.save()
                     windows10[user.id] += 1
                     self.save()
                     await ctx.reply(f"Added 1 `windows10` to {user.display_name}", mention_author=False)
@@ -264,9 +264,9 @@ class MainCog(commands.Cog):
                     return
             elif str(item) == "bronzecoin":
                 if amount == None or int(amount) == 1:
-                        if user.id not in bronzecoin:
-                            bronzecoin[user.id] = 0
-                            self.save()
+                    if user.id not in bronzecoin:
+                        bronzecoin[user.id] = 0
+                        self.save()
                     bronzecoin[user.id] += 1
                     self.save()
                     await ctx.reply(f"Added 1 `bronzecoin` to {user.display_name}", mention_author=False)
@@ -284,9 +284,9 @@ class MainCog(commands.Cog):
                     return
             elif str(item) == "silvercoin":
                 if amount == None or int(amount) == 1:
-                        if user.id not in silvercoin:
-                            silvercoin[user.id] = 0
-                            self.save()
+                    if user.id not in silvercoin:
+                        silvercoin[user.id] = 0
+                        self.save()
                     silvercoin[user.id] += 1
                     self.save()
                     await ctx.reply(f"Added 1 `silvercoin` to {user.display_name}", mention_author=False)
@@ -304,10 +304,10 @@ class MainCog(commands.Cog):
                     return
             elif str(item) == "goldcoin":
                 if amount == None or int(amount) == 1:
-                        if user.id not in goldcoin:
-                            gold[user.id] = 0
-                            self.save()
-                    gold[user.id] += 1
+                    if user.id not in goldcoin:
+                        goldcoin[user.id] = 0
+                        self.save()
+                    goldcoin[user.id] += 1
                     self.save()
                     await ctx.reply(f"Added 1 `goldcoin` to {user.display_name}", mention_author=False)
                     return

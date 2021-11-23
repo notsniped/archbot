@@ -86,6 +86,9 @@ with open(f'{cwd}/database/silvercoin.json', 'r') as f:
 with open(f'{cwd}/database/goldcoin.json', 'r') as f:
     global goldcoin
     goldcoin = json.load(f)
+with open(f'{cwd}/database/jobs.json', 'r') as f:
+    global jobs
+    jobs = json.load(f)
 
 class colors: 
     cyan = '\033[96m'
@@ -123,6 +126,8 @@ class MainCog(commands.Cog):
             json.dump(silvercoin, f)
         with open(f'{cwd}/database/goldcoin.json', 'w+') as f:
             json.dump(goldcoin, f)
+        with open(f'{cwd}/database/jobs.json', 'w+') as f:
+            json.dump(jobs, f)
     
     # def load_data(self):
     #     if os.path.isfile(data_filename):                     

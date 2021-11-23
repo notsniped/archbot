@@ -24,7 +24,7 @@ from discord import TextChannel
 from discord.ext import commands
 from async_timeout import timeout
 from discord.ext.commands import *
-from datetime import datetime, timedelta
+from datetime import datetime
 ### Modules end ###
 on_cooldown = {}
 work_cooldown = 3600
@@ -1274,7 +1274,7 @@ class MainCog(commands.Cog):
                       on_cooldown[ctx.message.author.id] = datetime.now()
                       pass
                 else:
-                      await ctx.reply(f"This command is on cooldown. Please retry after {str(timedelta(seconds=int(round(datetime.now()-on_cooldown[ctx.message.author.id]))))} seconds.")
+                      await ctx.reply(f"This command is on cooldown. Please retry after {datetime.timedelta(seconds=int(round(datetime.now()-on_cooldown[ctx.message.author.id])))} seconds.")
                       return
                 if j == "mod":
                     await ctx.reply("You earned 5000 coins from Discord Moderator job")

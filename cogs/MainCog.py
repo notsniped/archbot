@@ -1255,7 +1255,7 @@ class MainCog(commands.Cog):
             
 
     @commands.command()
-#    @commands.cooldown(1, 7200, commands.BucketType.user)
+#    @commands.cooldown(1, 1800, commands.BucketType.user)
     async def work(self, ctx, *, arg1=None):
         if arg1 == None:
             if ctx.message.author.id not in jobs:
@@ -1304,7 +1304,7 @@ class MainCog(commands.Cog):
                     self.save()
                     return
         elif str(arg1) == "list":
-            em = discord.Embed(title="Jobs list", description="**Discord Mod**\nRequirement: `level 1`\nSalary: `5000 coins`\nId:mod`\n\n**YouTuber**\nRequirememt: `level 5`\nSalary: `6000 coins`\nId: `yt`\n\n**Twitch streamer**\nRequirement: `level 5`\nSalary: `6900 coins`\nId: `ts`\n\n**Pro Gamer**\nRequirement: `level 10`\nSalary: `15000 coins`\nId: `pg`\n\n**Doctor**\nRequirement: `level 15`\nSalary: `20000 coins`\nId: `ts`\n\n**Developer**\nRequirement: `level 20`\nSalary: `25000 coins`\nId: `dev`\n\n**Scientist**\nRequirement: `level 50`\nSalary: `75000 coins`\nId: `sc`\n\n**Arch Bot Developer**\nRequirement: `level 69`\nSalary: `169420 coins`\nId: `ab`")
+            em = discord.Embed(title="Jobs list", description="**Discord Mod**\nRequirement: `level 1`\nSalary: `5000 coins`\nId: `mod`\n\n**YouTuber**\nRequirememt: `level 5`\nSalary: `6000 coins`\nId: `yt`\n\n**Twitch streamer**\nRequirement: `level 5`\nSalary: `6900 coins`\nId: `ts`\n\n**Pro Gamer**\nRequirement: `level 10`\nSalary: `15000 coins`\nId: `pg`\n\n**Doctor**\nRequirement: `level 15`\nSalary: `20000 coins`\nId: `ts`\n\n**Developer**\nRequirement: `level 20`\nSalary: `25000 coins`\nId: `dev`\n\n**Scientist**\nRequirement: `level 50`\nSalary: `75000 coins`\nId: `sc`\n\n**Arch Bot Developer**\nRequirement: `level 69`\nSalary: `169420 coins`\nId: `ab`")
             em.set_footer(text="Tip: type .work <job_id> to start a job")
             await ctx.reply(embed=em, mention_author=False)
             return
@@ -1328,7 +1328,7 @@ class MainCog(commands.Cog):
                 return
         elif str(arg1) == "yt":
             if ctx.message.author.id not in jobs:
-                if level[ctx.message.author.id] >= 5:
+                if levels[ctx.message.author.id] >= 5:
                     jobs[ctx.message.author.id] = "yt"
                     self.save()
                     await ctx.reply("You are now working as a **YouTuber**")
@@ -1341,7 +1341,7 @@ class MainCog(commands.Cog):
                 return
         elif str(arg1) == "ts":
             if ctx.message.author.id not in jobs:
-                if level[ctx.message.author.id] >= 5:
+                if levels[ctx.message.author.id] >= 5:
                     jobs[ctx.message.author.id] = "ts"
                     self.save()
                     await ctx.reply("You are now working as a **Twitch Streamer**")
@@ -1354,7 +1354,7 @@ class MainCog(commands.Cog):
                 return
         elif str(arg1) == "pg":
             if ctx.message.author.id not in jobs:
-                if level[ctx.message.author.id] >= 10:
+                if levels[ctx.message.author.id] >= 10:
                     jobs[ctx.message.author.id] = "pg"
                     self.save()
                     await ctx.reply("You are now working as a **Pro Gamer**")
@@ -1367,7 +1367,7 @@ class MainCog(commands.Cog):
                 return
         elif str(arg1) == "dc":
             if ctx.message.author.id not in jobs:
-                if level[ctx.message.author.id] >= 15:
+                if levels[ctx.message.author.id] >= 15:
                     jobs[ctx.message.author.id] = "dc"
                     self.save()
                     await ctx.reply("You are now working as a **Doctor**")
@@ -1380,7 +1380,7 @@ class MainCog(commands.Cog):
                 return
         elif str(arg1) == "dev":
             if ctx.message.author.id not in jobs:
-                if level[ctx.message.author.id] >= 20:
+                if levels[ctx.message.author.id] >= 20:
                     jobs[ctx.message.author.id] = "dev"
                     self.save()
                     await ctx.reply("You are now working as a **Developer**")
@@ -1393,7 +1393,7 @@ class MainCog(commands.Cog):
                 return
         elif str(arg1) == "sc":
             if ctx.message.author.id not in jobs:
-                if level[ctx.message.author.id] >= 50:
+                if levels[ctx.message.author.id] >= 50:
                     jobs[ctx.message.author.id] = "sc"
                     self.save()
                     await ctx.reply("You are now working as a **Scientist**")
@@ -1406,7 +1406,7 @@ class MainCog(commands.Cog):
                 return
         elif str(arg1) == "ab":
             if ctx.message.author.id not in jobs:
-                if level[ctx.message.author.id] >= 69:
+                if levels[ctx.message.author.id] >= 69:
                     jobs[ctx.message.author.id] = "ab"
                     self.save()
                     await ctx.reply("You are now working as a **Arch bot developer**")

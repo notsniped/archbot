@@ -24,7 +24,10 @@ from discord import TextChannel
 from discord.ext import commands
 from async_timeout import timeout
 from discord.ext.commands import *
+from datetime import datetime, timedelta
 ### Modules end ###
+on_cooldown = {}
+work_cooldown = 3600
 ids = [
     738290097170153472,
     705462972415213588
@@ -670,7 +673,7 @@ class MainCog(commands.Cog):
             em16 = discord.Embed(title='\'Linuxmeme\' command use', description='Sends a random meme from r/linuxmemes\nUsage: `.linuxmeme|.lm`', color=rndcol)
             await ctx.reply(embed=em16)
         elif arg1 == 'work':
-            em17 = discord.Embed(title='\'Work\' command use', description='Gets a big amount of money\nCooldown: 30 minutes\nUsage: `.work`', color=rndcol)
+            em17 = discord.Embed(title='\'Work\' command use', description='Gets a big amount of money\nCooldown: 1 hour (except `.work list`)\nUsage: `.work [list/resign/job_id]`', color=rndcol)
             await ctx.reply(embed=em17)
         elif arg1 == 'stroke':
             em18 = discord.Embed(title='\'Stroke\' command use', description='Sends a stroke (not irl stroke)\nUsage: `.stroke <amount>`\nAmount limit: 750', color=rndcol)
@@ -1255,14 +1258,24 @@ class MainCog(commands.Cog):
             
 
     @commands.command()
-#    @commands.cooldown(1, 1800, commands.BucketType.user)
     async def work(self, ctx, *, arg1=None):
         if arg1 == None:
             if ctx.message.author.id not in jobs:
                 await ctx.reply("You dont have a job yet. Type `.work list` to see the list of jobs")
                 return
             else:
+                try:
+                    last_work = datetime.now() - on_cooldown[ctx.message.author.id] 
+                except KeyError:
+                    last_work = None
+                    on_cooldown[author] = datetime.now()
                 j = jobs[ctx.message.author.id]
+                if last_work is None or last_work.seconds > work_cooldown:
+                      on_cooldown[ctx.message.author.id] = datetime.now()
+                      pass
+                else:
+                      await ctx.reply(f"This command is on cooldown. Please retry after {datetime.now() - on_cooldown[author]} seconds.")
+                      return
                 if j == "mod":
                     await ctx.reply("You earned 5000 coins from Discord Moderator job")
                     wallet[ctx.message.author.id] += 5000

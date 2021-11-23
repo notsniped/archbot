@@ -1264,13 +1264,13 @@ class MainCog(commands.Cog):
                 return
             else:
                 try:
-                    last_work = datetime.now() - on_cooldown[ctx.message.author.id] 
+                    last_work = datetime.datetime.now() - on_cooldown[ctx.message.author.id] 
                 except KeyError:
                     last_work = None
-                    on_cooldown[ctx.message.author.id] = datetime.now()
+                    on_cooldown[ctx.message.author.id] = datetime.datetime.now()
                 j = jobs[ctx.message.author.id]
                 if last_work is None or last_work.seconds > work_cooldown:
-                      on_cooldown[ctx.message.author.id] = datetime.now()
+                      on_cooldown[ctx.message.author.id] = datetime.datetime.now()
                       pass
                 else:
                     await ctx.reply("This command is on cooldown")

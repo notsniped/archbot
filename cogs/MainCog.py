@@ -1255,18 +1255,171 @@ class MainCog(commands.Cog):
             
 
     @commands.command()
-    @commands.cooldown(1, 1800, commands.BucketType.user)
-    async def work(self, ctx):
-        now = datetime.datetime.now()
-        current_time = now.strftime("%H:%M:%S")
-        coins = randint(1000, 50000)
-        wallet[ctx.message.author.id] += coins
-        await ctx.send(f"You earned {coins} coins.")
-        self.save()
-        if bool(log) == True:
-            print(f'[{current_time}]{colors.cyan}{ctx.message.author.display_name}{colors.end} earned {colors.green}{coins}{colors.end} coins')
+#    @commands.cooldown(1, 7200, commands.BucketType.user)
+    async def work(self, ctx, *, arg1=None):
+        if arg1 == None:
+            if ctx.message.author.id not in jobs:
+                await ctx.reply("You dont have a job yet. Type `.work list` to see the list of jobs")
+                return
+            else:
+                j = jobs[ctx.message.author.id]
+                if j == "mod":
+                    await ctx.reply("You earned 5000 coins from Discord Moderator job")
+                    wallet[ctx.message.author.id] += 5000
+                    self.save()
+                    return
+                elif j == "yt":
+                    await ctx.reply("You earned 6000 coins from YouTuber job")
+                    wallet[ctx.message.author.id] += 6000
+                    self.save()
+                    return
+                elif j == "ts":
+                    await ctx.reply("You earned 6900 coins from Twitch Streamer job")
+                    wallet[ctx.message.author.id] += 6900
+                    self.save()
+                    return
+                elif j == "pg":
+                    await ctx.reply("You earned 15000 coins from Pro Gamer job")
+                    wallet[ctx.message.author.id] += 15000
+                    self.save()
+                    return
+                elif j = "dc":
+                    await ctx.reply("You earned 20000 coins from Doctor job")
+                    wallet[ctx.message.author.id] += 20000
+                    self.save()
+                    return
+                elif j == "dev":
+                    await ctx.reply("You earned 25000 coins from Developer job")
+                    wallet[ctx.message.author.id] += 25000
+                    self.save()
+                    return
+                elif j == "sc":
+                    await ctx.reply("You earned 75000 coins from Scientist job")
+                    wallet[ctx.message.author.id] += 75000
+                    self.save()
+                    return
+                elif j == "ad":
+                    await ctx.reply("You earned 169420 coins from Arch bot developer job")
+                    wallet[ctx.message.author.id] += 169420
+                    self.save()
+                    return
+        elif str(arg1) == "list":
+            em = discord.Embed(title="Jobs list", description="**Discord Mod**\nRequirement: `level 1`\nSalary: `5000 coins`\nId:mod`\n\n**YouTuber**\nRequirememt: `level 5`\nSalary: `6000 coins`\nId: `yt`\n\n**Twitch streamer**\nRequirement: `level 5`\nSalary: `6900 coins`\nId: `ts`\n\n**Pro Gamer**\nRequirement: `level 10`\nSalary: `15000 coins`\nId: `pg`\n\n**Doctor**\nRequirement: `level 15`\nSalary: `20000 coins`\nId: `ts`\n\n**Developer**\nRequirement: `level 20`\nSalary: `25000 coins`\nId: `dev`\n\n**Scientist**\nRequirement: `level 50`\nSalary: `75000 coins`\nId: `sc`\n\n**Arch Bot Developer**\nRequirement: `level 69`\nSalary: `169420 coins`\nId: `ab`")
+            em.set_footer(text="Tip: type .work <job_id> to start a job")
+            await ctx.reply(embed=em, mention_author=False)
+            return
+        elif str(arg1) == "resign":
+            if ctx.message.author.id not in jobs:
+                await ctx.reply("You dont have a job")
+                return
+            else:
+                del jobs[ctx.message.author.id]
+                await ctx.reply("You resigned from your job.")
+                self.save()
+                return
+        elif str(arg1) == "mod":
+            if ctx.message.author.id not in jobs:
+                jobs[ctx.message.author.id] = "mod"
+                await ctx.reply("You are working as a **Discord Moderator** now!")
+                self.save()
+                return
+            else:
+                await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
+                return
+        elif str(arg1) == "yt":
+            if ctx.message.author.id not in jobs:
+                if level[ctx.message.author.id] >= 5:
+                    jobs[ctx.message.author.id] = "yt"
+                    self.save()
+                    await ctx.reply("You are now working as a **YouTuber**")
+                    return
+                else:
+                    await ctx.reply("Your level is not high enough to work as a **YouTuber**")
+                    return
+            else:
+                await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
+                return
+        elif str(arg1) == "ts":
+            if ctx.message.author.id not in jobs:
+                if level[ctx.message.author.id] >= 5:
+                    jobs[ctx.message.author.id] = "ts"
+                    self.save()
+                    await ctx.reply("You are now working as a **Twitch Streamer**")
+                    return
+                else:
+                    await ctx.reply("Your level is not high enough to work as a **Twitch Streamer**")
+                    return
+            else:
+                await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
+                return
+        elif str(arg1) == "pg":
+            if ctx.message.author.id not in jobs:
+                if level[ctx.message.author.id] >= 10:
+                    jobs[ctx.message.author.id] = "pg"
+                    self.save()
+                    await ctx.reply("You are now working as a **Pro Gamer**")
+                    return
+                else:
+                    await ctx.reply("Your level is not high enough to work as a **Pro Gamer**")
+                    return
+            else:
+                await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
+                return
+        elif str(arg1) == "dc":
+            if ctx.message.author.id not in jobs:
+                if level[ctx.message.author.id] >= 15:
+                    jobs[ctx.message.author.id] = "dc"
+                    self.save()
+                    await ctx.reply("You are now working as a **Doctor**")
+                    return
+                else:
+                    await ctx.reply("Your level is not high enough to work as a **Doctor**")
+                    return
+            else:
+                await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
+                return
+        elif str(arg1) == "dev":
+            if ctx.message.author.id not in jobs:
+                if level[ctx.message.author.id] >= 20:
+                    jobs[ctx.message.author.id] = "dev"
+                    self.save()
+                    await ctx.reply("You are now working as a **Developer**")
+                    return
+                else:
+                    await ctx.reply("Your level is not high enough to work as a **Developer**")
+                    return
+            else:
+                await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
+                return
+        elif str(arg1) == "sc":
+            if ctx.message.author.id not in jobs:
+                if level[ctx.message.author.id] >= 50:
+                    jobs[ctx.message.author.id] = "sc"
+                    self.save()
+                    await ctx.reply("You are now working as a **Scientist**")
+                    return
+                else:
+                    await ctx.reply("Your level is not high enough to work as a **Scientist**")
+                    return
+            else:
+                await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
+                return
+        elif str(arg1) == "ab":
+            if ctx.message.author.id not in jobs:
+                if level[ctx.message.author.id] >= 69:
+                    jobs[ctx.message.author.id] = "ab"
+                    self.save()
+                    await ctx.reply("You are now working as a **Arch bot developer**")
+                    return
+                else:
+                    await ctx.reply("Your level is not high enough to work as a **Arch bot developer**")
+                    return
+            else:
+                await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
+                return
         else:
-            pass
+            await ctx.reply(f"Invalid command/job id")
+            return
 
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)

@@ -24,7 +24,6 @@ from discord import TextChannel
 from discord.ext import commands
 from async_timeout import timeout
 from discord.ext.commands import *
-from datetime import datetime, timedelta
 ### Modules end ###
 on_cooldown = {}
 work_cooldown = 3600

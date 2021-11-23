@@ -240,7 +240,7 @@ class MainCog(commands.Cog):
             await ctx.reply(embed=em, mention_author=False)
      
     @commands.command()
-    async def add_item(self, ctx, user : discord.User, *, item:str, amount:int=None):
+    async def add_item(self, ctx, user : discord.User, item:str, amount:int=None):
         if ctx.message.author.id == 705462972415213588:
             if str(item) == "windows10":
                 if amount == None or int(amount) == 1:

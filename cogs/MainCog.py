@@ -240,15 +240,13 @@ class MainCog(commands.Cog):
             await ctx.reply(embed=em, mention_author=False)
      
     @commands.command()
-    async def add_item(self, ctx, *, item:str, amount:int=None, user : discord.User=None):
+    async def add_item(self, ctx, *, user : discord.User, item:str, amount:int=None):
         if ctx.message.author.id == 705462972415213588:
-            if item == "windows10":
+            if str(item) == "windows10":
                 if amount == None or int(amount) == 1:
-                    if user == None:
-                        
-                    if user.id not in windows10:
-                        windows10[user.id] = 0
-                        self.save()
+                        if user.id not in windows10:
+                            windows10[user.id] = 0
+                            self.save()
                     windows10[user.id] += 1
                     self.save()
                     await ctx.reply(f"Added 1 `windows10` to {user.display_name}", mention_author=False)
@@ -256,8 +254,79 @@ class MainCog(commands.Cog):
                 elif int(amount) == 0:
                     await ctx.reply(f"You don\'t need to run the command to give 0 items", mention_author=False)
                     return
-      
-                               
+                else:
+                    if user.id not in windows10:
+                        windows10[user.id] = 0
+                        self.save()
+                    windows10[user.id] += int(amount)
+                    self.save()
+                    await ctx.reply(f"Added {amount} windows 10 keys to {user.display_name}")
+                    return
+            elif str(item) == "bronzecoin":
+                if amount == None or int(amount) == 1:
+                        if user.id not in bronzecoin:
+                            bronzecoin[user.id] = 0
+                            self.save()
+                    bronzecoin[user.id] += 1
+                    self.save()
+                    await ctx.reply(f"Added 1 `bronzecoin` to {user.display_name}", mention_author=False)
+                    return
+                elif int(amount) == 0:
+                    await ctx.reply(f"You don\'t need to run the command to give 0 items", mention_author=False)
+                    return
+                else:
+                    if user.id not in bronzecoin:
+                        bronzecoin[user.id] = 0
+                        self.save()
+                    bronzecoin[user.id] += int(amount)
+                    self.save()
+                    await ctx.reply(f"Added {amount} bronze coins to {user.display_name}")
+                    return
+            elif str(item) == "silvercoin":
+                if amount == None or int(amount) == 1:
+                        if user.id not in silvercoin:
+                            silvercoin[user.id] = 0
+                            self.save()
+                    silvercoin[user.id] += 1
+                    self.save()
+                    await ctx.reply(f"Added 1 `silvercoin` to {user.display_name}", mention_author=False)
+                    return
+                elif int(amount) == 0:
+                    await ctx.reply(f"You don\'t need to run the command to give 0 items", mention_author=False)
+                    return
+                else:
+                    if user.id not in silvercoin:
+                        silvercoin[user.id] = 0
+                        self.save()
+                    silvercoin[user.id] += int(amount)
+                    self.save()
+                    await ctx.reply(f"Added {amount} silver coins to {user.display_name}")
+                    return
+            elif str(item) == "goldcoin":
+                if amount == None or int(amount) == 1:
+                        if user.id not in goldcoin:
+                            gold[user.id] = 0
+                            self.save()
+                    gold[user.id] += 1
+                    self.save()
+                    await ctx.reply(f"Added 1 `goldcoin` to {user.display_name}", mention_author=False)
+                    return
+                elif int(amount) == 0:
+                    await ctx.reply(f"You don\'t need to run the command to give 0 items", mention_author=False)
+                    return
+                else:
+                    if user.id not in goldcoin:
+                        goldcoin[user.id] = 0
+                        self.save()
+                    goldcoin[user.id] += int(amount)
+                    self.save()
+                    await ctx.reply(f"Added {amount} gold coins to {user.display_name}")
+                    return
+            else:
+                await ctx.reply("No such item")
+        else:
+            await ctx.reply("You cant use this")
+                      
     @commands.command()
     async def buy(self, ctx, item:str, amount:int=None):
         if str(item) == "windows10":

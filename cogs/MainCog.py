@@ -1311,7 +1311,7 @@ class MainCog(commands.Cog):
                     wallet[ctx.message.author.id] += 75000
                     self.save()
                     return
-                elif j == "ad":
+                elif j == "ab":
                     await ctx.reply("You earned 169420 coins from Arch bot developer job")
                     wallet[ctx.message.author.id] += 169420
                     self.save()

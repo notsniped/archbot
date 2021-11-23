@@ -1268,7 +1268,7 @@ class MainCog(commands.Cog):
                     last_work = datetime.now() - on_cooldown[ctx.message.author.id] 
                 except KeyError:
                     last_work = None
-                    on_cooldown[author] = datetime.now()
+                    on_cooldown[ctx.message.author.id] = datetime.now()
                 j = jobs[ctx.message.author.id]
                 if last_work is None or last_work.seconds > work_cooldown:
                       on_cooldown[ctx.message.author.id] = datetime.now()

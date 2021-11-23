@@ -1283,7 +1283,7 @@ class MainCog(commands.Cog):
                     wallet[ctx.message.author.id] += 15000
                     self.save()
                     return
-                elif j = "dc":
+                elif j == "dc":
                     await ctx.reply("You earned 20000 coins from Doctor job")
                     wallet[ctx.message.author.id] += 20000
                     self.save()

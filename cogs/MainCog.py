@@ -1316,7 +1316,7 @@ class MainCog(commands.Cog):
                     self.save()
                     return
         elif str(arg1) == "list":
-            em = discord.Embed(title="Jobs list", description="**Discord Mod**\nRequirement: `level 1`\nSalary: `5000 coins`\nId: `mod`\n\n**YouTuber**\nRequirememt: `level 5`\nSalary: `6000 coins`\nId: `yt`\n\n**Twitch streamer**\nRequirement: `level 5`\nSalary: `6900 coins`\nId: `ts`\n\n**Pro Gamer**\nRequirement: `level 10`\nSalary: `15000 coins`\nId: `pg`\n\n**Doctor**\nRequirement: `level 15`\nSalary: `20000 coins`\nId: `ts`\n\n**Developer**\nRequirement: `level 20`\nSalary: `25000 coins`\nId: `dev`\n\n**Scientist**\nRequirement: `level 50`\nSalary: `75000 coins`\nId: `sc`\n\n**Arch Bot Developer**\nRequirement: `level 69`\nSalary: `169420 coins`\nId: `ab`")
+            em = discord.Embed(title="Jobs list", description="**Discord Mod**\nRequirement: `level 1`\nSalary: `5000 coins`\nId: `mod`\n\n**YouTuber**\nRequirememt: `level 5`\nSalary: `6000 coins`\nId: `yt`\n\n**Twitch streamer**\nRequirement: `level 5`\nSalary: `6900 coins`\nId: `ts`\n\n**Pro Gamer**\nRequirement: `level 10`\nSalary: `15000 coins`\nId: `pg`\n\n**Doctor**\nRequirement: `level 15`\nSalary: `20000 coins`\nId: `dc`\n\n**Developer**\nRequirement: `level 20`\nSalary: `25000 coins`\nId: `dev`\n\n**Scientist**\nRequirement: `level 50`\nSalary: `75000 coins`\nId: `sc`\n\n**Arch Bot Developer**\nRequirement: `level 69`\nSalary: `169420 coins`\nId: `ab`")
             em.set_footer(text="Tip: type .work <job_id> to start a job")
             await ctx.reply(embed=em, mention_author=False)
             return

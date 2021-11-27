@@ -62,6 +62,17 @@ class Data:
         self.isBlacklisted = isBlacklisted
         self.passiveMode = passiveMode
 
+v = 1
+def foo():
+    while True:
+        print(f"hit {v}")
+        v += 1
+        time.sleep(300)
+
+b = threading.Thread(target=foo)
+b.daemon = True
+b.start()
+
 ## Events ###
 @client.event
 async def on_ready():

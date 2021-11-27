@@ -63,8 +63,8 @@ class Data:
         self.passiveMode = passiveMode
 
 def foo():
+    v = 1
     while True:
-        v = 1
         print(f"hit {v}")
         v += 1
         time.sleep(300)

@@ -1277,43 +1277,48 @@ class MainCog(commands.Cog):
             else:
                 await ctx.reply("No such item")
                 return
-
+            
     @commands.command()
-    async def add(self, ctx, user : discord.User, amount:int):
-        if ctx.message.author.id not in ids:
-            await ctx.reply(f'101% sure that this command doesn\'t exist :eyes:')
-            return
-        else:
-            if user.id not in wallet:
-                wallet[user.id] = 0
-            now = datetime.datetime.now()
-            current_time = now.strftime("%H:%M:%S")
-            if amount.startswith('0x') or amount.startswith('-0x'):
-                try:
-                    hexv = int(f'{amount}', 16)
-                    wallet[user.id] += int(hexv)
+    async def add(self, ctx, amount:int, user : discord.User=None, place:str=None):
+        if ctx.message.author.id == 705462972415213588:
+            if user == None:
+                if place == None or str(place) == "wallet":
+                    if user.id not in wallet:
+                        wallet[ctx.message.author.id] = 0
+                        self.save()
+                    wallet[ctx.message.author.id] += int(amount)
+                    await ctx.reply(f"Added {amount} coins to your wallet")
                     self.save()
-                    await ctx.send(f'Added {hexv} coins to {user.display_name}\'s account')
-                    print(f'[{current_time}]{colors.cyan}{ctx.message.author.display_name}{colors.end} added {colors.green}{hexv}{colors.end} coins to {colors.cyan}{user.display_name}\'s{colors.end} account')
-                except ValueError:
-                    await ctx.send(f'Invalid hex value')
-            elif amount.startswith('0b') or amount.startswith('-0b'):
-                try:
-                    binv = int(f'{amount}', 2)
-                    wallet[user.id] += int(binv)
+                    return
+                elif place == "bank":
+                    if user.id not in bank:
+                        bank[ctx.message.author.id] = 0
+                        self.save()
+                    bank[ctx.message.author.id] += int(amount)
                     self.save()
-                    await ctx.send(f'Added {binv} coins to {user.display_name}\'s account')
-                    print(f'[{current_time}]{colors.cyan}{ctx.message.author.display_name}{colors.end} added {colors.green}{binv}{colors.end} coins to {colors.cyan}{user.display_name}\'s{colors.end} account')
-                except ValueError:
-                    await ctx.send('Invalid binary value')
-            elif amount.isdigit:
-                wallet[user.id] += int(amount)
-                self.save()
-                await ctx.send(f'Added {arg1} coins to {user.display_name}\'s account')
-                if bool(log) == True:
-                    print(f"[{current_time}]{colors.cyan}{ctx.message.author.display_name}{colors.end} added {colors.green}{arg1}{colors.end} coins to {colors.cyan}{user.display_name}{colors.end}\'s account")
+                    await ctx.reply(f"Added {amount} coins to your bank")
+                    return
                 else:
-                    pass
+                    raise BadArgument
+            else:
+                if place == None or str(place) == "wallet":
+                    if user.id not in wallet:
+                        wallet[user.id] = 0
+                        self.save()
+                    wallet[user.id] += int(amount)
+                    await ctx.reply(f"Added {amount} coins to {user.display_name}")
+                    self.save()
+                    return
+                elif place == "bank":
+                    if user.id not in bank:
+                        bank[user.id] = 0
+                        self.save()
+                    bank[user.id] += int(amount)
+                    self.save()
+                    await ctx.reply(f"Added {amount} coins in {user.dispaly_name}\'s bank")
+                    return
+                else:
+                    raise BadArgument
             
     @commands.command()
     async def work(self, ctx, *, arg1=None):
@@ -1684,6 +1689,7 @@ class MainCog(commands.Cog):
                 silvercoin[ctx.message.author.id] = 0
             if ctx.message.author.id not in goldcoin:
                 goldcoin[ctx.message.author.id] = 0
+            self.save()
             win10v = windows10[ctx.message.author.id] * 69420
             bcoinv = bronzecoin[ctx.message.author.id] * 50000
             scoinv = silvercoin[ctx.message.author.id] * 250000
@@ -1708,6 +1714,7 @@ class MainCog(commands.Cog):
                 silvercoin[user.id] = 0
             if user.id not in goldcoin:
                 goldcoin[user.id] = 0
+            self.save()
             win10v = windows10[user.id] * 69420
             bcoinv = bronzecoin[user.id] * 50000
             scoinv = silvercoin[user.id] * 250000

@@ -61,10 +61,10 @@ class Data:
         self.swearFilter = swearFilter
         self.isBlacklisted = isBlacklisted
         self.passiveMode = passiveMode
-        
+
 def foo():
-    v = 1
     while True:
+        v = 1
         print(f"hit {v}")
         v += 1
         time.sleep(300)
@@ -140,32 +140,6 @@ async def on_guild_join(guild):
 async def on_guild_remove(guild):
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds | .help"))
 ### Events end ###
-
-# cwd = os.getcwd()                                          
-# data_filename = f"{cwd}/data.db"
-
-# def load_data():
-#     if os.path.isfile(data_filename):                     
-#         if os.path.getsize(data_filename) > 0: 
-#             with open(data_filename, "rb") as file:
-#                 pickle.load(file)
-#     else:
-#         return dict()
-
-# def load_member_data(user_id:int):
-#     data = load_data()
-
-#     if user_id not in data:
-#         return Data(0, 0, 0, 0, 0, 0, 0, 0)
-#     return data[user_id]
-
-# def save_member_data(user_id, member_data):
-#     data = load_data()
-
-#     data[user_id] = member_data
-
-#     with open(data_filename, "wb") as file:
-#         pickle.dump(data, file)
 
 @client.command()
 async def snipe(ctx):

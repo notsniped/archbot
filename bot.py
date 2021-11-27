@@ -100,14 +100,6 @@ async def on_message_edit(message_before, message_after):
         before = message_before.content
         global after
         after = message_after.content
-        if bool(log):
-            if guild == 876826249207640096:
-                c = client.get_channel(881199227190013992)
-                em = discord.Embed(description = f"**Message before**: {message_before.content}\n**Message after**: {message_after.content}")
-                em.set_footer(text = f"This message was edited by {message_before.author}")
-                await c.send(embed = em)
-            else:
-                pass
         else:
             pass
 

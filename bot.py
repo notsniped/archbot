@@ -100,8 +100,6 @@ async def on_message_edit(message_before, message_after):
         before = message_before.content
         global after
         after = message_after.content
-        else:
-            pass
 
 snipe_message_author = {}
 snipe_message_content = {}

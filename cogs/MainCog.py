@@ -99,16 +99,6 @@ class colors:
     green = '\033[92m'
     end = '\033[0m'
 
-v = 1
-def foo():
-    while True:
-        print(f"hit {v}")
-        v += 1
-        time.sleep(600)
-
-b = threading.Thread(name='foo', target=foo)
-b.start()
-
 ### Commands ###
 class MainCog(commands.Cog):
     def __init__(self, client : commands.Bot):

@@ -1675,7 +1675,7 @@ class MainCog(commands.Cog):
             if ctx.message.author.id not in wallet:
                 wallet[ctx.message.author.id] = 0
             if ctx.message.author.id not in bank:
-                bank[ctx.message.author.id]
+                bank[ctx.message.author.id] = 0
             if ctx.message.author.id not in windows10:
                 windows10[ctx.message.author.id] = 0
             if ctx.message.author.id not in bronzecoin:
@@ -1699,7 +1699,7 @@ class MainCog(commands.Cog):
             if user.id not in wallet:
                 wallet[user.id] = 0
             if user.id not in bank:
-                bank[user.id]
+                bank[user.id] = 0
             if user.id not in windows10:
                 windows10[user.id] = 0
             if user.id not in bronzecoin:

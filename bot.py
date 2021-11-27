@@ -61,9 +61,9 @@ class Data:
         self.swearFilter = swearFilter
         self.isBlacklisted = isBlacklisted
         self.passiveMode = passiveMode
-
-v = 1
+        
 def foo():
+    v = 1
     while True:
         print(f"hit {v}")
         v += 1

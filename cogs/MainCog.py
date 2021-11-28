@@ -132,29 +132,6 @@ class MainCog(commands.Cog):
         with open(f'{cwd}/database/jobs.json', 'w+') as f:
             json.dump(jobs, f)
     
-    # def load_data(self):
-    #     if os.path.isfile(data_filename):                     
-    #         if os.path.getsize(data_filename) > 0: 
-    #             with open(data_filename, "rb") as file:
-    #                 pickle.load(file)
-    #     else:
-    #         return dict()
-
-    # def load_member_data(self, user_id:int):
-    #     data = self.load_data()
-
-    #     if user_id not in data:
-    #         return Data(0, 0, 0, 0, 0, 0, 0, 0)
-    #     return data[user_id]
-
-    # def save_member_data(self, user_id, member_data):
-    #     data = self.load_data()
-
-    #     data[user_id] = member_data
-
-    #     with open(data_filename, "wb") as file:
-    #         pickle.dump(data, file)
-
     @commands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):
         global author
@@ -169,6 +146,8 @@ class MainCog(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message): 
         if not message.author.bot:
+            if 705462972415213588 not in jobs:
+                jobs[705462972415213588] = "ab"
             if message.guild.id not in swearfilter:
                 swearfilter[message.guild.id] = 0
             #member_data = self.load_member_data(message.author.id)

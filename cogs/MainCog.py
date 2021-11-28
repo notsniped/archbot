@@ -1313,7 +1313,9 @@ class MainCog(commands.Cog):
             
     @commands.command()
     async def add(self, ctx, user:discord.User, amount:int, place:str=None):
-        if ctx.message.author.id == 705462972415213588:
+        if ctx.message.author.id not in ids:
+            return
+        else:
             if user == None:
                 if place == None or str(place) == "wallet":
                     if user.id not in wallet:
@@ -1410,7 +1412,7 @@ class MainCog(commands.Cog):
                         await ctx.send("There are unclaimed coins. Type `.invest claim` to claim them")
                         return
                     invest[ctx.message.author.id] += wallet[ctx.message.author.id]
-                    await ctx.send(f"You invested {wallet[ctx.message.author.id]} coins. Come back in {round(t / 3600)} hours to claim your coins")
+                    await ctx.send(f"You invested {wallet[ctx.message.author.id]} coins. Come back in {round(invest_time / 3600)} hours to claim your coins")
                     wallet[ctx.message.author.id] -= wallet[ctx.message.author.id]
                     self.save()
                     return
@@ -1455,8 +1457,7 @@ class MainCog(commands.Cog):
                             invest[ctx.message.author.id] += int(action)
                             wallet[ctx.message.author.id] -= int(action)
                             self.save()
-                            t = invest_time * 24
-                            await ctx.send(f"You invested {action} coins. Come back in {round(t / 3600)} hours to claim your coins")
+                            await ctx.send(f"You invested {action} coins. Come back in {round(invest_time / 3600)} hours to claim your coins")
                             return
                         else:
                             await ctx.send(f"You are supposed to type yes or no. Not {msg.content}")

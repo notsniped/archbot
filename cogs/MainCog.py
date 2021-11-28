@@ -1413,10 +1413,10 @@ class MainCog(commands.Cog):
                             else:
                                 await ctx.reply("You already have invested coins")
                                 return
-                            invest[ctx.message.author.id] += int(amount)
-                            wallet[ctx.message.author.id] -= int(amount)
+                            invest[ctx.message.author.id] += int(action)
+                            wallet[ctx.message.author.id] -= int(action)
                             self.save()
-                            await ctx.send(f"You invested {amount} coins. Come back in {round(invest_time / 3600)} hours to claim your coins")
+                            await ctx.send(f"You invested {action} coins. Come back in {round(invest_time / 3600)} hours to claim your coins")
                             return
                         else:
                             await ctx.send(f"You are supposed to type yes or no. Not {msg.content}")

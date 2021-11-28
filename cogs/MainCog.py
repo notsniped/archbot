@@ -318,7 +318,7 @@ class MainCog(commands.Cog):
                     await ctx.reply(f"Added {amount} gold coins to {user.display_name}")
                     return
             elif str(item) == "all":
-                if amonut == None or int(amount) == 1:
+                if amount == None or int(amount) == 1:
                     if user.id not in windows10:
                         windows10[user.id] = 0
                     if user.id not in bronzecoin:

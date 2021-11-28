@@ -1338,7 +1338,7 @@ class MainCog(commands.Cog):
                         self.save()
                     bank[user.id] += int(amount)
                     self.save()
-                    await ctx.reply(f"Added {amount} coins in {user.dispaly_name}\'s bank")
+                    await ctx.reply(f"Added {amount} coins in {user.display_name}\'s bank")
                     return
                 else:
                     raise BadArgument

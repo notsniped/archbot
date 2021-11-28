@@ -32,7 +32,7 @@ work_cooldown = 3600
 def getrnd():
     rnd = random.randint(7200, 86400)
     return rnd
-invest_time = 10
+invest_time = getrnd()
 ids = [
     738290097170153472,
     705462972415213588
@@ -1373,7 +1373,7 @@ class MainCog(commands.Cog):
                 await ctx.reply("You cant claim your money yet")
                 return
             rnd = round(random.uniform(1, 2), 2)
-            a = invest[ctx.message.author.id] * rnd
+            a = round(invest[ctx.message.author.id] * rnd)
             wallet[ctx.message.author.id] += a
             invest[ctx.message.author.id] = 0
             self.save()

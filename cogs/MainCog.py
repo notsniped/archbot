@@ -840,7 +840,7 @@ class MainCog(commands.Cog):
         elif arg1 == 'credits':
             em56 == discord.Embed(title='\'Credits\' command use', description='Shows the arch bot developer team\nUsage: `.credits.`')
             await ctx.reply(embed=em56)
-        elif arg1 == 'invest:
+        elif arg1 == 'invest':
             em57 = discord.Embed(title='\'Invest\' command use', description='Invests coins and claims them after a random amount of time with a random amount of profit\nCooldown: random\nUsage: `.invest <claim/amount/all>`")
             await ctx.reply(embed=em57)
         elif arg1 == 'help':

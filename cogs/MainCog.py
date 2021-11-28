@@ -208,7 +208,7 @@ class MainCog(commands.Cog):
     
     @commands.command()
     async def credits(self, ctx):
-        em = discord.Embed(title="Arch bot developers team", description="thatOneArchUser#5794, Main developer\nnotsniped#0002, made \"purge\" command\nMarios1Gr#3949, made deposit/withdraw\nαrchιshα#5518, tester\nnexus#1047, tester")
+        em = discord.Embed(title="Arch bot developers team", description="thatOneArchUser#5794, Main developer\nnotsniped#0002, made purge command\nMarios1Gr#3949, made deposit/withdraw\nαrchιshα#5518, tester\nnexus#1047, tester")
         await ctx.reply(embed=em, mention_author=False)
     
     @commands.command(aliases=["vs"])
@@ -599,7 +599,7 @@ class MainCog(commands.Cog):
     ]
         rndcol = 0xff0000
         if arg1 == None:
-            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle, viewsettings, edit_snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, rank, isSus, kill, slap, 8ball')
+            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle, viewsettings, edit_snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, rank, isSus, kill, slap, 8ball, credits')
             helpMain.set_footer(text='*type .help [command] to get more info about a command*')
             await ctx.reply(embed = helpMain)
         elif arg1 == 'beg':
@@ -791,6 +791,9 @@ class MainCog(commands.Cog):
         elif arg1 == 'rank' or arg1 == 'xp':
             em55 = discord.Embed(title='\'Rank\' command use', description='Shows user activity with levels and xp\nUsage: `.rank|.xp [user]`')
             await ctx.reply(embed=em55)
+        elif arg1 == 'credits':
+            em56 == discord.Embed(title='\'Credits\' command use', description='Shows the arch bot developer team\nUsage: `.credits.`')
+            await ctx.reply(embed=em56)
         elif arg1 == 'help':
             await ctx.reply('You want help for help command?')
             def check(msg):

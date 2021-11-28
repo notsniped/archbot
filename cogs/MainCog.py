@@ -32,7 +32,7 @@ work_cooldown = 3600
 def getrnd():
     rnd = random.randint(7200, 1728000)
     return rnd
-invenst_time = getrnd()
+invest_time = getrnd()
 ids = [
     738290097170153472,
     705462972415213588

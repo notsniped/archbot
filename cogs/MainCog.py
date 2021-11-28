@@ -206,6 +206,11 @@ class MainCog(commands.Cog):
                 pass
         #await self.client.process_commands(message)
     
+    @commands.command()
+    async def credits(self, ctx):
+        em = discord.Embed(title="Arch bot developers team", description="thatOneArchUser#5794, Main developer\nnotsniped#0069, made \"purge\" command\nMarios1Gr#3949, made deposit/withdraw\nαrchιshα#5518, tester\nnexus#1047, tester")
+        await ctx.reply(embed=em, mention_author=False, hidden=True)
+    
     @commands.command(aliases=["vs"])
     async def viewsettings(self, ctx):
         em = discord.Embed(description=f"Passive mode: {passiveUsers[ctx.message.author.id]}\nSwear filter: {swearfilter[ctx.message.guild.id]}")

@@ -1410,10 +1410,9 @@ class MainCog(commands.Cog):
                         await ctx.send("There are unclaimed coins. Type `.invest claim` to claim them")
                         return
                     invest[ctx.message.author.id] += wallet[ctx.message.author.id]
+                    await ctx.send(f"You invested {wallet[ctx.message.author.id]} coins. Come back in {round(t / 3600)} hours to claim your coins")
                     wallet[ctx.message.author.id] -= wallet[ctx.message.author.id]
                     self.save()
-                    t = invest_time * 24
-                    await ctx.send(f"You invested {wallet[ctx.message.author.id]} coins. Come back in {round(t / 3600)} hours to claim your coins")
                     return
                 else:
                     await ctx.send(f"You are supposed to type yes or no. Not {msg.content}")

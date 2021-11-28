@@ -1365,6 +1365,7 @@ class MainCog(commands.Cog):
             if ctx.message.author.id not in invest or invest[ctx.message.author.id] == 0:
                 await ctx.reply("You didnt invest any coins. Type `.invest <amount>` to invest some coins")
                 return
+            i = datetime.datetime.now() - cd[ctx.message.author.id]
             if i is None or i.seconds > invest_time:
                 cd[ctx.message.author.id] = datetime.datetime.now()
                 pass
@@ -1388,11 +1389,6 @@ class MainCog(commands.Cog):
                         await ctx.reply("You dont have that many coins in your wallet")
                         return
                     else:
-                        if invest[ctx.message.author.id] == 0:
-                            pass
-                        else:
-                            await ctx.send("There are unclaimed coins. Type `.invest claim` to claim them")
-                            return
                         def check(msg):
                             return msg.author == ctx.message.author and msg.channel == ctx.message.channel and (msg.content)
 
@@ -1412,6 +1408,11 @@ class MainCog(commands.Cog):
                                 pass
                             else:
                                 await ctx.reply("You already have invested coins")
+                                return
+                            if invest[ctx.message.author.id] == 0:
+                                pass
+                            else:
+                                await ctx.send("There are unclaimed coins. Type `.invest claim` to claim them")
                                 return
                             invest[ctx.message.author.id] += int(action)
                             wallet[ctx.message.author.id] -= int(action)

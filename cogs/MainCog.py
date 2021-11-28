@@ -30,9 +30,9 @@ on_cooldown = {}
 cd = {}
 work_cooldown = 3600
 def getrnd():
-    rnd = random.randint(7200, 1728000)
+    rnd = random.randint(7200, 86400)
     return rnd
-invest_time = getrnd()
+invest_time = 10
 ids = [
     738290097170153472,
     705462972415213588
@@ -1417,7 +1417,8 @@ class MainCog(commands.Cog):
                             invest[ctx.message.author.id] += int(action)
                             wallet[ctx.message.author.id] -= int(action)
                             self.save()
-                            await ctx.send(f"You invested {action} coins. Come back in {round(invest_time / 3600)} hours to claim your coins")
+                            t = invest_time * 24
+                            await ctx.send(f"You invested {action} coins. Come back in {round(t / 3600)} hours to claim your coins")
                             return
                         else:
                             await ctx.send(f"You are supposed to type yes or no. Not {msg.content}")

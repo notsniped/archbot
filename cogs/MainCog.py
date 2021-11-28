@@ -27,8 +27,12 @@ from async_timeout import timeout
 from discord.ext.commands import *
 ### Modules end ###
 on_cooldown = {}
+cd = {}
 work_cooldown = 3600
-invenst_time = random.randint(7200, 1728000
+def getrnd():
+    rnd = random.randint(7200, 1728000)
+    return rnd
+invenst_time = getrnd()
 ids = [
     738290097170153472,
     705462972415213588
@@ -93,6 +97,9 @@ with open(f'{cwd}/database/goldcoin.json', 'r') as f:
 with open(f'{cwd}/database/jobs.json', 'r') as f:
     global jobs
     jobs = json.load(f)
+with open(f'{cwd}/database/invest.json', 'r') as f:
+    global invest
+    invest = json.load(f)
 
 class colors: 
     cyan = '\033[96m'
@@ -132,6 +139,8 @@ class MainCog(commands.Cog):
             json.dump(goldcoin, f)
         with open(f'{cwd}/database/jobs.json', 'w+') as f:
             json.dump(jobs, f)
+        with open(f'{cwd}/database/invest.json', 'w+') as f:
+            json.dump(invest, f)
     
     @commands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):
@@ -1372,6 +1381,8 @@ class MainCog(commands.Cog):
             wallet[ctx.message.author.id] += a
             invest[ctx.message.author.id] = 0
             self.save()
+            await ctx.reply(f"You claimed {a} coins with {rnd} profit")
+            return
         else:
             if action.isdigit:
                 if int(action) < 10000:
@@ -1382,10 +1393,24 @@ class MainCog(commands.Cog):
                         await ctx.reply("You dont have that many coins in your wallet")
                         return
                     else:
-                        invest[ctx.message.author.id] += int(amount)
-                        wallet[ctx.message.author.id] -= int(amount)
-            
-                              
+                        def check(msg):
+                            return msg.author == ctx.message.author and msg.channel == ctx.message.channel and (msg.content)
+
+                        await ctx.reply(f"Are you sure you want to invest {action} coins? If you invest them you wont have them in your wallet for some time\nYou can claim after the coins after some time using `.invest claim`\nType yes or no")
+                        msg = await self.client.wait_for("message", check=check)
+                        if msg.content == "no":
+                            await ctx.send("Ok guess you are not gonna invest today")
+                            return
+                        elif msg.content == "yes":
+                            invest[ctx.message.author.id] += int(amount)
+                            wallet[ctx.message.author.id] -= int(amount)
+                            self.save()
+                            await ctx.send(f"You invested {amount} coins. Come back in {round(invest_time / 3600)} hours to claim your coins")
+                            return
+                        else:
+                            await ctx.send(f"You are supposed to type yes or no. Not {msg.content}")
+                            return
+                        
     @commands.command()
     async def work(self, ctx, *, arg1=None):
         if arg1 == None:

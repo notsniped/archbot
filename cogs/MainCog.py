@@ -233,7 +233,10 @@ class MainCog(commands.Cog):
      
     @commands.command()
     async def add_item(self, ctx, user : discord.User, item:str, amount:int=None):
-        if ctx.message.author.id == 705462972415213588:
+        if ctx.message.author.id not in ids:
+            await ctx.reply("You cant use this")
+            return
+        else:
             if str(item) == "windows10":
                 if amount == None or int(amount) == 1:
                     if user.id not in windows10:
@@ -351,8 +354,6 @@ class MainCog(commands.Cog):
                     return
             else:
                 await ctx.reply("No such item")
-        else:
-            await ctx.reply("You cant use this")
                       
     @commands.command()
     async def buy(self, ctx, item:str, amount:int=None):
@@ -1301,7 +1302,7 @@ class MainCog(commands.Cog):
                 return
             
     @commands.command()
-    async def add(self, ctx, amount:int, user : discord.User=None, place:str=None):
+    async def add(self, ctx, user:discord.User, amount:int, place:str=None):
         if ctx.message.author.id == 705462972415213588:
             if user == None:
                 if place == None or str(place) == "wallet":

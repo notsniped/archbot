@@ -1365,9 +1365,6 @@ class MainCog(commands.Cog):
         if ctx.message.author.id not in invest:
             invest[ctx.message.author.id] = 0
             self.save()
-        if ctx.message.author.id not in wallet or wallet[ctx.message.author.id] == 0 or wallet[ctx.message.author.id] < 10000:
-            await ctx.reply("You dont have enough money to invest. You need at least 10000")
-            return
         if str(action) == "claim":
             if ctx.message.author.id not in invest or invest[ctx.message.author.id] == 0:
                 await ctx.reply("You didnt invest any coins. Type `.invest <amount>` to invest some coins")

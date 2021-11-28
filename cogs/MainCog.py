@@ -162,6 +162,8 @@ class MainCog(commands.Cog):
                 swearfilter[message.guild.id] = 0
             #member_data = self.load_member_data(message.author.id)
             #member_data.xp += 1
+            if message.author.id not in invest:
+                invest[message.author.id] = 0
             if message.author.id not in xp:
                 xp[message.author.id] = 1
             else:

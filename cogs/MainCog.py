@@ -1379,6 +1379,46 @@ class MainCog(commands.Cog):
             self.save()
             await ctx.reply(f"You claimed {a} coins with {rnd} profit")
             return
+        elif str(action) == "all" or str(action) == "max":
+            if wallet[ctx.message.author.id] < 10000:
+                await ctx.reply("You can\'t invest less than 10000 coins")
+                return
+            else:
+                else:
+                    def check(msg):
+                        return msg.author == ctx.message.author and msg.channel == ctx.message.channel and (msg.content)
+
+                    await ctx.reply(f"Are you sure you want to invest {wallet[ctx.message.author.id]} coins? If you invest them you wont have them in your wallet for some time\nYou can claim after the coins after some time using `.invest claim`\nType yes or no")
+                    msg = await self.client.wait_for("message", check=check)
+                    if msg.content == "no":
+                        await ctx.send("Ok guess you are not gonna invest today")
+                        return
+                    elif msg.content == "yes":
+                        try:
+                            i = datetime.datetime.now() - cd[ctx.message.author.id] 
+                        except KeyError:
+                            i = None
+                            cd[ctx.message.author.id] = datetime.datetime.now()
+                        if i is None or i.seconds > invest_time:
+                            cd[ctx.message.author.id] = datetime.datetime.now()
+                            pass
+                        else:
+                            await ctx.reply("You already have invested coins")
+                            return
+                        if invest[ctx.message.author.id] == 0:
+                            pass
+                        else:
+                            await ctx.send("There are unclaimed coins. Type `.invest claim` to claim them")
+                            return
+                        invest[ctx.message.author.id] += wallet[ctx.message.author.id]
+                        wallet[ctx.message.author.id] -= wallet[ctx.message.author.id]
+                        self.save()
+                        t = invest_time * 24
+                        await ctx.send(f"You invested {wallet[ctx.message.author.id]} coins. Come back in {round(t / 3600)} hours to claim your coins")
+                        return
+                    else:
+                        await ctx.send(f"You are supposed to type yes or no. Not {msg.content}")
+                        return
         else:
             if action.isdigit:
                 if int(action) < 10000:
@@ -1422,8 +1462,10 @@ class MainCog(commands.Cog):
                             return
                         else:
                             await ctx.send(f"You are supposed to type yes or no. Not {msg.content}")
-                            return
-                        
+                            return                        
+            else:
+                raise BadArgument
+            
     @commands.command()
     async def work(self, ctx, *, arg1=None):
         if arg1 == None:

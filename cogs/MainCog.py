@@ -314,6 +314,41 @@ class MainCog(commands.Cog):
                     self.save()
                     await ctx.reply(f"Added {amount} gold coins to {user.display_name}")
                     return
+            elif str(item) == "all":
+                if amonut == None or int(amount) == 1:
+                    if user.id not in windows10:
+                        windows10[user.id] = 0
+                    if user.id not in bronzecoin:
+                        bronzecoin[user.id] = 0
+                    if user.id not in silvercoin:
+                        silvercoin[user.id] = 0
+                    if user.id not in goldcoin:
+                        goldcoin[user.id] = 0
+                    self.save()
+                    windows10[user.id] += 1
+                    bronzecoin[user.id] += 1
+                    silvercoin[user.id] += 1
+                    goldcoin[user.id] += 1
+                    self.save()
+                    await ctx.reply(f"Added all items once in {user.display_name}\'s profile", mention_author=False)
+                    return
+                else:
+                    if user.id not in windows10:
+                        windows10[user.id] = 0
+                    if user.id not in bronzecoin:
+                        bronzecoin[user.id] = 0
+                    if user.id not in silvercoin:
+                        silvercoin[user.id] = 0
+                    if user.id not in goldcoin:
+                        goldcoin[user.id] = 0
+                    self.save()
+                    windows10[user.id] += int(amount)
+                    bronzecoin[user.id] += int(amount)
+                    silvercoin[user.id] += int(amount)
+                    goldcoin[user.id] += int(amount)
+                    self.save()
+                    await ctx.reply(f"Added all items {amount} times in {user.display_name}\'s profile", mention_author=False)
+                    return
             else:
                 await ctx.reply("No such item")
         else:

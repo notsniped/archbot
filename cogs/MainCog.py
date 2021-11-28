@@ -840,6 +840,9 @@ class MainCog(commands.Cog):
         elif arg1 == 'credits':
             em56 == discord.Embed(title='\'Credits\' command use', description='Shows the arch bot developer team\nUsage: `.credits.`')
             await ctx.reply(embed=em56)
+        elif arg1 == 'invest:
+            em57 = discord.Embed(title='\'Invest\' command use', description='Invests coins and claims them after a random amount of time with a random amount of profit\nCooldown: random\nUsage: `.invest <claim/amount/all>`")
+            await ctx.reply(embed=em57)
         elif arg1 == 'help':
             await ctx.reply('You want help for help command?')
             def check(msg):
@@ -1844,6 +1847,7 @@ class MainCog(commands.Cog):
             embed.add_field(name="Wallet", value=str(wallet[ctx.message.author.id]))
             embed.add_field(name="Bank", value=str(bank[ctx.message.author.id]))
             embed.add_field(name="Networth", value=str(networth))
+            embed.add_field(name="Invested coins", value=str(invest[ctx.message.author.id]))
             embed.set_footer(text=f'Currency api made by {owner}')
             await ctx.send(embed=embed)
         else:

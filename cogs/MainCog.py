@@ -28,6 +28,7 @@ from discord.ext.commands import *
 ### Modules end ###
 on_cooldown = {}
 work_cooldown = 3600
+invenst_time = random.randint(7200, 1728000
 ids = [
     738290097170153472,
     705462972415213588
@@ -1342,7 +1343,49 @@ class MainCog(commands.Cog):
                     return
                 else:
                     raise BadArgument
+     
+    @commands.command(name="invest")
+    async def _invest(self, ctx, action:str):
+        if ctx.message.author.id not in invest:
+            invest[ctx.message.author.id] = 0
+            self.save()
+        if ctx.message.author.id not in wallet or wallet[ctx.message.author.id] == 0 or wallet[ctx.message.author.id] < 10000:
+            await ctx.reply("You dont have enough money to invest. You need at least 10000")
+            return
+        if str(action) == "claim":
+            if ctx.message.author.id not in invest or invest[ctx.message.author.id] == 0:
+                await ctx.reply("You didnt invest any coins. Type `.invest <amount>` to invest some coins")
+                return
+            try:
+                i = datetime.datetime.now() - cd[ctx.message.author.id] 
+            except KeyError:
+                i = None
+                cd[ctx.message.author.id] = datetime.datetime.now()
+            if i is None or i.seconds > invest_time:
+                cd[ctx.message.author.id] = datetime.datetime.now()
+                pass
+            else:
+                await ctx.reply("You cant claim your money yet")
+                return
+            rnd = round(random.uniform(1, 2), 2)
+            a = invest[ctx.message.author.id] * rnd
+            wallet[ctx.message.author.id] += a
+            invest[ctx.message.author.id] = 0
+            self.save()
+        else:
+            if action.isdigit:
+                if int(action) < 10000:
+                    await ctx.reply("You can\'t invest less than 10000 coins")
+                    return
+                else:
+                    if int(action) > wallet[ctx.message.author.id]:
+                        await ctx.reply("You dont have that many coins in your wallet")
+                        return
+                    else:
+                        invest[ctx.message.author.id] += int(amount)
+                        wallet[ctx.message.author.id] -= int(amount)
             
+                              
     @commands.command()
     async def work(self, ctx, *, arg1=None):
         if arg1 == None:

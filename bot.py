@@ -16,7 +16,6 @@ import requests
 import threading
 import traceback
 import itertools
-import youtube_dl
 from time import sleep
 import multiprocessing
 from random import randint
@@ -25,7 +24,6 @@ from discord.utils import get
 from discord.ext import tasks
 from discord import TextChannel
 from discord.ext import commands
-from youtube_dl import YoutubeDL
 from async_timeout import timeout
 from discord.ext.commands import *
 from discord import FFmpegPCMAudio

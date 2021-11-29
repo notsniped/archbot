@@ -16,7 +16,6 @@ import requests
 import threading
 import aiohttp
 import traceback
-import youtube_dl
 from time import sleep
 from random import randint
 from discord.utils import get

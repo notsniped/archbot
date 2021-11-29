@@ -143,6 +143,13 @@ class MainCog(commands.Cog):
             json.dump(invest, f)
     
     @commands.Cog.listener()
+    async def on_dbl_vote(self, data):
+        user = data['user']
+        embed = discord.Embed(description="New Vote! Voter: {}".format(user))
+        channel = self.bot.get_channel(int(914901090577842246))
+        await channel.send(embed=embed)
+
+    @commands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):
         global author
         author = message_before.author

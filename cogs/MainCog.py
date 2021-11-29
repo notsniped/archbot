@@ -234,7 +234,7 @@ class MainCog(commands.Cog):
             for filename in os.listdir("./database"):
                 if filename.endswith(".json"):
                     #await channel.send(file=discord.File(f"./database/{filename}"))
-                     await ctx.send(file=discord.file(f"./database/{filename}")
+                     await ctx.send(file=discord.file(f"./database/{filename}"))
 
     @commands.command()
     async def credits(self, ctx):

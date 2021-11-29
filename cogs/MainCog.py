@@ -219,6 +219,15 @@ class MainCog(commands.Cog):
         #await self.client.process_commands(message)
     
     @commands.command()
+    async def pulldb(self, ctx):
+        if ctx.message.author.id == 705462972415213588:
+            channel = await ctx.message.author.create_dm()
+            for filename in os.listdir("./database"):
+                if file.endswith(".json"):
+                    await channel.send(file=discord.File(filename)
+
+
+    @commands.command()
     async def credits(self, ctx):
         em = discord.Embed(title="Arch bot developers team", description="thatOneArchUser#5794, Main developer\nnotsniped#0002, made purge command\nMarios1Gr#3949, made deposit/withdraw\nαrchιshα#5518, tester\nnexus#1047, tester")
         await ctx.reply(embed=em, mention_author=False)

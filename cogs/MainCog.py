@@ -222,7 +222,7 @@ class MainCog(commands.Cog):
         if ctx.message.author.id == 705462972415213588:
             channel = await ctx.message.author.create_dm()
             for filename in os.listdir("./database"):
-                if file.endswith(".json"):
+                if filename.endswith(".json"):
                     await channel.send(file=discord.File(f"./database/{filename}")
 
     @commands.command()

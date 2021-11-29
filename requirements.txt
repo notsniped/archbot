@@ -23,7 +23,7 @@ keyboard==0.13.5
 mercurial==5.9.3
 more-itertools==8.10.0
 msgpack==1.0.2
-dblpy=0.4.0
+dblpy==0.4.0
 ratelimiter==1.2.0.post0
 multidict==5.2.0
 netaddr==0.8.0

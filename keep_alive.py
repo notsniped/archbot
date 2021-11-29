@@ -7,9 +7,9 @@ app = Flask('')
 def main():
     return "Your bot is alive!"
 
-def run():
+def keep_alive():
     app.run(host="0.0.0.0", port=5000)
 
-def keep_alive():
-    server = Thread(target=run)
-    server.start()
+#def keep_alive():
+#    server = Thread(target=run)
+#    server.start()

@@ -111,6 +111,8 @@ class colors:
 class MainCog(commands.Cog):
     def __init__(self, client : commands.Bot):
         self.client = client
+        self.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg1OTg2OTk0MTUzNTk5Nzk3MiIsImJvdCI6dHJ1ZSwiaWF0IjoxNjM4MjAwNzU3fQ.vMYJRHRZEmD40RyPA90yyVyZskUMOKzH2y9-8_-dEWQ"
+        self.dblpy = dbl.DBLClient(self.bot, self.token, webhook_path='/dblwebhook', webhook_auth='password', webhook_port=5000)
 
     def save(self):
         with open(f'{cwd}/database/wallet.json', 'w+') as f:

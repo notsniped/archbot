@@ -16,6 +16,7 @@ import requests
 import threading
 import traceback
 import itertools
+from keep_alive import keep_alive
 from time import sleep
 import multiprocessing
 from random import randint
@@ -196,4 +197,5 @@ async def reload(ctx, *, arg1):
     client.load_extension(f'cogs.{arg1}')
     await ctx.send("Reloaded Cog")
 
+keep_alive()
 client.run("ODU5ODY5OTQxNTM1OTk3OTcy.YNy-SQ.WBkUfwsxxaBfUnvGmPvuViqXyrE")

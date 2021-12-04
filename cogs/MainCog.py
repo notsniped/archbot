@@ -28,11 +28,8 @@ from discord.ext.commands import *
 ### Modules end ###
 on_cooldown = {}
 cd = {}
-work_cooldown = 3600
-def getrnd():
-    rnd = random.randint(7200, 86400)
-    return rnd
-invest_time = getrnd()
+work_cooldown = 1700
+invest_time = 18000
 ids = [
     738290097170153472,
     705462972415213588,
@@ -235,7 +232,7 @@ class MainCog(commands.Cog):
             for filename in os.listdir("./database"):
                 if filename.endswith(".json"):
                     #await channel.send(file=discord.File(f"./database/{filename}"))
-                     await ctx.send(file=discord.file(f"./database/{filename}"))
+                     await ctx.send(file=discord.File(f"./database/{filename}"))
 
     @commands.command()
     async def credits(self, ctx):
@@ -1395,7 +1392,7 @@ class MainCog(commands.Cog):
             else:
                 await ctx.reply("You cant claim your money yet")
                 return
-            rnd = round(random.uniform(1, 2), 2)
+            rnd = ''.join(map(str, random.choices([1.25, 1.5, 1.75, 2, 2.5, 5], weights=[35, 10, 5, 3, 1, 0.5], k=1)))
             a = round(invest[ctx.message.author.id] * rnd)
             wallet[ctx.message.author.id] += a
             invest[ctx.message.author.id] = 0

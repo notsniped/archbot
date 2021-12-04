@@ -664,7 +664,7 @@ class MainCog(commands.Cog):
             rnd = random.choice(colors)
             return int(hex(rnd))
         if arg1 == None:
-            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob, invest\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle, viewsettings, edit_snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, rank, isSus, kill, slap, 8ball, credits', color=discord.Colour.random())
+            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob, invest\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle, viewsettings, edit_snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, windowsmeme, stroke, say, rank, isSus, kill, slap, 8ball, credits', color=discord.Colour.random())
             helpMain.set_footer(text='*type .help [command] to get more info about a command*')
             await ctx.reply(embed = helpMain)
         elif arg1 == 'beg':
@@ -862,6 +862,9 @@ class MainCog(commands.Cog):
         elif arg1 == 'invest':
             em57 = discord.Embed(title='\'Invest\' command use', description='Invests coins and claims them after a random amount of time with a random amount of profit\nCooldown: random\nUsage: `.invest <claim/amount/all>`', color=discord.Colour.random())
             await ctx.reply(embed=em57)
+        elif arg1 == 'windowsmeme' or arg1 == 'windowshatememe' or arg1 == 'wm':
+            em58 = discord.Embed(title='\'windowsmeme\' command use', description="Shows a windows hate meme cause windows bad\nUsage: `.windowsmeme|.wm`")
+            await ctx.reply(embed=em58)
         elif arg1 == 'help':
             await ctx.reply('You want help for help command?')
             def check(msg):

@@ -662,7 +662,7 @@ class MainCog(commands.Cog):
     ]
         def rndcol():
             rnd = random.choice(colors)
-            return hex(rnd)
+            return int(hex(rnd))
         if arg1 == None:
             helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob, invest\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle, viewsettings, edit_snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, rank, isSus, kill, slap, 8ball, credits', color=rndcol())
             helpMain.set_footer(text='*type .help [command] to get more info about a command*')

@@ -236,7 +236,7 @@ class MainCog(commands.Cog):
 
     @commands.command()
     async def credits(self, ctx):
-        em = discord.Embed(title="Arch bot developers team", description="thatOneArchUser#5794, Main developer\nnotsniped#0002, made purge command\nMarios1Gr#3949, made deposit/withdraw\nαrchιshα#5518, tester\nnexus#1047, tester\nxristos_hal#4383, bot administrator")
+        em = discord.Embed(title="Arch bot developers team", description="thatOneArchUser#5794, Main developer\nnotsniped#0002, made purge command, bot administrator\nMarios1Gr#3949, made deposit/withdraw\nαrchιshα#5518, tester\nnexus#1047, tester\nxristos_hal#4383, bot administrator")
         await ctx.reply(embed=em, mention_author=False)
     
     @commands.command(aliases=["vs"])
@@ -517,7 +517,6 @@ class MainCog(commands.Cog):
     async def fstab(self, ctx):    
         await ctx.reply('https://cdn.discordapp.com/attachments/878297190576062515/879845618636423259/IMG_20210825_005111.jpg')
 
-    blRank = True
     @commands.command(aliases=['xp'])
     async def rank(self, ctx, user : discord.User=None):
         if user == None:
@@ -661,43 +660,45 @@ class MainCog(commands.Cog):
         0x00ffff,
         0xbfff00
     ]
-        rndcol = 0xff0000
+        def rndcol():
+            rnd = random.choice(colors)
+            return hex(rnd)
         if arg1 == None:
-            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob, invest\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle, viewsettings, edit_snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, rank, isSus, kill, slap, 8ball, credits')
+            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob, invest\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle, viewsettings, edit_snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, stroke, say, rank, isSus, kill, slap, 8ball, credits', color=rndcol())
             helpMain.set_footer(text='*type .help [command] to get more info about a command*')
             await ctx.reply(embed = helpMain)
         elif arg1 == 'beg':
-            em1 = discord.Embed(title='\'Beg\' command use', description='Gives an amount of coins to the user.\nCooldown: 30 seconds\nUsage: `.beg`', color=rndcol)
+            em1 = discord.Embed(title='\'Beg\' command use', description='Gives an amount of coins to the user.\nCooldown: 30 seconds\nUsage: `.beg`', color=rndcol())
             await ctx.reply(embed=em1)
         elif arg1 == 'balance' or arg1 == 'bal':
-            em2 = discord.Embed(title='\'Balance\' command use', description='Shows the amount of a user\nAliases: bal\nUsage `.balance|.bal` [@user]', color=rndcol)
+            em2 = discord.Embed(title='\'Balance\' command use', description='Shows the amount of a user\nAliases: bal\nUsage `.balance|.bal` [@user]', color=rndcol())
             em2.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em2)
         elif arg1 == 'hunt':
-            em3 = discord.Embed(title='\'Hunt\' command use', description='Goes for hunting to get moneu\nCooldown: 30 seconds\nUsage: `.hunt`', color=rndcol)
+            em3 = discord.Embed(title='\'Hunt\' command use', description='Goes for hunting to get moneu\nCooldown: 30 seconds\nUsage: `.hunt`', color=rndcol())
             await ctx.reply(embed=em3)
         elif arg1 == 'daily':
-            em4 = discord.Embed(title='\'Daily\' command use', description='Gives an amount of coins\nCooldown: 1 day\nUsage: `.daily`', color=rndcol)
+            em4 = discord.Embed(title='\'Daily\' command use', description='Gives an amount of coins\nCooldown: 1 day\nUsage: `.daily`', color=rndcol())
             await ctx.reply(embed=em4)
         elif arg1 == 'weekly':
-            em5 = discord.Embed(title='\'Weekly\' command use', description='Gives an amount of coins\nCooldown: 1 week\nUsage: `.weekly`', color=rndcol)
+            em5 = discord.Embed(title='\'Weekly\' command use', description='Gives an amount of coins\nCooldown: 1 week\nUsage: `.weekly`', color=rndcol())
             await ctx.reply(embed=em5)
         elif arg1 == 'monthly':
-            em6 = discord.Embed(title='\'Monthly\' command use', description='Gives an amount of coins\nCooldown: 1 month\nUsage: `.monthly`', color=rndcol)
+            em6 = discord.Embed(title='\'Monthly\' command use', description='Gives an amount of coins\nCooldown: 1 month\nUsage: `.monthly`', color=rndcol())
             await ctx.reply(embed=em6)
         elif arg1 == 'postmeme' or arg1 == 'pm':
-            em7 = discord.Embed(title='\'Post meme\' command use', description='Posts a meme and gets money\nCooldown: 40 seconds\nUsage: `.postmeme|.pm`', color=rndcol)
+            em7 = discord.Embed(title='\'Post meme\' command use', description='Posts a meme and gets money\nCooldown: 40 seconds\nUsage: `.postmeme|.pm`', color=rndcol())
             await ctx.reply(embed=em7)
         elif arg1 == 'ban':
-            em8 = discord.Embed(title='\'Ban\' command use', description='Bans a user from the server\nUsage: `.ban <@user>`\nPermissions needed: ban members', color=rndcol)
+            em8 = discord.Embed(title='\'Ban\' command use', description='Bans a user from the server\nUsage: `.ban <@user>`\nPermissions needed: ban members', color=rndcol())
             em8.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em8)
         elif arg1 == 'kick':
-            em9 = discord.Embed(title='\'Kick\' command use', description='Kicks a user from the server\nUsage: `.kick <@user>`\nPermissions needed: kick members', color=rndcol)
+            em9 = discord.Embed(title='\'Kick\' command use', description='Kicks a user from the server\nUsage: `.kick <@user>`\nPermissions needed: kick members', color=rndcol())
             em9.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em9)
         elif arg1 == 'nuke':
-            em10 = discord.Embed(title='\'Nuke\' command use', description='Deletes all the messages from a channel\nUsage: `.nuke <#channel>`\nPermissions needed: manage channels', color=rndcol)
+            em10 = discord.Embed(title='\'Nuke\' command use', description='Deletes all the messages from a channel\nUsage: `.nuke <#channel>`\nPermissions needed: manage channels', color=rndcol())
             em10.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em10)
         elif arg1 == 'purge':
@@ -705,161 +706,161 @@ class MainCog(commands.Cog):
             em11.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em11)
         elif arg1 == '8ball':
-            em12 = discord.Embed(title='\'8ball\' command use', description='Asks a qustion to the bot and responds with a random answer\nUsage: `.8ball <question>', color=rndcol)
+            em12 = discord.Embed(title='\'8ball\' command use', description='Asks a qustion to the bot and responds with a random answer\nUsage: `.8ball <question>', color=rndcol())
             em12.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em12)
         elif arg1 == 'meme':
-            em13 = discord.Embed(title='\'Meme\' command use', description='Sends a random meme from r/memes\nUsage: `.meme`', color=rndcol)
+            em13 = discord.Embed(title='\'Meme\' command use', description='Sends a random meme from r/memes\nUsage: `.meme`', color=rndcol())
             await ctx.reply(embed=em13)
         elif arg1 == 'ihadastroke':
-            em14 = discord.Embed(title='\'Ihadastroke\' command use', description='Sends a random image from r/ihadastroke\nUsage: `.ihadastroke`', color=rndcol)
+            em14 = discord.Embed(title='\'Ihadastroke\' command use', description='Sends a random image from r/ihadastroke\nUsage: `.ihadastroke`', color=rndcol())
             await ctx.reply(embed=em14)
         elif arg1 == 'softwaregore' or arg1 == 'sg':
-            em15 = discord.Embed(title='\'Softwaregore\' command use', description='Sends a random image from r/softwaregore\nUsage: `.softwaregore|.sg`', color=rndcol)
+            em15 = discord.Embed(title='\'Softwaregore\' command use', description='Sends a random image from r/softwaregore\nUsage: `.softwaregore|.sg`', color=rndcol())
             await ctx.reply(embed=em15)
         elif arg1 == 'linuxmeme' or arg1 == 'lm':
-            em16 = discord.Embed(title='\'Linuxmeme\' command use', description='Sends a random meme from r/linuxmemes\nUsage: `.linuxmeme|.lm`', color=rndcol)
+            em16 = discord.Embed(title='\'Linuxmeme\' command use', description='Sends a random meme from r/linuxmemes\nUsage: `.linuxmeme|.lm`', color=rndcol())
             await ctx.reply(embed=em16)
         elif arg1 == 'work':
-            em17 = discord.Embed(title='\'Work\' command use', description='Gets a big amount of money\nCooldown: 1 hour (except `.work list`)\nUsage: `.work [list/resign/job_id]`', color=rndcol)
+            em17 = discord.Embed(title='\'Work\' command use', description='Gets a big amount of money\nCooldown: 1 hour (except `.work list`)\nUsage: `.work [list/resign/job_id]`', color=rndcol())
             await ctx.reply(embed=em17)
         elif arg1 == 'stroke':
-            em18 = discord.Embed(title='\'Stroke\' command use', description='Sends a stroke (not irl stroke)\nUsage: `.stroke <amount>`\nAmount limit: 750', color=rndcol)
+            em18 = discord.Embed(title='\'Stroke\' command use', description='Sends a stroke (not irl stroke)\nUsage: `.stroke <amount>`\nAmount limit: 750', color=rndcol())
             em18.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em18)
         elif arg1 == 'invites':
-            em19 = discord.Embed(title='\'Invites\' command use', description='Shows the amount of people the user invited\nUsage: `.invites [user]`', color=rndcol)
+            em19 = discord.Embed(title='\'Invites\' command use', description='Shows the amount of people the user invited\nUsage: `.invites [user]`', color=rndcol())
             em19.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em19)
         elif arg1 == 'snipe':
-            em20 = discord.Embed(title='\'Snipe\' command use', description='Shows the last deleted message in the channel\nUsage: `.snipe`', color=rndcol)
+            em20 = discord.Embed(title='\'Snipe\' command use', description='Shows the last deleted message in the channel\nUsage: `.snipe`', color=rndcol())
             await ctx.reply(embed=em20)
         elif arg1 == 'edit_snipe' or arg1 == 'edit-snipe' or arg1 == 'edit':
-            em21 = discord.Embed(title='\'Edit snipe\' command use', description='Shows the last edited message in the channel\nUsage: `.edit_snipe|.edit`\nAvailability: beta only', color=rndcol)
+            em21 = discord.Embed(title='\'Edit snipe\' command use', description='Shows the last edited message in the channel\nUsage: `.edit_snipe|.edit`\nAvailability: beta only', color=rndcol())
             await ctx.reply(embed=em21)
         elif arg1 == 'highlow' or arg1 == 'hl':
-            em22 = discord.Embed(title='\'Highlow\' command use', description='The bot generates 2 random numbers. The first one doesn\'t send it and the second one does. You have to guess if the hidden number is lower, higher or equal to the sent one\nCooldown: 40 seconds\nUsage: `.highlow|.hl`\nResponses: higher, lower, jackpot', color=rndcol)
+            em22 = discord.Embed(title='\'Highlow\' command use', description='The bot generates 2 random numbers. The first one doesn\'t send it and the second one does. You have to guess if the hidden number is lower, higher or equal to the sent one\nCooldown: 40 seconds\nUsage: `.highlow|.hl`\nResponses: higher, lower, jackpot', color=rndcol())
             await ctx.reply(embed=em22)
         elif arg1 == 'kill':
-            em23 = discord.Embed(title='\'Kill\' command use', description='*kills* a user\nUsage: `.kill <@user>`', color=rndcol)
+            em23 = discord.Embed(title='\'Kill\' command use', description='*kills* a user\nUsage: `.kill <@user>`', color=rndcol())
             em23.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em23)
         elif arg1 == 'fstab' or arg1 == 'fstab.goldfish':
-            em24 = discord.Embed(title='\'Fstab\' command use', description='Sends the meme fstab.goldfish\nUsage: `.fstab`', color=rndcol)
+            em24 = discord.Embed(title='\'Fstab\' command use', description='Sends the meme fstab.goldfish\nUsage: `.fstab`', color=rndcol())
             await ctx.reply(embed=em24)
         elif arg1 == 'slap':
-            em25 = discord.Embed(title='\'Slap\' command use', description='*slaps* a user\nUsage: `.slap <@user>', color=rndcol)
+            em25 = discord.Embed(title='\'Slap\' command use', description='*slaps* a user\nUsage: `.slap <@user>', color=rndcol())
             await ctx.reply(embed=em25)
         elif arg1 == 'guess':
-            em26 = discord.Embed(title='\'Guess\' command use', description='You have to gues a number from 1 to 10. If you find it you get some coins\nCooldown: 30 seconds\nUsage: `.guess <number>`', color=rndcol)
+            em26 = discord.Embed(title='\'Guess\' command use', description='You have to gues a number from 1 to 10. If you find it you get some coins\nCooldown: 30 seconds\nUsage: `.guess <number>`', color=rndcol())
             em26.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em26)
         elif arg1 == 'give' or arg1 == 'gift':
-            em27 = discord.Embed(title='\'Give\' command use', description='Gives coins to a user mentioned\nUsage: `.give|.gift <@user> <amount> [item]', color=rndcol)
+            em27 = discord.Embed(title='\'Give\' command use', description='Gives coins to a user mentioned\nUsage: `.give|.gift <@user> <amount> [item]', color=rndcol())
             em27.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em27)
         elif arg1 == 'isSus' or arg1 == 'sus':
-            em28 = discord.Embed(title='\'Sus\' command use', description='Checks if a user is sus\nUsage: `.isSus|.sus <@user>`', color=rndcol)
+            em28 = discord.Embed(title='\'Sus\' command use', description='Checks if a user is sus\nUsage: `.isSus|.sus <@user>`', color=rndcol())
             em28.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em28)
         elif arg1 == 'add':
-            em29 = discord.Embed(title='\'Add\' command use', description='Adds coins to a user\nAvailability: __developer only__\nUsage: `.add <@user> <amount:int/hex/bin>`', color=rndcol)
+            em29 = discord.Embed(title='\'Add\' command use', description='Adds coins to a user\nAvailability: __developer only__\nUsage: `.add <@user> <amount:int/hex/bin>`', color=rndcol())
             em29.set_footer(text=f'This command can be only used by {owner}')
             await ctx.reply(embed=em29)
         elif arg1 == 'add_xp':
-            em30 = discord.Embed(title='\'Add xp\' command use', description='Adds xp to a user\nAvailability: __developer only__\nUsage: `.add_xp <@user> <amount:int/hex/bin>`', color=rndcol)
+            em30 = discord.Embed(title='\'Add xp\' command use', description='Adds xp to a user\nAvailability: __developer only__\nUsage: `.add_xp <@user> <amount:int/hex/bin>`', color=rndcol())
             em30.set_footer(text=f'This command can be only used by {owner}')
             await ctx.reply(embed=em30)
         elif arg1 == 'add_lvl':
-            em31 = discord.Embed(title='\'Add levels\' command use', description='Adds levels to a user\nAvailability: __developer only__\nUsage: `.add_lvl <@user> <amount:int/hex/bin>', color=rndcol)
+            em31 = discord.Embed(title='\'Add levels\' command use', description='Adds levels to a user\nAvailability: __developer only__\nUsage: `.add_lvl <@user> <amount:int/hex/bin>', color=rndcol())
             em31.set_footer(text=f'This command can be only used by {owner}')
             await ctx.reply(embed=em31)
         elif arg1 == 'fish':
-            em32 = discord.Embed(title='\'Fish\' command use', description='Fishes stuff\nCooldown: 30 seconds\nUsage `.fish`', color=rndcol)
+            em32 = discord.Embed(title='\'Fish\' command use', description='Fishes stuff\nCooldown: 30 seconds\nUsage `.fish`', color=rndcol())
             await ctx.reply(embed=em32)
         elif arg1 == 'deposit' or arg1 == 'dep':
-            em33 = discord.Embed(title='\'Deposit\' command use', description='Deposits coins and puts them in the bank\nUsage: `.deposit|.dep <max/all/amount:int>`', color=rndcol)
+            em33 = discord.Embed(title='\'Deposit\' command use', description='Deposits coins and puts them in the bank\nUsage: `.deposit|.dep <max/all/amount:int>`', color=rndcol())
             em33.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em33)
         elif arg1 == 'withdraw' or arg1 == 'with':
-            em34 = discord.Embed(title='\'Withdraw\' command use', description='Withdraws coins and puts them in the wallet\nUsage: `.withdraw|.with <max/all/amount:int>', color=rndcol)
+            em34 = discord.Embed(title='\'Withdraw\' command use', description='Withdraws coins and puts them in the wallet\nUsage: `.withdraw|.with <max/all/amount:int>', color=rndcol())
             em34.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em34)
         elif arg1 == 'shop':
-            em35 = discord.Embed(title='\'Shop\' command use', description='Shows the items in shop\nUsage: `.shop`', color=rndcol)
+            em35 = discord.Embed(title='\'Shop\' command use', description='Shows the items in shop\nUsage: `.shop`', color=rndcol())
             await ctx.reply(embed=em35)
         elif arg1 == 'inventory' or arg1 == 'inv':
-            em36 = discord.Embed(title='\'Inventory\' command use', description='Shows a user\'s inventory\nUsage: `.inventory|.inv [@user]', color=rndcol)
+            em36 = discord.Embed(title='\'Inventory\' command use', description='Shows a user\'s inventory\nUsage: `.inventory|.inv [@user]', color=rndcol())
             em36.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em36)
         elif arg1 == 'rob':
-            em37 = discord.Embed(title='\'Rob\' command use', description='Robs a user\nUsage: `.rob <@user>`', color=rndcol)
+            em37 = discord.Embed(title='\'Rob\' command use', description='Robs a user\nUsage: `.rob <@user>`', color=rndcol())
             em37.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em37)
         elif arg1 == 'networth' or arg1 == 'nw':
-            em38 = discord.Embed(title='\'Networth\' command use', description='Shows the networth of a player in hypixel skyblock\nUsage: `.networth|.nw <playername> [profile]', color=rndcol)
+            em38 = discord.Embed(title='\'Networth\' command use', description='Shows the networth of a player in hypixel skyblock\nUsage: `.networth|.nw <playername> [profile]', color=rndcol())
             em38.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em38)
         elif arg1 == 'auctionhouse' or arg1 == 'ah' or arg1 == 'auction_house':
-            em39 = discord.Embed(title='\'Auction house\' command use', description='Shows the auction stats of an item in hypixel skyblock\nUsage: `.auctionhouse|.ah <item_id>`', color=rndcol)
+            em39 = discord.Embed(title='\'Auction house\' command use', description='Shows the auction stats of an item in hypixel skyblock\nUsage: `.auctionhouse|.ah <item_id>`', color=rndcol())
             em39.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em39)
         elif arg1 == 'lbin':
-            em40 = discord.Embed(title='\'Lowest BIN\' command use', description='Shows the lowest price of an item in hypixel skyblock\nUsage: `.lbin <item_id>`', color=rndcol)
+            em40 = discord.Embed(title='\'Lowest BIN\' command use', description='Shows the lowest price of an item in hypixel skyblock\nUsage: `.lbin <item_id>`', color=rndcol())
             em40.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em40)
         elif arg1 == 'say':
-            em41 = discord.Embed(title='\'Say\' command use', description='Says stuff\nUsage: `.say <text>', color=rndcol)
+            em41 = discord.Embed(title='\'Say\' command use', description='Says stuff\nUsage: `.say <text>', color=rndcol())
             em41.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em41)
         elif arg1 == 'play':
-            em42 = discord.Embed(title='\'Play\' command use', description='Plays a song in a voice channel\nUsage: `.play|.p <song_name/url>`\n**This command is under development**', color=rndcol)
+            em42 = discord.Embed(title='\'Play\' command use', description='Plays a song in a voice channel\nUsage: `.play|.p <song_name/url>`\n**This command is under development**', color=rndcol())
             em42.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em42)
         elif arg1 == 'join':
-            em43 = discord.Embed(title='\'Join\' command use', description='Joins a voice channel\nUsage `.join [#channel]`', color=rndcol)
+            em43 = discord.Embed(title='\'Join\' command use', description='Joins a voice channel\nUsage `.join [#channel]`', color=rndcol())
             await ctx.reply(embed=em43)
         elif arg1 == 'leave':
-            em44 = discord.Embed(title='\'Leave\' command use', description='Leaves the current connected voice channel\nUsage: `.leave`', color=rndcol)
+            em44 = discord.Embed(title='\'Leave\' command use', description='Leaves the current connected voice channel\nUsage: `.leave`', color=rndcol())
             await ctx.reply(embed=em44)
         elif arg1 == 'stop':
-            em45 = discord.Embed(title='\'Stop\' command use', description='Stops the current playing song\nUsage: `.stop`', color=rndcol)
+            em45 = discord.Embed(title='\'Stop\' command use', description='Stops the current playing song\nUsage: `.stop`', color=rndcol())
             await ctx.reply(embed=em45)
         elif arg1 == 'pause':
-            em46 = discord.Embed(title='\'Pause\' command use', description='Pauses the current playing song\nUsage: `.pause`', color=rndcol)
+            em46 = discord.Embed(title='\'Pause\' command use', description='Pauses the current playing song\nUsage: `.pause`', color=rndcol())
             await ctx.reply(embed=em46)
         elif arg1 == 'resume':
-            em47 = discord.Embed(title='\'Resume\' command use', description='Resumes a paused song\nUsage: `.resume`', color=rndcol)
+            em47 = discord.Embed(title='\'Resume\' command use', description='Resumes a paused song\nUsage: `.resume`', color=rndcol())
             await ctx.reply(embed=em47)
         elif arg1 == 'masterhacker':
-            em48 = discord.Embed(title='\'Masterhacker\' command use', description='Sends a random image from r/masterhacker\nUsage: `.masterhacker`', color=rndcol)
+            em48 = discord.Embed(title='\'Masterhacker\' command use', description='Sends a random image from r/masterhacker\nUsage: `.masterhacker`', color=rndcol())
             await ctx.reply(embed=em48)
         elif arg1 == 'passive':
-            em49 = discord.Embed(title='\'Passive\' command use', description='Toggles passive mode. If it is turned on people\ncan\'t rob you but you can\'t rob people too\nCooldown: 1 hour\nUsage `.passive`', color=rndcol)
+            em49 = discord.Embed(title='\'Passive\' command use', description='Toggles passive mode. If it is turned on people\ncan\'t rob you but you can\'t rob people too\nCooldown: 1 hour\nUsage `.passive`', color=rndcol())
             await ctx.reply(embed=em49)
         elif arg1 == 'sweartoggle':
-            em50 = discord.Embed(title='\'Sweartoggle\' command use', description='Toggles swear filter for a server. If enabled, when someone sends\na banned word, i will delete it and give the user a warn\nPermissions required: Administrator\nUsage: `.sweartoggle`', color=rndcol)
+            em50 = discord.Embed(title='\'Sweartoggle\' command use', description='Toggles swear filter for a server. If enabled, when someone sends\na banned word, i will delete it and give the user a warn\nPermissions required: Administrator\nUsage: `.sweartoggle`', color=rndcol())
             await ctx.reply(embed=em50)
         elif arg1 == 'summon':
-            em51 = discord.Embed(title='\'Summon\' command use', description='Joins in the channel where the message author is\nUsage: `.summon`')
+            em51 = discord.Embed(title='\'Summon\' command use', description='Joins in the channel where the message author is\nUsage: `.summon`', color=rndcol())
             await ctx.reply(embed=em51)
         elif arg1 == 'now':
-            em52 = discord.Embed(title='\'Now\' command use', description='Shows the current playing song')
+            em52 = discord.Embed(title='\'Now\' command use', description='Shows the current playing song', color=rndcol())
             await ctx.reply(embed=em52)
         elif arg1 == 'queue':
-            em53 = discord.Embed(title='\'Queue\' command use', description='Shows songs in queue')
+            em53 = discord.Embed(title='\'Queue\' command use', description='Shows songs in queue', color=rndcol())
             await ctx.reply(embed=em53)
         elif arg1 == 'buy':
-            em54 = discord.Embed(title='\'Buy\' command use', description='Buys an item from the shop (`.shop`)\nUsage: `.buy <item> [amount]`')
+            em54 = discord.Embed(title='\'Buy\' command use', description='Buys an item from the shop (`.shop`)\nUsage: `.buy <item> [amount]`', color=rndcol())
             await ctx.reply(embed=em54)
         elif arg1 == 'rank' or arg1 == 'xp':
-            em55 = discord.Embed(title='\'Rank\' command use', description='Shows user activity with levels and xp\nUsage: `.rank|.xp [user]`')
+            em55 = discord.Embed(title='\'Rank\' command use', description='Shows user activity with levels and xp\nUsage: `.rank|.xp [user]`', color=rndcol())
             await ctx.reply(embed=em55)
         elif arg1 == 'credits':
-            em56 == discord.Embed(title='\'Credits\' command use', description='Shows the arch bot developer team\nUsage: `.credits.`')
+            em56 == discord.Embed(title='\'Credits\' command use', description='Shows the arch bot developer team\nUsage: `.credits.`', color=rndcol())
             await ctx.reply(embed=em56)
         elif arg1 == 'invest':
-            em57 = discord.Embed(title='\'Invest\' command use', description='Invests coins and claims them after a random amount of time with a random amount of profit\nCooldown: random\nUsage: `.invest <claim/amount/all>`')
+            em57 = discord.Embed(title='\'Invest\' command use', description='Invests coins and claims them after a random amount of time with a random amount of profit\nCooldown: random\nUsage: `.invest <claim/amount/all>`', color=rndcol())
             await ctx.reply(embed=em57)
         elif arg1 == 'help':
             await ctx.reply('You want help for help command?')
@@ -871,7 +872,7 @@ class MainCog(commands.Cog):
                 await ctx.send('ok gimme a sec')
                 async with ctx.typing():
                     await asyncio.sleep(2)
-                h = discord.Embed(title='\'Help\' command use', description='helps\nusage: .help [command]', color=rndcol)
+                h = discord.Embed(title='\'Help\' command use', description='helps\nusage: .help [command]', color=rndcol())
                 h.set_footer(text='why the fk do u need help with this command')
                 await ctx.send(embed=h)
             elif msg.content == 'no':
@@ -884,8 +885,12 @@ class MainCog(commands.Cog):
     @commands.command()
     async def warns(self, ctx, *, user : discord.User=None):
         if user == None:
+            if ctx.message.author.id not in warnings:
+                warnings[ctx.message.author.id] = 0
             await ctx.reply(f"You have {warnings[ctx.message.author.id]} warnings")
         else:
+            if user.id not in warnings:
+                warnings[user.id] = 0
             await ctx.reply(f"{user.display_name} has {warnings[user.id]} warnings")
 
     blStroke = True
@@ -904,6 +909,18 @@ class MainCog(commands.Cog):
     bl8ball = True
     @commands.command(aliases=['8ball'])
     async def _8ball(self, ctx, *, question):
+        colors = [
+            0x000000,
+            0xff0000,
+            0x00ff00,
+            0x0000ff,
+            0x800080,
+            0x00ffff,
+            0xbfff00
+    ]
+        def rndcol():
+            rnd = random.choice(colors)
+            return hex(rnd)
         responses = [
                 "no?????.",
                 "when you grow a braincell, yes",
@@ -922,7 +939,7 @@ class MainCog(commands.Cog):
                 "My sources say no.",
                 "Outlook not so good."
         ]
-        e = discord.Embed(title=f'{question}', description=f'{random.choice(responses)}')
+        e = discord.Embed(title=f'{question}', description=f'{random.choice(responses)}', color=rndcol())
         await ctx.send(embed=e)
 
     blNuke = True
@@ -955,12 +972,24 @@ class MainCog(commands.Cog):
     blInvites = True
     @commands.command()
     async def invites(self, ctx, *, user : discord.User=None):
+        colors = [
+            0x000000,
+            0xff0000,
+            0x00ff00,
+            0x0000ff,
+            0x800080,
+            0x00ffff,
+            0xbfff00
+    ]
+        def rndcol():
+            rnd = random.choice(colors)
+            return hex(rnd)
         totalInvites = 0
         if user == None:
             for i in await ctx.guild.invites():
                 if i.inviter == ctx.author:
                     totalInvites += i.uses
-            e = discord.Embed(title=f'{ctx.message.author.display_name}\'s total invites', description=f"{totalInvites} invite{'' if totalInvites == 1 else 's'}")
+            e = discord.Embed(title=f'{ctx.message.author.display_name}\'s total invites', description=f"{totalInvites} invite{'' if totalInvites == 1 else 's'}", color=rndcol())
             await ctx.reply(embed=e)
         elif user.bot:
             await ctx.reply('This is a bot not a user')
@@ -969,13 +998,25 @@ class MainCog(commands.Cog):
             for i in await ctx.guild.invites():
                 if i.inviter == user:
                     totalInvites += i.uses
-            e = discord.Embed(title=f'{user.display_name}\'s total invites', description=f"{totalInvites} invite{'' if totalInvites == 1 else 's'}")
+            e = discord.Embed(title=f'{user.display_name}\'s total invites', description=f"{totalInvites} invite{'' if totalInvites == 1 else 's'}", color=rndcol())
             await ctx.reply(embed=e)
 
     blPurge = True
     @commands.command()
     @commands.has_permissions(manage_channels=True)
     async def purge(self, ctx, amount:int):
+        colors = [
+            0x000000,
+            0xff0000,
+            0x00ff00,
+            0x0000ff,
+            0x800080,
+            0x00ffff,
+            0xbfff00
+    ]
+        def rndcol():
+            rnd = random.choice(colors)
+            return hex(rnd)
         if int(amount) == 0:
             await ctx.reply("You can\'t purge 0 messages **dood**")
             return
@@ -989,18 +1030,31 @@ class MainCog(commands.Cog):
             pass
         await ctx.message.delete()
         await ctx.channel.purge(limit=amount)
-        embedSuccessPurge = discord.Embed(title='Purge Successful', description=f'Purged {amount} messages from this channel.')
+        embedSuccessPurge = discord.Embed(title='Purge Successful', description=f'Purged {amount} messages from this channel.', color=rndcol())
         await ctx.send(embed = embedSuccessPurge)
 
     blMeme = True
     @commands.command()
     async def meme(self, ctx):
+        colors = [
+            0x000000,
+            0xff0000,
+            0x00ff00,
+            0x0000ff,
+            0x800080,
+            0x00ffff,
+            0xbfff00
+    ]
+        def rndcol():
+            rnd = random.choice(colors)
+            return hex(rnd)
         async with ctx.typing():
-            memes_submissions = reddit.subreddit('memes').hot()
+            re = ['memes', 'meme', 'dankmemes']
+            memes_submissions = reddit.subreddit(random.choice(re)).hot()
             post_to_pick = random.randint(1, 100)
             for i in range(0, post_to_pick):
                 submission = next(x for x in memes_submissions if not x.stickied)
-            embed = discord.Embed(title = submission.title)
+            embed = discord.Embed(title = submission.title, color=rndcol())
             embed.set_image(url=submission.url)
         await ctx.send(embed = embed)
 
@@ -1020,23 +1074,47 @@ class MainCog(commands.Cog):
     blRstroke = True
     @commands.command()
     async def ihadastroke(self, ctx):
+        colors = [
+            0x000000,
+            0xff0000,
+            0x00ff00,
+            0x0000ff,
+            0x800080,
+            0x00ffff,
+            0xbfff00
+    ]
+        def rndcol():
+            rnd = random.choice(colors)
+            return hex(rnd)
         async with ctx.typing():
             memes_submissions = reddit.subreddit('ihadastroke').hot()
             post_to_pick = random.randint(1, 100)
             for i in range(0, post_to_pick):
                 submission = next(x for x in memes_submissions if not x.stickied)
-            embed = discord.Embed(title = submission.title)
+            embed = discord.Embed(title = submission.title, color=rndcol())
             embed.set_image(url=submission.url)
         await ctx.send(embed = embed)
 
     @commands.command(aliases=['mh'])
     async def masterhacker(self, ctx):
+        colors = [
+            0x000000,
+            0xff0000,
+            0x00ff00,
+            0x0000ff,
+            0x800080,
+            0x00ffff,
+            0xbfff00
+    ]
+        def rndcol():
+            rnd = random.choice(colors)
+            return hex(rnd)
         async with ctx.typing():
             memes_submissions = reddit.subreddit('masterhacker').hot()
             post_to_pick = random.randint(1, 100)
             for i in range(0, post_to_pick):
                 submission = next(x for x in memes_submissions if not x.stickied)
-            embed = discord.Embed(title = submission.title)
+            embed = discord.Embed(title = submission.title, color=rndcol())
             embed.set_image(url=submission.url)
         await ctx.send(embed = embed)
 
@@ -1174,12 +1252,24 @@ class MainCog(commands.Cog):
 
     @commands.command(aliases=['sg'])
     async def softwaregore(self, ctx):
+        colors = [
+            0x000000,
+            0xff0000,
+            0x00ff00,
+            0x0000ff,
+            0x800080,
+            0x00ffff,
+            0xbfff00
+    ]
+        def rndcol():
+            rnd = random.choice(colors)
+            return hex(rnd)
         async with ctx.typing():
             sg_submissions = reddit.subreddit('softwaregore').hot()
             post_to_pick = random.randint(1, 100)
             for i in range(0, post_to_pick):
                 submission = next(x for x in sg_submissions if not x.stickied)
-        embed = discord.Embed(title = submission.title)
+        embed = discord.Embed(title = submission.title, color=rndcol())
         embed.set_image(url=submission.url)
         await ctx.send(embed = embed)
 
@@ -1834,6 +1924,18 @@ class MainCog(commands.Cog):
 
     @commands.command(aliases=['bal'])
     async def balance(self, ctx, user : discord.User=None):
+        colors = [
+            0x000000,
+            0xff0000,
+            0x00ff00,
+            0x0000ff,
+            0x800080,
+            0x00ffff,
+            0xbfff00
+    ]
+        def rndcol():
+            rnd = random.choice(colors)
+            return hex(rnd)
         if bool(currency) == False:
             await ctx.send('Currency is disabled')
             return
@@ -1858,7 +1960,7 @@ class MainCog(commands.Cog):
             scoinv = silvercoin[ctx.message.author.id] * 250000
             gcoinv = goldcoin[ctx.message.author.id] * 1000000
             networth = wallet[ctx.message.author.id] + bank[ctx.message.author.id] + win10v + bcoinv + scoinv + gcoinv
-            embed = discord.Embed(title=f"{ctx.message.author.display_name}'s Balance")
+            embed = discord.Embed(title=f"{ctx.message.author.display_name}'s Balance", color=rndcol())
             embed.add_field(name="Wallet", value=str(wallet[ctx.message.author.id]))
             embed.add_field(name="Bank", value=str(bank[ctx.message.author.id]))
             embed.add_field(name="Networth", value=str(networth))
@@ -1884,7 +1986,7 @@ class MainCog(commands.Cog):
             scoinv = silvercoin[user.id] * 250000
             gcoinv = goldcoin[user.id] * 1000000
             networth = wallet[user.id] + bank[user.id] + win10v + bcoinv + scoinv + gcoinv
-            embed = discord.Embed(title=f"{user.display_name}'s Balance")
+            embed = discord.Embed(title=f"{user.display_name}'s Balance", color=rndcol())
             embed.add_field(name="Wallet", value=str(wallet[user.id]))
             embed.add_field(name="Bank", value=str(bank[user.id]))
             embed.add_field(name="Networth", value=str(networth))
@@ -1893,12 +1995,48 @@ class MainCog(commands.Cog):
 
     @commands.command(aliases=["lm"])
     async def linuxmeme(self, ctx):
+        colors = [
+            0x000000,
+            0xff0000,
+            0x00ff00,
+            0x0000ff,
+            0x800080,
+            0x00ffff,
+            0xbfff00
+    ]
+        def rndcol():
+            rnd = random.choice(colors)
+            return hex(rnd)
         async with ctx.typing():
             memes_submissions = reddit.subreddit('linuxmemes').hot()
             post_to_pick = random.randint(1, 100)
             for i in range(0, post_to_pick):
                 submission = next(x for x in memes_submissions if not x.stickied)
-            embed = discord.Embed(title = submission.title)
+            embed = discord.Embed(title = submission.title, color=rndcol())
+            embed.set_image(url=submission.url)
+        await ctx.send(embed = embed)
+        
+    @commands.command(aliases=["wm"])
+    async def windowsmeme(self, ctx):
+        colors = [
+            0x000000,
+            0xff0000,
+            0x00ff00,
+            0x0000ff,
+            0x800080,
+            0x00ffff,
+            0xbfff00
+    ]
+        def rndcol():
+            rnd = random.choice(colors)
+            return hex(rnd)
+        async with ctx.typing():
+            re = ['windowshatememes', 'antiwindowsmemes']
+            memes_submissions = reddit.subreddit(random.choice(re)).hot()
+            post_to_pick = random.randint(1, 100)
+            for i in range(0, post_to_pick):
+                submission = next(x for x in memes_submissions if not x.stickied)
+            embed = discord.Embed(title = submission.title, color=rndcol())
             embed.set_image(url=submission.url)
         await ctx.send(embed = embed)
 

@@ -249,27 +249,27 @@ class MainCog(commands.Cog):
 
     @commands.command()
     async def credits(self, ctx):
-        em = discord.Embed(title="Arch bot developers team", description="thatOneArchUser#5794, Main developer\nnotsniped#0002, made purge command, bot administrator\nMarios1Gr#3949, made deposit/withdraw\nαrchιshα#5518, tester\nnexus#1047, tester\nxristos_hal#4383, bot administrator")
+        em = discord.Embed(title="Arch bot developers team", description="thatOneArchUser#5794, Main developer\nnotsniped#0002, made purge command, bot administrator\nMarios1Gr#3949, made deposit/withdraw\nαrchιshα#5518, tester\nnexus#1047, tester\nxristos_hal#4383, bot administrator", color=discord.Colour.random())
         await ctx.reply(embed=em, mention_author=False)
     
     @commands.command(aliases=["vs"])
     async def viewsettings(self, ctx):
-        em = discord.Embed(description=f"Passive mode: {passiveUsers[ctx.message.author.id]}\nSwear filter: {swearfilter[ctx.message.guild.id]}")
+        em = discord.Embed(description=f"Passive mode: {passiveUsers[ctx.message.author.id]}\nSwear filter: {swearfilter[ctx.message.guild.id]}", color=discord.Colour.random())
         await ctx.reply(embed=em, mention_author=False)
 
     @commands.command()
     async def shop(self, ctx):
-        em = discord.Embed(title=f"Arch bot shop", description=f"Windows 10 key\nDescription: Windows 10 lisence key, too expensive for an os\nCost: 69420\nId: `windows10`\n\nBronze coin\nCost: 50000 coins\nId: `bronzecoin`\n\nSilver coin\nCost: 250000 coins\nId: `silvercoin`\n\nGold coin\nCost: 1000000 coins\nId: `goldcoin`", color=0xff0000)
+        em = discord.Embed(title=f"Arch bot shop", description=f"Windows 10 key\nDescription: Windows 10 lisence key, too expensive for an os\nCost: 69420\nId: `windows10`\n\nBronze coin\nCost: 50000 coins\nId: `bronzecoin`\n\nSilver coin\nCost: 250000 coins\nId: `silvercoin`\n\nGold coin\nCost: 1000000 coins\nId: `goldcoin`", color=discord.Colour.random())
         em.set_footer(text="Tip: type .buy <item_id> [amount] to buy an item")
         await ctx.reply(embed=em, mention_author=False)
              
     @commands.command(aliases=['inv'])
     async def inventory(self, ctx, user : discord.User=None):
         if user == None:
-            em = discord.Embed(title=f"{ctx.message.author.display_name}'s inventory", description=f"Windows 10 keys: {windows10[ctx.message.author.id]}\nBronze coins: {bronzecoin[ctx.message.author.id]}\nSilver coins: {silvercoin[ctx.message.author.id]}\nGold coins: {goldcoin[ctx.message.author.id]}", color=0xff0000)
+            em = discord.Embed(title=f"{ctx.message.author.display_name}'s inventory", description=f"Windows 10 keys: {windows10[ctx.message.author.id]}\nBronze coins: {bronzecoin[ctx.message.author.id]}\nSilver coins: {silvercoin[ctx.message.author.id]}\nGold coins: {goldcoin[ctx.message.author.id]}", color=discord.Colour.random())
             await ctx.reply(embed=em, mention_author=False)
         else:
-            em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[user.id]}\nBronze coins: {bronzecoin[user.id]}\nSilver coins: {silvercoin[user.id]}\nGold coins: {goldcoin[user.id]}", color=0xff0000)
+            em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[user.id]}\nBronze coins: {bronzecoin[user.id]}\nSilver coins: {silvercoin[user.id]}\nGold coins: {goldcoin[user.id]}", color=discord.Colour.random())
             await ctx.reply(embed=em, mention_author=False)
      
     @commands.command()
@@ -543,7 +543,7 @@ class MainCog(commands.Cog):
                         break
                     else:
                         pass
-            embed = discord.Embed(title=f"{ctx.message.author.display_name}'s Rank", color=0xff0000)
+            embed = discord.Embed(title=f"{ctx.message.author.display_name}'s Rank", color=discord.Colour.random())
             embed.add_field(name="Level", value=str(levels[ctx.message.author.id]))
             xpv = f"{xp[ctx.message.author.id]}/{xpreq}"
             embed.add_field(name="Exp", value=str(xpv))
@@ -573,18 +573,22 @@ class MainCog(commands.Cog):
 
     blAdd_xp = True
     @commands.command()
-    async def add_xp(self, ctx, user : discord.User, *, arg1):
+    async def add_xp(self, ctx, user : discord.User, amount:int):
         if ctx.message.author.id not in ids:
             await ctx.reply(f'101% sure that this command doesn\'t exist :eyes:')
         else:
-            if arg1.isdigit:
-                if user.id not in xp:
-                    xp[user.id] = 0
-                xp[user.id] += int(arg1)
-                self.save()
-                await ctx.reply(f'Added {arg1} xp to {user.display_name}')
-            else:
-                await ctx.reply(f'{arg1} is not a number')
+            if amount.isdigit:
+                if int(amount) > sys.maxsize:
+                    await ctx.reply(f"You cant give more than {sys.maxsize} xp")
+                    return
+                else:
+                    if user.id not in xp:
+                        xp[user.id] = 0
+                    xp[user.id] += int(amount)
+                    self.save()
+                    await ctx.reply(f'Added {amount} xp to {user.display_name}')
+                else:
+                    await ctx.reply(f'{amount} is not a number')
 
     @commands.command()
     @commands.cooldown(1, 3600, commands.BucketType.user)
@@ -605,10 +609,10 @@ class MainCog(commands.Cog):
             if any(x in after.lower() for x in bad):
                 r = lambda: random.randint(0,255)
                 col = '#%02X%02X%02X' % (r(),r(),r())
-                em = discord.Embed(description=f'**Message before**: {before}\n**Message after**:||{after}||', color=0xff0000)
+                em = discord.Embed(description=f'**Message before**: {before}\n**Message after**:||{after}||', color=discord.Colour.random())
                 em.set_footer(text=f'This message was edited by {author}\nWARNING: this message contains banned text')
             else:
-                em = discord.Embed(description=f'**Message before**: {before}\n**Message after**:{after}')
+                em = discord.Embed(description=f'**Message before**: {before}\n**Message after**:{after}', color=discord.Colour.random())
                 em.set_footer(text=f'This message was edited by {author}')
             await ctx.send(embed = em)
         except:
@@ -621,6 +625,8 @@ class MainCog(commands.Cog):
             pass
         else:
             if arg1.isdigit:
+                if int(arg1) > sys.maxsize:
+                    await ctx.reply(f"You cant give more than {sys.maxsize} levels")
                 if user.id not in levels:
                     levels[user.id] = 1
                 levels[user.id] += int(arg1)
@@ -876,7 +882,7 @@ class MainCog(commands.Cog):
             em57 = discord.Embed(title='\'Invest\' command use', description='Invests coins and claims them after a random amount of time with a random amount of profit\nCooldown: random\nUsage: `.invest <claim/amount/all>`', color=discord.Colour.random())
             await ctx.reply(embed=em57)
         elif arg1 == 'windowsmeme' or arg1 == 'windowshatememe' or arg1 == 'wm':
-            em58 = discord.Embed(title='\'windowsmeme\' command use', description="Shows a windows hate meme cause windows bad\nUsage: `.windowsmeme|.wm`")
+            em58 = discord.Embed(title='\'windowsmeme\' command use', description="Shows a windows hate meme cause windows bad\nUsage: `.windowsmeme|.wm`", color=discord.Colour.random())
             await ctx.reply(embed=em58)
         elif arg1 == 'help':
             await ctx.reply('You want help for help command?')
@@ -898,7 +904,7 @@ class MainCog(commands.Cog):
         else:
             await ctx.reply(f"No command \"{arg1}\" found")
 
-    @commands.command()
+    @commands.command(aliases=['warnings'])
     async def warns(self, ctx, *, user : discord.User=None):
         if user == None:
             if ctx.message.author.id not in warnings:
@@ -1262,7 +1268,7 @@ class MainCog(commands.Cog):
             "https://cdn.weeb.sh/images/rJ4141YDZ.gif",
             "https://cdn.weeb.sh/images/HJKiX1tPW.gif"
         ]
-        e = discord.Embed(title=f'{ctx.message.author} slaps {user}')
+        e = discord.Embed(title=f'{ctx.message.author} slaps {user}', color=discord.Colour.random())
         e.set_image(url=f'{random.choice(responses3)}')
         await ctx.send(embed = e)
 
@@ -1443,6 +1449,9 @@ class MainCog(commands.Cog):
         if ctx.message.author.id not in ids:
             return
         else:
+            if int(amount) > sys.maxsize:
+                await ctx.reply(f"You can\'t add more than {sys.maxsize} coins.")
+                return
             if user == None:
                 if place == None or str(place) == "wallet":
                     if user.id not in wallet:

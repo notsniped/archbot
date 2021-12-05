@@ -201,20 +201,6 @@ class MainCog(commands.Cog):
                         break
                     else:
                         pass
-            if int(wallet[message.author.id]) == sys.maxsize:
-                channel = await message.author.create_dm()
-                await channel.send(f"You have reached max value in your wallet ({sys.maxsize}). Depositing 50% of it")
-                maxv = round(sys.maxsize / 2)
-                if int(bank[message.author.id]) == sys.maxsize or int(bank[message.author.id]) > maxv:
-                    await channel.send(f"Error: cannot deposit all coins, more than {maxv} coins in bank. Some coins will be deleted!")
-                    wallet[message.author.id] -= maxv
-                    m = round(sys.maxsize - bank[message.author.id])
-                    if m == 0:
-                        return
-                    else:
-                        bank[message.author.id] += m
-                wallet[message.author.id] -= maxv
-                bank[message.author.id] += maxv
             if int(xp[message.author.id]) >= xpreq:
                 xp[message.author.id] -= xp[message.author.id]
                 levels[message.author.id] += 1
@@ -579,8 +565,7 @@ class MainCog(commands.Cog):
             await ctx.reply(f'101% sure that this command doesn\'t exist :eyes:')
         else:
             if amount.isdigit:
-                if int(amount) > sys.maxsize:
-                    await ctx.reply(f"You cant give more than {sys.maxsize} xp")
+                if not currency:
                     return
                 else:
                     if user.id not in xp:
@@ -627,7 +612,7 @@ class MainCog(commands.Cog):
         else:
             if arg1.isdigit:
                 if int(arg1) > sys.maxsize:
-                    await ctx.reply(f"You cant give more than {sys.maxsize} levels")
+                    pass
                 if user.id not in levels:
                     levels[user.id] = 1
                 levels[user.id] += int(arg1)
@@ -1450,9 +1435,6 @@ class MainCog(commands.Cog):
         if ctx.message.author.id not in ids:
             return
         else:
-            if int(amount) > sys.maxsize:
-                await ctx.reply(f"You can\'t add more than {sys.maxsize} coins.")
-                return
             if user == None:
                 if place == None or str(place) == "wallet":
                     if user.id not in wallet:

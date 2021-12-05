@@ -201,6 +201,19 @@ class MainCog(commands.Cog):
                         break
                     else:
                         pass
+            if int(wallet[message.author.id]) == sys.maxsize:
+                await client.send_message(message.author.id, f"You have reached max value in your wallet ({sys.maxsize}). Depositing 50% of it")
+                maxv = round(sys.maxsize / 2)
+                if int(bank[message.author.id]) == sys.maxsize or int(bank[message.author.id]) > maxv:
+                    await client.send_message(message.author.id, f"Error: cannot deposit all coins, more than {maxv} coins in bank. Some coins will be deleted!")
+                    wallet[message.author.id] -= maxv
+                    m = round(sys.maxsize - bank[message.author.id])
+                    if m == 0:
+                        return
+                    else:
+                        bank[message.author.id] += m
+                wallet[message.author.id] -= maxv
+                bank[message.author.id] += maxv
             if int(xp[message.author.id]) >= xpreq:
                 xp[message.author.id] -= xp[message.author.id]
                 levels[message.author.id] += 1
@@ -522,10 +535,10 @@ class MainCog(commands.Cog):
         if user == None:
             xpreq = 0
             if levels[ctx.message.author.id] == 0:
-                xpreq = 50
+                xpreq = 25
             else:
                 for level in range(int(levels[ctx.message.author.id])):
-                    xpreq += 50
+                    xpreq += 25
                     if xpreq >= 5000:
                         break
                     else:
@@ -543,10 +556,10 @@ class MainCog(commands.Cog):
             if user.id not in xp:
                 xp[user.id] = 0
             if levels[user.id] == 1:
-                xpreq = 50
+                xpreq = 25
             else:
                 for level in range(int(levels[user.id])):
-                    xpreq += 50
+                    xpreq += 25
                     if xpreq >= 5000:
                         break
                     else:
@@ -1497,6 +1510,12 @@ class MainCog(commands.Cog):
                 await ctx.reply("You can\'t invest less than 10000 coins")
                 return
             else:
+                maxv = round(sys.maxsize / 5)
+                if wallet[ctx.message.author.id] > maxv:
+                    await ctx.reply(f"You can\'t invest more than {maxv} coins (int64 max value divided by 5) due to an OverflowError")
+                    return
+                else:
+                    pass
                 def check(msg):
                     return msg.author == ctx.message.author and msg.channel == ctx.message.channel and (msg.content)
 
@@ -1540,6 +1559,10 @@ class MainCog(commands.Cog):
                         await ctx.reply("You dont have that many coins in your wallet")
                         return
                     else:
+                        maxv = round(sys.maxsize / 5)
+                        if int(action) > maxv:
+                            await ctx.reply(f"You can\'t invest more than {maxv} coins (int64 max value divided by 5) due to an OverflowError")
+                            return
                         def check(msg):
                             return msg.author == ctx.message.author and msg.channel == ctx.message.channel and (msg.content)
 

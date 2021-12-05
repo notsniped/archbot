@@ -202,10 +202,11 @@ class MainCog(commands.Cog):
                     else:
                         pass
             if int(wallet[message.author.id]) == sys.maxsize:
-                await client.send_message(message.author.id, f"You have reached max value in your wallet ({sys.maxsize}). Depositing 50% of it")
+                channel = await message.author.create_dm()
+                await channel.send(f"You have reached max value in your wallet ({sys.maxsize}). Depositing 50% of it")
                 maxv = round(sys.maxsize / 2)
                 if int(bank[message.author.id]) == sys.maxsize or int(bank[message.author.id]) > maxv:
-                    await client.send_message(message.author.id, f"Error: cannot deposit all coins, more than {maxv} coins in bank. Some coins will be deleted!")
+                    await channel.send(f"Error: cannot deposit all coins, more than {maxv} coins in bank. Some coins will be deleted!")
                     wallet[message.author.id] -= maxv
                     m = round(sys.maxsize - bank[message.author.id])
                     if m == 0:

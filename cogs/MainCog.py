@@ -587,8 +587,8 @@ class MainCog(commands.Cog):
                     xp[user.id] += int(amount)
                     self.save()
                     await ctx.reply(f'Added {amount} xp to {user.display_name}')
-                else:
-                    await ctx.reply(f'{amount} is not a number')
+            else:
+                await ctx.reply(f'{amount} is not a number')
 
     @commands.command()
     @commands.cooldown(1, 3600, commands.BucketType.user)

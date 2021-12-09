@@ -154,11 +154,11 @@ async def snipe(ctx):
     channel = ctx.channel
     try:
         if any(x in snipe_message_content[channel.id].lower() for x in bad):
-            em = discord.Embed(name = f"Last deleted message in #{channel.name}", description =f"||{snipe_message_content[channel.id]}||")
+            em = discord.Embed(name = f"Last deleted message in #{channel.name}", description =f"||{snipe_message_content[channel.id]}||", color=discord.Colour.random())
             em.set_footer(text = f"This message was sent by {snipe_message_author[channel.id]}\nWarning: this message contains banned words")
             await ctx.send(embed = em)
         else:
-            em = discord.Embed(name = f"Last deleted message in #{channel.name}", description = snipe_message_content[channel.id])
+            em = discord.Embed(name = f"Last deleted message in #{channel.name}", description = snipe_message_content[channel.id], color=discord.Colour.random())
             em.set_footer(text = f"This message was sent by {snipe_message_author[channel.id]}")
             await ctx.send(embed = em)
     except:

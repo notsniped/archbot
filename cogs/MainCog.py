@@ -98,6 +98,12 @@ with open(f'{cwd}/database/jobs.json', 'r') as f:
 with open(f'{cwd}/database/invest.json', 'r') as f:
     global invest
     invest = json.load(f)
+with open(f'{cwd}/database/devbox.json', 'r') as f:
+    global devbox
+    devbox = json.load(f)
+with open(f'{cwd}/database/dailybox.json', 'r') as f:
+    global dailybox
+    dailybox = json.load(f)
 
 class colors: 
     cyan = '\033[96m'
@@ -113,34 +119,7 @@ class MainCog(commands.Cog):
         self.dblpy = dbl.DBLClient(self.client, self.token, webhook_path='/dblwebhook', webhook_auth='password', webhook_port=5000)
 
     def save(self):
-        with open(f'{cwd}/database/wallet.json', 'w+') as f:
-            json.dump(wallet, f)
-        with open(f'{cwd}/database/bank.json', 'w+') as f:
-            json.dump(bank, f)
-        with open(f'{cwd}/database/xp.json', 'w+') as f:
-            json.dump(xp, f)
-        with open(f'{cwd}/database/levels.json', 'w+') as f:
-            json.dump(levels, f)
-        with open(f'{cwd}/database/passiveUsers.json', 'w+') as f:
-            json.dump(passiveUsers, f)
-        with open(f'{cwd}/database/warnings.json', 'w+') as f:
-            json.dump(warnings, f)
-        with open(f'{cwd}/database/wallet.json', 'w+') as f:
-            json.dump(wallet, f)
-        with open(f'{cwd}/database/swearfilter.json', 'w+') as f:
-            json.dump(swearfilter, f)
-        with open(f'{cwd}/database/windows10.json', 'w+') as f:
-            json.dump(windows10, f)
-        with open(f'{cwd}/database/bronzecoin.json', 'w+') as f:
-            json.dump(bronzecoin, f)
-        with open(f'{cwd}/database/silvercoin.json', 'w+') as f:
-            json.dump(silvercoin, f)
-        with open(f'{cwd}/database/goldcoin.json', 'w+') as f:
-            json.dump(goldcoin, f)
-        with open(f'{cwd}/database/jobs.json', 'w+') as f:
-            json.dump(jobs, f)
-        with open(f'{cwd}/database/invest.json', 'w+') as f:
-            json.dump(invest, f)
+        for file in os.listdir("../database/"):
     
     @commands.Cog.listener()
     async def on_dbl_vote(self, data):

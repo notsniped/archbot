@@ -127,6 +127,7 @@ class MainCog(commands.Cog):
     @commands.Cog.listener()
     async def on_dbl_vote(self, data):
         user = data['user']
+        print(f"New vote from {user}!")
         embed = discord.Embed(description="New Vote! Voter: {}".format(user))
         channel = self.bot.get_channel(int(914901090577842246))
         await channel.send(embed=embed)

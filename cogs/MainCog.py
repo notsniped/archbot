@@ -242,6 +242,42 @@ class MainCog(commands.Cog):
             await ctx.reply(embed=em, mention_author=False)
      
     @commands.command()
+    async def use(self, ctx, item:str, amount:int=None):
+        if str(item) == "developer" or str(item) == "devbox":
+            if amount == None or int(amount) == 1:
+                if devbox[ctx.message.author.id] < 1:
+                    await ctx.reply("You don\'t own that item")
+                    return
+                else:
+                    items = [
+                        "coins",
+                        "windows10",
+                        "goldcoin"
+                    ]
+                    rnd = random.choice(items)
+                    msg = await ctx.reply("Opening developer box...")
+                    async with ctx.typing():
+                        await asyncio.sleep(2)
+                    if rnd == "coins":
+                        c = random.randint(100000, 69696969696969)
+                        wallet[ctx.message.author.id] += c
+                        await msg.edit(content=f"You earned {c} coins from a developer box!")
+                        self.save()
+                        return
+                    elif rnd == "windows10":
+                        w = random.randint(69, 69420)
+                        windows10[ctx.message.author.id] += w
+                        await msg.edit(content=f"You earned {w} windows 10 keys from a developer box!")
+                        self.save()
+                        return
+                    elif rnd == "goldcoin":
+                        g = random.randint(6969, 6969420)
+                        goldcoin[ctx.message.author.id] += g
+                        await msg.edit(content=f"You earned {g} golden coins from a developer box!")
+                        self.save()
+                        return
+    
+    @commands.command()
     async def add_item(self, ctx, user : discord.User, item:str, amount:int=None):
         if ctx.message.author.id not in ids:
             await ctx.reply("You cant use this")

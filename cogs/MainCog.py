@@ -119,7 +119,7 @@ class MainCog(commands.Cog):
         self.dblpy = dbl.DBLClient(self.client, self.token, webhook_path='/dblwebhook', webhook_auth='password', webhook_port=5000)
 
     def save(self):
-        for file in os.listdir("{cwd}/database"):
+        for file in os.listdir(f"{cwd}/database"):
             if filename.endswith(".json"):
                 with open(f"{cwd}/database/{filename}", "w+") as f:
                     json.dump(filename[:-5], f)
@@ -287,8 +287,52 @@ class MainCog(commands.Cog):
                 if int(devbox[ctx.message.author.id]) < int(amount):
                     await ctx.reply("You don\'t own this item")
                     return
-                
-    
+                else:
+                    items = [
+                        "coins",
+                        "windows10",
+                        "goldcoin"
+                    ]
+                    c = 0
+                    w = 0
+                    g = 0
+                    for i in range(int(amount)):
+                        rnd = random.choice(items)
+                        if rnd == "coins":
+                            c += 1
+                        elif rnd == "windows10":
+                            w += 1
+                        elif rnd == "goldcoin":
+                            g += 1
+                    if c != 0:
+                        coin0 = random.randint(100000, 69696969696969)
+                        coin1 = round(coin0 * c)
+                    if w != 0:
+                        win0 = random.randint(69, 69420)
+                        win1 = round(win0 * w)
+                    if g != 0:
+                        gold0 = random.randint(6969, 6969420)
+                        gold1 = round(gold0 * g)
+                    msg = await ctx.reply(f"Opening {amount} developer boxes...")
+                    async with ctx.typing():
+                        await asyncio.sleep(2)
+                    windows10[ctx.message.author.id] += int(win1)
+                    wallet[ctx.message.author.id] += int(coin1)
+                    goldcoin[ctx.message.author.id] += int(gold1)
+                    self.save()
+                    embed = discord.Embed(description="You earned:", color=discord.Colour.random())
+                    if c != 0:
+                        embed.add_field(name="Coins", value=str(coin1))
+                        pass
+                    if w != 0:
+                        embed.add_field(name="Windows 10 keys", value=str(win1))
+                        pass
+                    if g != 0:
+                        embed.add_field(name="Golden coins", value=str(gold1))
+                        pass
+                    await msg.edit(embed=embed)
+
+                            
     @commands.command()
     async def add_item(self, ctx, user : discord.User, item:str, amount:int=None):
         if ctx.message.author.id not in ids:

@@ -335,6 +335,118 @@ class MainCog(commands.Cog):
                         embed.add_field(name="Golden coins", value=str(gold1))
                         pass
                     await msg.edit(embed=embed)
+        elif str(item) == "daily" or str(item) == "dailybox":
+            if amount == None or int(amount) == 1:
+                if int(dailybox[ctx.message.author.id]) < 1:
+                    await ctx.reply("You don\'t own this item")
+                    return
+                else:
+                    items = [
+                        "coins",
+                        "windows10",
+                        "bronzecoin",
+                        "silvercoin",
+                        "goldcoin"
+                    ]
+                    rnd = random.choice(items)
+                    msg = await ctx.reply("Opening developer box...")
+                    async with ctx.typing():
+                        await asyncio.sleep(2)
+                    daily[ctx.message.author.id] -= 1
+                    if rnd == "coins":
+                        c = random.randint(1000, 100000)
+                        wallet[ctx.message.author.id] += c
+                        await msg.edit(content=f"You earned {c} coins from a daily box!")
+                        self.save()
+                        return
+                    elif rnd == "windows10":
+                        w = random.randint(1, 2)
+                        windows10[ctx.message.author.id] += w
+                        await msg.edit(content=f"You earned {w} windows 10 keys from a daily box!")
+                        self.save()
+                        return
+                    elif rnd == "bronzecoin":
+                        b = random.randint(1, 2)
+                        bronzecoin[ctx.message.author.id] += b
+                        await msg.edit(content=f"You earned {b} bronze coins from a daily box!")
+                        self.save()
+                        return
+                    elif rnd == "silvercoin":
+                        s = random.randint(1, 2)
+                        silvercoin[ctx.message.author.id] += s
+                        await msg.edit(content=f"You earned {s} silver coins from a daily box!")
+                        self.save()
+                        return
+                    elif rnd == "goldcoin":
+                        g = random.randint(1, 2)
+                        goldcoin[ctx.message.author.id] += g
+                        await msg.edit(content=f"You earned {g} golden coins from a daily box!")
+                        self.save()
+                        return
+            elif int(amount) == 0:
+                await ctx.reply(f"Oppened 0 daily boxes and got......................\nNOTHING!!!")
+                return
+            elif int(amount) < 0:
+                await ctx.reply("Don\'t try to break me")
+                return
+            else:
+                if int(dailybox[ctx.message.author.id]) < int(amount):
+                    await ctx.reply("You don\'t own this item")
+                    return
+                else:
+                    items = [
+                        "coins",
+                        "windows10",
+                        "bronzecoin",
+                        "silvercoin",
+                        "goldcoin"
+                    ]
+                    c = 0
+                    w = 0
+                    g = 0
+                    b = 0
+                    s = 0
+                    for i in range(int(amount)):
+                        rnd = random.choice(items)
+                        if rnd == "coins":
+                            c += 1
+                        elif rnd == "windows10":
+                            w += 1
+                        elif rnd == "goldcoin":
+                            g += 1
+                        elif rnd == "silvercoin":
+                            s += 1
+                        elif rnd == "bronzecoin":
+                            b += 1
+                    if c != 0:
+                        c = random.randint(1000, 100000)
+                        coin1 = round(coin0 * c)
+                    if w != 0:
+                        w = random.randint(1, 2)
+                        win1 = round(win0 * w)
+                    if g != 0:
+                        gold0 = random.randint(1, 2)
+                        gold1 = round(gold0 * g)
+                    msg = await ctx.reply(f"Opening {amount} developer boxes...")
+                    async with ctx.typing():
+                        await asyncio.sleep(2)
+                    windows10[ctx.message.author.id] += int(win1)
+                    wallet[ctx.message.author.id] += int(coin1)
+                    goldcoin[ctx.message.author.id] += int(gold1)
+                    dailybox[ctx.message.author.id] -= int(amount)
+                    self.save()
+                    embed = discord.Embed(description="You earned:", color=discord.Colour.random())
+                    if c != 0:
+                        embed.add_field(name="Coins", value=str(coin1))
+                        pass
+                    if w != 0:
+                        embed.add_field(name="Windows 10 keys", value=str(win1))
+                        pass
+                    if g != 0:
+                        embed.add_field(name="Golden coins", value=str(gold1))
+                        pass
+                    embed.set_footer(text=f"These rewards are from {amount} daily boxes")
+                    await msg.edit(embed=embed)
 
     @commands.command()
     async def add_item(self, ctx, user : discord.User, item:str, amount:int=None):

@@ -242,7 +242,7 @@ class MainCog(commands.Cog):
             em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[user.id]}\nBronze coins: {bronzecoin[user.id]}\nSilver coins: {silvercoin[user.id]}\nGold coins: {goldcoin[user.id]}", color=discord.Colour.random())
             await ctx.reply(embed=em, mention_author=False)
      
-    @commands.command()
+    @commands.command(aliases=["open"])
     async def use(self, ctx, item:str, amount:int=None):
         if str(item) == "developer" or str(item) == "devbox":
             if amount == None or int(amount) == 1:
@@ -419,6 +419,27 @@ class MainCog(commands.Cog):
                     self.save()
                     await ctx.reply(f"Added {amount} gold coins to {user.display_name}")
                     return
+            elif str(item) == "devbox":
+                if amount == None or int(amount) == 1:
+                    if user.id not in devbox:
+                        devbox[user.id] = 0
+                        self.save()
+                        pass
+                    devbox[user.id] += 1
+                    self.save()
+                    await ctx.reply(f"Added 1 `developer box` to {user.display_name}", mention_author=False)
+                    return
+                elif int(amount) == 0:
+                    await ctx.reply(f"You don\'t need to run the command to give 0 items", mention_author=False)
+                    return
+                else:
+                    if user.id not in devbox:
+                        devbox[user.id] = 0
+                        self.save()
+                    devbox[user.id] += int(amount)
+                    self.save()
+                    await ctx.reply(f"Added {amount} developer boxes to {user.display_name}")
+                    return
             elif str(item) == "all":
                 if amount == None or int(amount) == 1:
                     if user.id not in windows10:
@@ -434,6 +455,7 @@ class MainCog(commands.Cog):
                     bronzecoin[user.id] += 1
                     silvercoin[user.id] += 1
                     goldcoin[user.id] += 1
+                    devbox[user.id] += 1
                     self.save()
                     await ctx.reply(f"Added all items once in {user.display_name}\'s profile", mention_author=False)
                     return
@@ -446,11 +468,14 @@ class MainCog(commands.Cog):
                         silvercoin[user.id] = 0
                     if user.id not in goldcoin:
                         goldcoin[user.id] = 0
+                    if user.id not in devbox:
+                        devbox[user.id] = 0
                     self.save()
                     windows10[user.id] += int(amount)
                     bronzecoin[user.id] += int(amount)
                     silvercoin[user.id] += int(amount)
                     goldcoin[user.id] += int(amount)
+                    devbox[user.id] += int(amount)
                     self.save()
                     await ctx.reply(f"Added all items {amount} times in {user.display_name}\'s profile", mention_author=False)
                     return
@@ -989,7 +1014,7 @@ class MainCog(commands.Cog):
             await ctx.reply(f"{arg1} isnt a number dood")
 
     bl8ball = True
-    @commands.command(aliases=['8ball'])
+    @commands.command(name=['8ball'])
     async def _8ball(self, ctx, *, question):
         colors = [
             0x000000,
@@ -1720,8 +1745,9 @@ class MainCog(commands.Cog):
                     self.save()
                     return
                 elif j == "ab":
-                    await ctx.reply("You earned 169420 coins from Arch bot developer job")
+                    await ctx.reply("You earned 169420 coins and a **developer box** from Arch bot developer job")
                     wallet[ctx.message.author.id] += 169420
+                    devbox[ctx.message.author.id] += 1
                     self.save()
                     return
         elif str(arg1) == "list":

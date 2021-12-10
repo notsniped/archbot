@@ -119,7 +119,7 @@ class MainCog(commands.Cog):
         self.dblpy = dbl.DBLClient(self.client, self.token, webhook_path='/dblwebhook', webhook_auth='password', webhook_port=5000)
 
     def save(self):
-        for file in os.listdir(f"{cwd}/database"):
+        for filename in os.listdir(f"{cwd}/database"):
             if filename.endswith(".json"):
                 with open(f"{cwd}/database/{filename}", "w+") as f:
                     json.dump(filename[:-5], f)

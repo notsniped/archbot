@@ -238,10 +238,10 @@ class MainCog(commands.Cog):
     @commands.command(aliases=['inv'])
     async def inventory(self, ctx, user : discord.User=None):
         if user == None:
-            em = discord.Embed(title=f"{ctx.message.author.display_name}'s inventory", description=f"Windows 10 keys: {windows10[ctx.message.author.id]}\nBronze coins: {bronzecoin[ctx.message.author.id]}\nSilver coins: {silvercoin[ctx.message.author.id]}\nGold coins: {goldcoin[ctx.message.author.id]}\nDeveloper boxes: {devbox[ctx.message.author.id]}", color=discord.Colour.random())
+            em = discord.Embed(title=f"{ctx.message.author.display_name}'s inventory", description=f"Windows 10 keys: {windows10[ctx.message.author.id]}\nBronze coins: {bronzecoin[ctx.message.author.id]}\nSilver coins: {silvercoin[ctx.message.author.id]}\nGold coins: {goldcoin[ctx.message.author.id]}\nDaily boxes: {dailybox[ctx.message.author.id]}\nDeveloper boxes: {devbox[ctx.message.author.id]}", color=discord.Colour.random())
             await ctx.reply(embed=em, mention_author=False)
         else:
-            em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[user.id]}\nBronze coins: {bronzecoin[user.id]}\nSilver coins: {silvercoin[user.id]}\nGold coins: {goldcoin[user.id]}\nDeveloper boxes: {devbox[user.id]}", color=discord.Colour.random())
+            em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[user.id]}\nBronze coins: {bronzecoin[user.id]}\nSilver coins: {silvercoin[user.id]}\nGold coins: {goldcoin[user.id]}\nDaily boxes: {dailybox[user.id]}\nDeveloper boxes: {devbox[user.id]}", color=discord.Colour.random())
             await ctx.reply(embed=em, mention_author=False)
      
     @commands.command(aliases=["open"])
@@ -334,7 +334,9 @@ class MainCog(commands.Cog):
                     if g != 0:
                         embed.add_field(name="Golden coins", value=str(gold1))
                         pass
+                    embed.set_footer(text=f"These rewards are from {amount} developer boxes")
                     await msg.edit(embed=embed)
+                    return
         elif str(item) == "daily" or str(item) == "dailybox":
             if amount == None or int(amount) == 1:
                 if int(dailybox[ctx.message.author.id]) < 1:
@@ -447,7 +449,11 @@ class MainCog(commands.Cog):
                         pass
                     embed.set_footer(text=f"These rewards are from {amount} daily boxes")
                     await msg.edit(embed=embed)
-
+                    return
+        else:
+            await ctx.reply(f"No such item: {item}")
+            return
+                    
     @commands.command()
     async def add_item(self, ctx, user : discord.User, item:str, amount:int=None):
         if ctx.message.author.id not in ids:
@@ -912,7 +918,7 @@ class MainCog(commands.Cog):
             rnd = random.choice(colors)
             return int(hex(rnd))
         if arg1 == None:
-            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob, invest\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle, viewsettings, edit_snipe\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, windowsmeme, stroke, say, rank, isSus, kill, slap, 8ball, credits', color=discord.Colour.random())
+            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob, invest, use\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle, viewsettings, edit_snipe, warn\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, windowsmeme, stroke, say, rank, isSus, kill, slap, 8ball, credits', color=discord.Colour.random())
             helpMain.set_footer(text='*type .help [command] to get more info about a command*')
             await ctx.reply(embed = helpMain)
         elif arg1 == 'beg':
@@ -1100,19 +1106,30 @@ class MainCog(commands.Cog):
             await ctx.reply(embed=em53)
         elif arg1 == 'buy':
             em54 = discord.Embed(title='\'Buy\' command use', description='Buys an item from the shop (`.shop`)\nUsage: `.buy <item> [amount]`', color=discord.Colour.random())
+            em54.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em54)
         elif arg1 == 'rank' or arg1 == 'xp':
             em55 = discord.Embed(title='\'Rank\' command use', description='Shows user activity with levels and xp\nUsage: `.rank|.xp [user]`', color=discord.Colour.random())
+            em55.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em55)
         elif arg1 == 'credits':
             em56 == discord.Embed(title='\'Credits\' command use', description='Shows the arch bot developer team\nUsage: `.credits.`', color=discord.Colour.random())
             await ctx.reply(embed=em56)
         elif arg1 == 'invest':
-            em57 = discord.Embed(title='\'Invest\' command use', description='Invests coins and claims them after a random amount of time with a random amount of profit\nCooldown: random\nUsage: `.invest <claim/amount/all>`', color=discord.Colour.random())
+            em57 = discord.Embed(title='\'Invest\' command use', description='Invests coins and claims them after 5 hours with a random amount of profit\nCooldown: random\nUsage: `.invest <claim/amount/all>`', color=discord.Colour.random())
+            em57.set_footer(text='<> is required and [] is optional argument')
             await ctx.reply(embed=em57)
         elif arg1 == 'windowsmeme' or arg1 == 'windowshatememe' or arg1 == 'wm':
             em58 = discord.Embed(title='\'windowsmeme\' command use', description="Shows a windows hate meme cause windows bad\nUsage: `.windowsmeme|.wm`", color=discord.Colour.random())
             await ctx.reply(embed=em58)
+        elif arg1 == 'use' or arg1 == 'open':
+            em59 = discord.Embed(title='\'use\' command', description="Opens a box\nUsage: `.use|.open <item> [amount]`", color=discord.Colour.random())
+            em59.set_footer(text='<> is required and [] is optional argument')
+            await ctx.reply(embed=em59)
+        elif arg1 == 'warn':
+            em60 = discord.Embed(title="\'warn\' command use", description="Warns a user\nUsage: `.warn <user> <reason>`\nPermissions: manage messages", color=discord.Colour.random())
+            em60.set_footer(text='<> is required and [] is optional argument')
+            await ctx.reply(embed=em60)
         elif arg1 == 'help':
             await ctx.reply('You want help for help command?')
             def check(msg):
@@ -1144,7 +1161,16 @@ class MainCog(commands.Cog):
                 warnings[user.id] = 0
             await ctx.reply(f"{user.display_name} has {warnings[user.id]} warnings")
 
-    blStroke = True
+    @commands.command()
+    @commands.has_permissions(manage_messages=True)
+    async def warn(self, ctx, *, user : discord.User, reason:str):
+        if user.id not in warnings:
+            warnings[user.id] = 0
+        await ctx.reply(f"**{user.display_name} has been warned with reason: {reason}")
+        warnings[user.id] += 1
+        self.save()
+        return
+    
     @commands.command()
     async def stroke(self, ctx, *, arg1):
         if arg1.isdigit:

@@ -150,8 +150,6 @@ class MainCog(commands.Cog):
                 jobs[705462972415213588] = "ab"
             if message.guild.id not in swearfilter:
                 swearfilter[message.guild.id] = 0
-            #member_data = self.load_member_data(message.author.id)
-            #member_data.xp += 1
             if message.author.id not in invest:
                 invest[message.author.id] = 0
             if message.author.id not in xp:
@@ -174,6 +172,10 @@ class MainCog(commands.Cog):
                 silvercoin[message.author.id] = 0
             if message.author.id not in goldcoin:
                 goldcoin[message.author.id] = 0
+            if message.author.id not in devbox:
+                devbox[message.author.id] = 0
+            if message.author.id not in dailybox:
+                dailybox[message.author.id] = 0
             xpreq = 0
             if levels[message.author.id] == 1:
                 xpreq = 25
@@ -236,10 +238,10 @@ class MainCog(commands.Cog):
     @commands.command(aliases=['inv'])
     async def inventory(self, ctx, user : discord.User=None):
         if user == None:
-            em = discord.Embed(title=f"{ctx.message.author.display_name}'s inventory", description=f"Windows 10 keys: {windows10[ctx.message.author.id]}\nBronze coins: {bronzecoin[ctx.message.author.id]}\nSilver coins: {silvercoin[ctx.message.author.id]}\nGold coins: {goldcoin[ctx.message.author.id]}", color=discord.Colour.random())
+            em = discord.Embed(title=f"{ctx.message.author.display_name}'s inventory", description=f"Windows 10 keys: {windows10[ctx.message.author.id]}\nBronze coins: {bronzecoin[ctx.message.author.id]}\nSilver coins: {silvercoin[ctx.message.author.id]}\nGold coins: {goldcoin[ctx.message.author.id]}\nDeveloper boxes: {devbox[ctx.message.author.id]}", color=discord.Colour.random())
             await ctx.reply(embed=em, mention_author=False)
         else:
-            em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[user.id]}\nBronze coins: {bronzecoin[user.id]}\nSilver coins: {silvercoin[user.id]}\nGold coins: {goldcoin[user.id]}", color=discord.Colour.random())
+            em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[user.id]}\nBronze coins: {bronzecoin[user.id]}\nSilver coins: {silvercoin[user.id]}\nGold coins: {goldcoin[user.id]}\nDeveloper boxes: {devbox[user.id]}", color=discord.Colour.random())
             await ctx.reply(embed=em, mention_author=False)
      
     @commands.command(aliases=["open"])

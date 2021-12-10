@@ -1014,7 +1014,7 @@ class MainCog(commands.Cog):
             await ctx.reply(f"{arg1} isnt a number dood")
 
     bl8ball = True
-    @commands.command(name=['8ball'])
+    @commands.command(aliases=['8ball'])
     async def _8ball(self, ctx, *, question):
         colors = [
             0x000000,

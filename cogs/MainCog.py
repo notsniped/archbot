@@ -261,6 +261,7 @@ class MainCog(commands.Cog):
                     msg = await ctx.reply("Opening developer box...")
                     async with ctx.typing():
                         await asyncio.sleep(2)
+                    devbox[ctx.message.author.id] -= 1
                     if rnd == "coins":
                         c = random.randint(100000, 69696969696969)
                         wallet[ctx.message.author.id] += c
@@ -321,6 +322,7 @@ class MainCog(commands.Cog):
                     windows10[ctx.message.author.id] += int(win1)
                     wallet[ctx.message.author.id] += int(coin1)
                     goldcoin[ctx.message.author.id] += int(gold1)
+                    devbox[ctx.message.author.id] -= int(amount)
                     self.save()
                     embed = discord.Embed(description="You earned:", color=discord.Colour.random())
                     if c != 0:
@@ -334,7 +336,6 @@ class MainCog(commands.Cog):
                         pass
                     await msg.edit(embed=embed)
 
-                            
     @commands.command()
     async def add_item(self, ctx, user : discord.User, item:str, amount:int=None):
         if ctx.message.author.id not in ids:

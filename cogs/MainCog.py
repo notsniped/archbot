@@ -1601,7 +1601,8 @@ class MainCog(commands.Cog):
                 await ctx.reply("You can\'t invest less than 10000 coins")
                 return
             else:
-                maxv = round(sys.maxsize / 5)
+                m = round(sys.maxsize / 5)
+                maxv = m - 1
                 if wallet[ctx.message.author.id] > maxv:
                     await ctx.reply(f"You can\'t invest more than {maxv} coins (int64 max value divided by 5) due to an OverflowError")
                     return
@@ -1650,7 +1651,8 @@ class MainCog(commands.Cog):
                         await ctx.reply("You dont have that many coins in your wallet")
                         return
                     else:
-                        maxv = round(sys.maxsize / 5)
+                        m = round(sys.maxsize / 5)
+                        maxv = m - 1
                         if int(action) > maxv:
                             await ctx.reply(f"You can\'t invest more than {maxv} coins (int64 max value divided by 5) due to an OverflowError")
                             return

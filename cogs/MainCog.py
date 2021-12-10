@@ -245,8 +245,8 @@ class MainCog(commands.Cog):
     async def use(self, ctx, item:str, amount:int=None):
         if str(item) == "developer" or str(item) == "devbox":
             if amount == None or int(amount) == 1:
-                if devbox[ctx.message.author.id] < 1:
-                    await ctx.reply("You don\'t own that item")
+                if int(devbox[ctx.message.author.id]) < 1:
+                    await ctx.reply("You don\'t own this item")
                     return
                 else:
                     items = [
@@ -276,6 +276,17 @@ class MainCog(commands.Cog):
                         await msg.edit(content=f"You earned {g} golden coins from a developer box!")
                         self.save()
                         return
+            elif int(amount) == 0:
+                await ctx.reply(f"Oppened 0 developer boxes and got......................\nNOTHING!!!")
+                return
+            elif int(amount) < 0:
+                await ctx.reply("Don\'t try to break me")
+                return
+            else:
+                if int(devbox[ctx.message.author.id]) < int(amount):
+                    await ctx.reply("You don\'t own this item")
+                    return
+                
     
     @commands.command()
     async def add_item(self, ctx, user : discord.User, item:str, amount:int=None):

@@ -4,7 +4,6 @@ import sys
 import time
 import praw
 import math
-import dbl
 import random
 import pickle
 import string
@@ -115,8 +114,6 @@ class colors:
 class MainCog(commands.Cog):
     def __init__(self, client : commands.Bot):
         self.client = client
-        self.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg1OTg2OTk0MTUzNTk5Nzk3MiIsImJvdCI6dHJ1ZSwiaWF0IjoxNjM4MjAwNzU3fQ.vMYJRHRZEmD40RyPA90yyVyZskUMOKzH2y9-8_-dEWQ"
-        self.dblpy = dbl.DBLClient(self.client, self.token, webhook_path='/dblwebhook', webhook_auth='password', webhook_port=5000)
 
     def save(self):
         for filename in os.listdir(f"{cwd}/database"):
@@ -124,14 +121,6 @@ class MainCog(commands.Cog):
                 with open(f"{cwd}/database/{filename}", "w+") as f:
                     json.dump(filename[:-5], f)
     
-    @commands.Cog.listener()
-    async def on_dbl_vote(self, data):
-        user = data['user']
-        print(f"New vote from {user}!")
-        embed = discord.Embed(description="New Vote! Voter: {}".format(user))
-        channel = self.bot.get_channel(int(914901090577842246))
-        await channel.send(embed=embed)
-
     @commands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):
         global author
@@ -354,7 +343,7 @@ class MainCog(commands.Cog):
                     msg = await ctx.reply("Opening daily box...")
                     async with ctx.typing():
                         await asyncio.sleep(2)
-                    daily[ctx.message.author.id] -= 1
+                    dailybox[ctx.message.author.id] -= 1
                     if rnd == "coins":
                         c = random.randint(1000, 100000)
                         wallet[ctx.message.author.id] += c
@@ -421,14 +410,20 @@ class MainCog(commands.Cog):
                         elif rnd == "bronzecoin":
                             b += 1
                     if c != 0:
-                        c = random.randint(1000, 100000)
+                        coin0 = random.randint(1000, 100000)
                         coin1 = round(coin0 * c)
                     if w != 0:
-                        w = random.randint(1, 2)
+                        win0 = random.randint(1, 2)
                         win1 = round(win0 * w)
                     if g != 0:
                         gold0 = random.randint(1, 2)
                         gold1 = round(gold0 * g)
+                    if s != 0:
+                        silver0 = random.randint(1, 2)
+                        silver1 = round(silver0 * s)
+                    if b != 0:
+                        b0 = random.randint(1, 2)
+                        b1 = round(b0 * b)
                     msg = await ctx.reply(f"Opening {amount} daily boxes...")
                     async with ctx.typing():
                         await asyncio.sleep(2)

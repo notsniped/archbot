@@ -348,8 +348,8 @@ class MainCog(commands.Cog):
                         "silvercoin",
                         "goldcoin"
                     ]
-                    rnd = random.choice(items)
-                    msg = await ctx.reply("Opening developer box...")
+                    rnd = rnd = ''.join(map(str, random.choices(items, weights=[40, 5, 3, 1, 0.5], k=1)))
+                    msg = await ctx.reply("Opening daily box...")
                     async with ctx.typing():
                         await asyncio.sleep(2)
                     daily[ctx.message.author.id] -= 1
@@ -407,7 +407,7 @@ class MainCog(commands.Cog):
                     b = 0
                     s = 0
                     for i in range(int(amount)):
-                        rnd = random.choice(items)
+                        rnd = rnd = rnd = ''.join(map(str, random.choices(items, weights=[40, 5, 3, 1, 0.5], k=1)))
                         if rnd == "coins":
                             c += 1
                         elif rnd == "windows10":
@@ -427,7 +427,7 @@ class MainCog(commands.Cog):
                     if g != 0:
                         gold0 = random.randint(1, 2)
                         gold1 = round(gold0 * g)
-                    msg = await ctx.reply(f"Opening {amount} developer boxes...")
+                    msg = await ctx.reply(f"Opening {amount} daily boxes...")
                     async with ctx.typing():
                         await asyncio.sleep(2)
                     windows10[ctx.message.author.id] += int(win1)
@@ -555,6 +555,27 @@ class MainCog(commands.Cog):
                     self.save()
                     await ctx.reply(f"Added {amount} developer boxes to {user.display_name}")
                     return
+            elif str(item) == "dailybox":
+                if amount == None or int(amount) == 1:
+                    if user.id not in dailybox:
+                        dailybox[user.id] = 0
+                        self.save()
+                        pass
+                    dailybox[user.id] += 1
+                    self.save()
+                    await ctx.reply(f"Added 1 `daily box` to {user.display_name}", mention_author=False)
+                    return
+                elif int(amount) == 0:
+                    await ctx.reply(f"You don\'t need to run the command to give 0 items", mention_author=False)
+                    return
+                else:
+                    if user.id not in dailybox:
+                        devbox[user.id] = 0
+                        self.save()
+                    dailybox[user.id] += int(amount)
+                    self.save()
+                    await ctx.reply(f"Added {amount} daily boxes to {user.display_name}")
+                    return
             elif str(item) == "all":
                 if amount == None or int(amount) == 1:
                     if user.id not in windows10:
@@ -565,12 +586,17 @@ class MainCog(commands.Cog):
                         silvercoin[user.id] = 0
                     if user.id not in goldcoin:
                         goldcoin[user.id] = 0
+                    if user.id not in devbox:
+                        devbox[user.id] = 0
+                    if user.id not in dailybox:
+                        dailybox[user.id] = 0
                     self.save()
                     windows10[user.id] += 1
                     bronzecoin[user.id] += 1
                     silvercoin[user.id] += 1
                     goldcoin[user.id] += 1
                     devbox[user.id] += 1
+                    dailybox[user.id] += 1
                     self.save()
                     await ctx.reply(f"Added all items once in {user.display_name}\'s profile", mention_author=False)
                     return
@@ -585,12 +611,15 @@ class MainCog(commands.Cog):
                         goldcoin[user.id] = 0
                     if user.id not in devbox:
                         devbox[user.id] = 0
+                    if user.id not in dailybox:
+                        dailybox[user.id] = 0
                     self.save()
                     windows10[user.id] += int(amount)
                     bronzecoin[user.id] += int(amount)
                     silvercoin[user.id] += int(amount)
                     goldcoin[user.id] += int(amount)
                     devbox[user.id] += int(amount)
+                    dailybox[user.id] += int(amount)
                     self.save()
                     await ctx.reply(f"Added all items {amount} times in {user.display_name}\'s profile", mention_author=False)
                     return

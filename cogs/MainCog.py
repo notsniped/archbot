@@ -116,10 +116,38 @@ class MainCog(commands.Cog):
         self.client = client
 
     def save(self):
-        for filename in os.listdir(f"{cwd}/database"):
-            if filename.endswith(".json"):
-                with open(f"{cwd}/database/{filename}", "w+") as f:
-                    json.dump(filename[:-5], f)
+        with open(f'{cwd}/database/wallet.json', 'w+') as f:
+            json.dump(wallet, f)
+        with open(f'{cwd}/database/bank.json', 'w+') as f:
+            json.dump(bank, f)
+        with open(f'{cwd}/database/xp.json', 'w+') as f:
+            json.dump(xp, f)
+        with open(f'{cwd}/database/levels.json', 'w+') as f:
+            json.dump(levels, f)
+        with open(f'{cwd}/database/passiveUsers.json', 'w+') as f:
+            json.dump(passiveUsers, f)
+        with open(f'{cwd}/database/warnings.json', 'w+') as f:
+            json.dump(warnings, f)
+        with open(f'{cwd}/database/wallet.json', 'w+') as f:
+            json.dump(wallet, f)
+        with open(f'{cwd}/database/swearfilter.json', 'w+') as f:
+            json.dump(swearfilter, f)
+        with open(f'{cwd}/database/windows10.json', 'w+') as f:
+            json.dump(windows10, f)
+        with open(f'{cwd}/database/bronzecoin.json', 'w+') as f:
+            json.dump(bronzecoin, f)
+        with open(f'{cwd}/database/silvercoin.json', 'w+') as f:
+            json.dump(silvercoin, f)
+        with open(f'{cwd}/database/goldcoin.json', 'w+') as f:
+            json.dump(goldcoin, f)
+        with open(f'{cwd}/database/jobs.json', 'w+') as f:
+            json.dump(jobs, f)
+        with open(f'{cwd}/database/invest.json', 'w+') as f:
+            json.dump(invest, f)
+        with open(f'{cwd}/database/devbox.json', 'w+') as f:
+            json.dump(devbox, f)
+        with open(f'{cwd}/database/dailybox.json', 'w+') as f:
+            json.dump(dailybox, f)
     
     @commands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):

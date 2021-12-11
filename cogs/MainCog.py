@@ -282,7 +282,31 @@ class MainCog(commands.Cog):
         em = discord.Embed(title=f"Arch bot shop", description=f"Windows 10 key\nDescription: Windows 10 lisence key, too expensive for an os\nCost: 69420\nId: `windows10`\n\nBronze coin\nCost: 50000 coins\nId: `bronzecoin`\n\nSilver coin\nCost: 250000 coins\nId: `silvercoin`\n\nGold coin\nCost: 1000000 coins\nId: `goldcoin`", color=discord.Colour.random())
         em.set_footer(text="Tip: type .buy <item_id> [amount] to buy an item")
         await ctx.reply(embed=em, mention_author=False)
-             
+        
+    @commands.command(pass_context=True)
+    async def poll(self, ctx, question, *options: str):
+        if len(options) <= 1:
+            await ctx.send('You need more than one option to make a poll!')
+            return
+        if len(options) > 10:
+            await ctx.send('You cannot make a poll for more than 10 things!')
+            return
+
+        if len(options) == 2 and options[0] == 'yes' and options[1] == 'no':
+            reactions = ['✅', '❌']
+        else:
+            reactions = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟']
+
+        description = []
+        for x, option in enumerate(options):
+            description += '\n {} {}'.format(reactions[x], option)
+        embed = discord.Embed(title=question, description=''.join(description))
+        react_message = await ctx.send(embed=embed)
+        for reaction in reactions[:len(options)]:
+            await react_message.add_reaction(reaction)
+        embed.set_footer(text='Poll ID: {}'.format(react_message.id))
+        await react_message.edit(embed=embed)
+        
     @commands.command(aliases=['inv'])
     async def inventory(self, ctx, user : discord.User=None):
         self.load()

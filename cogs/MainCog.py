@@ -2135,7 +2135,8 @@ class MainCog(commands.Cog):
         now = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S") 
         wallet[str(ctx.message.author.id)] += 10000
-        await ctx.send('You claimed 10,000 coins')
+        dailybox[str(ctx.message.author.id)] += 1
+        await ctx.send('You claimed 10,000 coins and a daily box')
         self.save()
         if bool(log) == True:
             print(f'[{current_time}]{ctx.message.author.display_name} claimed 10k coins from daily command')

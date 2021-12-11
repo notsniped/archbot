@@ -50,7 +50,7 @@ bad = [
 global startTime
 startTime = time.time()
 owner = 'thatOneArchUser#5794'
-cwd = os.getcwd()  
+cwd = os.getcwd()
 data_filename = f"{cwd}/data.db"
 currency = True
 client = commands.Bot
@@ -59,7 +59,7 @@ reddit = praw.Reddit(client_id='_pazwWZHi9JldA',
                      client_secret='1tq1HM7UMEGIro6LlwtlmQYJ1jB4vQ',
                      user_agent='idk', check_for_async=False)
 
-class colors: 
+class colors:
     cyan = '\033[96m'
     red = '\033[91m'
     green = '\033[92m'
@@ -152,7 +152,7 @@ class MainCog(commands.Cog):
             json.dump(devbox, f)
         with open(f'{cwd}/database/dailybox.json', 'w+') as f:
             json.dump(dailybox, f)
-    
+
     @commands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):
         global author
@@ -165,7 +165,7 @@ class MainCog(commands.Cog):
         after = message_after.content
 
     @commands.Cog.listener()
-    async def on_message(self, message): 
+    async def on_message(self, message):
         if not message.author.bot:
             self.load()
             if "705462972415213588" not in jobs:
@@ -225,7 +225,7 @@ class MainCog(commands.Cog):
             xpreq = 0
             if levels[str(message.author.id)] == 1:
                 xpreq = 25
-            else:             
+            else:
                 for level in range(int(levels[str(message.author.id)])):
                     xpreq += 25
                     if xpreq >= 5000:
@@ -240,7 +240,7 @@ class MainCog(commands.Cog):
                 pass
             xpreq = 0
             self.save()
-            if any(x in message.content.lower() for x in bad):     
+            if any(x in message.content.lower() for x in bad):
                 if str(message.author.id) not in warnings:
                     warnings[str(message.author.id)] = 0
                 if message.guild.id not in swearfilter:
@@ -249,13 +249,13 @@ class MainCog(commands.Cog):
                     await message.delete()
                     await message.channel.send(f"{message.author.mention} Watch your language")
                     warnings[str(message.author.id)] += 1
-                    self.save()                                                             
+                    self.save()
                 else:
                     pass
-            else:   
+            else:
                 pass
         #await self.client.process_commands(message)
-    
+
     @commands.command()
     async def pulldb(self, ctx):
         if ctx.message.author.id == 705462972415213588:
@@ -269,7 +269,7 @@ class MainCog(commands.Cog):
     async def credits(self, ctx):
         em = discord.Embed(title="Arch bot developers team", description="thatOneArchUser#5794, Main developer\nnotsniped#0002, made purge command, bot administrator\nMarios1Gr#3949, made deposit/withdraw\nαrchιshα#5518, tester\nnexus#1047, tester\nxristos_hal#4383, bot administrator", color=discord.Colour.random())
         await ctx.reply(embed=em, mention_author=False)
-    
+
     @commands.command(aliases=["vs"])
     async def viewsettings(self, ctx):
         self.load()
@@ -277,19 +277,86 @@ class MainCog(commands.Cog):
         await ctx.reply(embed=em, mention_author=False)
 
     @commands.command()
+    @commands.has_role("Giveaways")
+    async def giveaway(self, ctx):
+        giveaway_questions = ['Which channel will I host the giveaway in?', 'What is the prize?', 'How long should the giveaway run for (in seconds)?',]
+        giveaway_answers = []
+
+        def check(m):
+            return m.author == ctx.author and m.channel == ctx.channel
+
+        for question in giveaway_questions:
+            await ctx.send(question)
+            try:
+                message = await client.wait_for('message', timeout= 30.0, check= check)
+            except asyncio.TimeoutError:
+                await ctx.send('You didn\'t answer in time.  Please try again and be sure to send your answer within 30 seconds of the question.')
+                return
+            else:
+                giveaway_answers.append(message.content)
+
+        try:
+            c_id = int(giveaway_answers[0][2:-1])
+        except:
+            await ctx.send(f'You failed to mention the channel correctly.  Please do it like this: {ctx.channel.mention}')
+            return
+
+        channel = client.get_channel(c_id)
+        prize = str(giveaway_answers[1])
+        time = int(giveaway_answers[2])
+        await ctx.send(f'The giveaway for {prize} will begin shortly.\nPlease direct your attention to {channel.mention}, this giveaway will end in {time} seconds.')
+
+        give = discord.Embed(color = discord.Colour.random())
+        give.add_field(name= f'{ctx.author.display_name} is giving away: {prize}!', value = f'React with 🎉 to enter!\n Ends in {round(time/60, 2)} minutes!', inline = False)
+        end = datetime.datetime.utcnow() + datetime.timedelta(seconds = time)
+        give.set_footer(text = f'Giveaway ends at {end} UTC!')
+        my_message = await channel.send(embed = give)
+
+        await my_message.add_reaction("🎉")
+        await asyncio.sleep(time)
+        new_message = await channel.fetch_message(my_message.id)
+
+        users = await new_message.reactions[0].users().flatten()
+        users.pop(users.index(client.user))
+        winner = random.choice(users)
+
+        winning_announcement = discord.Embed(color = 0xff2424)
+        winning_announcement.set_author(name = f'THE GIVEAWAY HAS ENDED!')
+        winning_announcement.add_field(name = f'🎉 Prize: {prize}', value = f'🥳 **Winner**: {winner.mention}\n 🎫 **Number of Entrants**: {len(users)}', inline = False)
+        winning_announcement.set_footer(text = 'Thanks for entering!')
+        await channel.send(embed = winning_announcement)
+
+    @commands.command()
+    @commands.has_role("Giveaways")
+    async def reroll(ctx, channel: discord.TextChannel, id_ : int):
+        try:
+            new_message = await channel.fetch_message(id_)
+        except:
+            await ctx.send("Incorrect id.")
+            return
+
+        users = await new_message.reactions[0].users().flatten()
+        users.pop(users.index(client.user))
+        winner = random.choice(users)
+        reroll_announcement = discord.Embed(color = color=discord.Colour.random())
+        reroll_announcement.set_author(name = f'The giveaway was rerolled by the host!')
+        reroll_announcement.add_field(name = f'🥳 New Winner:', value = f'{winner.mention}', inline = False)
+        await channel.send(embed = reroll_announcement)
+
+    @commands.command()
     async def shop(self, ctx):
         self.load()
         em = discord.Embed(title=f"Arch bot shop", description=f"Windows 10 key\nDescription: Windows 10 lisence key, too expensive for an os\nCost: 69420\nId: `windows10`\n\nBronze coin\nCost: 50000 coins\nId: `bronzecoin`\n\nSilver coin\nCost: 250000 coins\nId: `silvercoin`\n\nGold coin\nCost: 1000000 coins\nId: `goldcoin`", color=discord.Colour.random())
         em.set_footer(text="Tip: type .buy <item_id> [amount] to buy an item")
         await ctx.reply(embed=em, mention_author=False)
-        
+
     @commands.command(pass_context=True)
     async def poll(self, ctx, question, *options: str):
         if len(options) <= 1:
-            await ctx.send('You need more than one option to make a poll!')
+            await ctx.send('You need more than one option to make a poll')
             return
         if len(options) > 10:
-            await ctx.send('You cannot make a poll for more than 10 things!')
+            await ctx.send('You cant make a poll for more than 10 options')
             return
 
         if len(options) == 2 and options[0] == 'yes' and options[1] == 'no':
@@ -304,9 +371,9 @@ class MainCog(commands.Cog):
         react_message = await ctx.send(embed=embed)
         for reaction in reactions[:len(options)]:
             await react_message.add_reaction(reaction)
-        embed.set_footer(text='Poll ID: {}'.format(react_message.id))
+        embed.set_footer(text='poll ID: {}'.format(react_message.id))
         await react_message.edit(embed=embed)
-        
+
     @commands.command(aliases=['inv'])
     async def inventory(self, ctx, user : discord.User=None):
         self.load()
@@ -316,7 +383,7 @@ class MainCog(commands.Cog):
         else:
             em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[str(user.id)]}\nBronze coins: {bronzecoin[str(user.id)]}\nSilver coins: {silvercoin[str(user.id)]}\nGold coins: {goldcoin[str(user.id)]}\nDaily boxes: {dailybox[str(user.id)]}\nDeveloper boxes: {devbox[str(user.id)]}", color=discord.Colour.random())
             await ctx.reply(embed=em, mention_author=False)
-     
+
     @commands.command(aliases=["open"])
     async def use(self, ctx, item:str, amount:int=None):
         self.load()
@@ -533,7 +600,12 @@ class MainCog(commands.Cog):
         else:
             await ctx.reply(f"No such item: {item}")
             return
-                    
+
+    @use.error
+    async def use_error(self, error, ctx):
+        if isistance(commands.MissingRequiredArgument):
+            await ctx.reply("The command use is: `.use <item> [amount]`")
+
     @commands.command()
     async def add_item(self, ctx, user : discord.User, item:str, amount:int=None):
         self.load()
@@ -712,7 +784,7 @@ class MainCog(commands.Cog):
                     return
             else:
                 await ctx.reply("No such item")
-                      
+
     @commands.command()
     async def buy(self, ctx, item:str, amount:int=None):
         self.load()
@@ -831,7 +903,7 @@ class MainCog(commands.Cog):
         else:
             await ctx.reply(f"No item {item} found. Type `.shop` to get the list of items")
             return
-                  
+
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def sweartoggle(self, ctx):
@@ -846,7 +918,7 @@ class MainCog(commands.Cog):
             await ctx.reply("Disabled swear filter for this server")
 
     @commands.command(aliases=['goldfish'])
-    async def fstab(self, ctx):    
+    async def fstab(self, ctx):
         await ctx.reply('https://cdn.discordapp.com/attachments/878297190576062515/879845618636423259/IMG_20210825_005111.jpg')
 
     @commands.command(aliases=['xp'])
@@ -925,7 +997,7 @@ class MainCog(commands.Cog):
 
     blEdit_snipe = True
     @commands.command()
-    async def edit_snipe(self, ctx): 
+    async def edit_snipe(self, ctx):
         try:
             if any(x in after.lower() for x in bad):
                 r = lambda: random.randint(0,255)
@@ -1259,7 +1331,7 @@ class MainCog(commands.Cog):
         warnings[str(user.id)] += 1
         self.save()
         return
-    
+
     @commands.command()
     async def stroke(self, ctx, *, arg1):
         if arg1.isdigit:
@@ -1312,7 +1384,7 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.has_permissions(manage_channels=True)
     async def nuke(self, ctx, channel: discord.TextChannel = None):
-        if channel == None: 
+        if channel == None:
             await ctx.send("You did not mention a channel!")
             return
 
@@ -1489,7 +1561,7 @@ class MainCog(commands.Cog):
         if ctx.message.author.id == 705462972415213588:
             def check(msg):
                 return msg.author == ctx.message.author and msg.channel == ctx.message.channel and (msg.content)
-            
+
             await ctx.send('You sure?')
             msg = await self.client.wait_for("message", check=check)
             if msg.content == 'y' or msg.content == 'yes':
@@ -1603,7 +1675,7 @@ class MainCog(commands.Cog):
             if bool(log) == True:
                 print(f'[{current_time}]{ctx.message.author.display_name} banned {member.display_name} from {ctx.message.guild.name}')
             else:
-                pass 
+                pass
 
     @commands.command()
     async def slap(self, ctx, user : discord.User):
@@ -1679,7 +1751,7 @@ class MainCog(commands.Cog):
 
         def check(msg):
             return msg.author == ctx.message.author and msg.channel == ctx.message.channel and (msg.content) in ['f', 'd', 'c']
-        
+
         msg = await self.client.wait_for("message", check=check)
 
         x = randint(0, 200)
@@ -1791,7 +1863,7 @@ class MainCog(commands.Cog):
             else:
                 await ctx.reply("No such item")
                 return
-            
+
     @commands.command()
     async def add(self, ctx, user:discord.User, amount:int, place:str=None):
         self.load()
@@ -1836,7 +1908,7 @@ class MainCog(commands.Cog):
                     return
                 else:
                     raise BadArgument
-     
+
     @commands.command(name="invest")
     async def _invest(self, ctx, action:str):
         self.load()
@@ -1953,10 +2025,10 @@ class MainCog(commands.Cog):
                             return
                         else:
                             await ctx.send(f"You are supposed to type yes or no. Not {msg.content}")
-                            return                        
+                            return
             else:
                 raise BadArgument
-            
+
     @commands.command()
     async def work(self, ctx, *, arg1=None):
         self.load()
@@ -2157,7 +2229,7 @@ class MainCog(commands.Cog):
         else:
             pass
         now = datetime.datetime.now()
-        current_time = now.strftime("%H:%M:%S") 
+        current_time = now.strftime("%H:%M:%S")
         wallet[str(ctx.message.author.id)] += 10000
         dailybox[str(ctx.message.author.id)] += 1
         await ctx.send('You claimed 10,000 coins and a daily box')
@@ -2410,7 +2482,7 @@ class MainCog(commands.Cog):
             embed = discord.Embed(title = submission.title, color=discord.Colour.random())
             embed.set_image(url=submission.url)
         await ctx.send(embed = embed)
-        
+
     @commands.command(aliases=["wm"])
     async def windowsmeme(self, ctx):
         colors = [
@@ -2512,7 +2584,7 @@ class MainCog(commands.Cog):
             await ctx.reply('An internal error occured')
         else:
             await ctx.reply(f'Undefined status code: {r.status_code}\nsend this to {owner}')
-### Commands end ###     
+### Commands end ###
 
 def setup(client):
     client.add_cog(MainCog(client))

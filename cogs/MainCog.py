@@ -58,6 +58,13 @@ log = True
 reddit = praw.Reddit(client_id='_pazwWZHi9JldA',
                      client_secret='1tq1HM7UMEGIro6LlwtlmQYJ1jB4vQ',
                      user_agent='idk', check_for_async=False)
+
+class colors: 
+    cyan = '\033[96m'
+    red = '\033[91m'
+    green = '\033[92m'
+    end = '\033[0m'
+
 with open(f'{cwd}/database/wallet.json', 'r') as f:
     global wallet
     wallet = json.load(f)
@@ -104,16 +111,13 @@ with open(f'{cwd}/database/dailybox.json', 'r') as f:
     global dailybox
     dailybox = json.load(f)
 
-class colors: 
-    cyan = '\033[96m'
-    red = '\033[91m'
-    green = '\033[92m'
-    end = '\033[0m'
-
 ### Commands ###
 class MainCog(commands.Cog):
     def __init__(self, client : commands.Bot):
         self.client = client
+
+    def load(self):
+        return
 
     def save(self):
         with open(f'{cwd}/database/wallet.json', 'w+') as f:
@@ -163,63 +167,88 @@ class MainCog(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message): 
         if not message.author.bot:
-            if 705462972415213588 not in jobs:
-                jobs[705462972415213588] = "ab"
-            if message.guild.id not in swearfilter:
-                swearfilter[message.guild.id] = 0
-            if message.author.id not in invest:
-                invest[message.author.id] = 0
-            if message.author.id not in xp:
-                xp[message.author.id] = 1
+            self.load()
+            if "705462972415213588" not in jobs:
+                jobs["705462972415213588"] = "ab"
+            if str(message.guild.id) in swearfilter:
+                pass
             else:
-                xp[message.author.id] += 1
-            if message.author.id not in levels:
-                levels[message.author.id] = 1
-            if message.author.id not in wallet:
-                wallet[message.author.id] = 0
-            if message.author.id not in bank:
-                bank[message.author.id] = 0
-            if message.author.id not in passiveUsers:
-                passiveUsers[message.author.id] = 0
-            if message.author.id not in windows10:
-                windows10[message.author.id] = 0
-            if message.author.id not in bronzecoin:
-                bronzecoin[message.author.id] = 0
-            if message.author.id not in silvercoin:
-                silvercoin[message.author.id] = 0
-            if message.author.id not in goldcoin:
-                goldcoin[message.author.id] = 0
-            if message.author.id not in devbox:
-                devbox[message.author.id] = 0
-            if message.author.id not in dailybox:
-                dailybox[message.author.id] = 0
+                swearfilter[str(message.guild.id)] = 0
+            if str(message.author.id) in invest:
+                pass
+            else:
+                invest[str(message.author.id)] = 0
+            if str(message.author.id) in xp:
+                xp[str(message.author.id)] += 1
+            else:
+                xp[str(message.author.id)] = 1
+            if str(message.author.id) in levels:
+                pass
+            else:
+                levels[str(message.author.id)] = 1
+            if str(message.author.id) in wallet:
+                pass
+            else:
+                wallet[str(message.author.id)] = 0
+            if str(message.author.id) in bank:
+                pass
+            else:
+                bank[str(message.author.id)] = 0
+            if str(message.author.id) in passiveUsers:
+                pass
+            else:
+                passiveUsers[str(message.author.id)] = 0
+            if str(message.author.id) in windows10:
+                pass
+            else:
+                windows10[str(message.author.id)] = 0
+            if str(message.author.id) in bronzecoin:
+                pass
+            else:
+                bronzecoin[str(message.author.id)] = 0
+            if str(message.author.id) in silvercoin:
+                pass
+            else:
+                silvercoin[str(message.author.id)] = 0
+            if str(message.author.id) in goldcoin:
+                pass
+            else:
+                goldcoin[str(message.author.id)] = 0
+            if str(message.author.id) in devbox:
+                pass
+            else:
+                devbox[str(message.author.id)] = 0
+            if str(message.author.id) in dailybox:
+                pass
+            else:
+                dailybox[str(message.author.id)] = 0
             xpreq = 0
-            if levels[message.author.id] == 1:
+            if levels[str(message.author.id)] == 1:
                 xpreq = 25
             else:             
-                for level in range(int(levels[message.author.id])):
+                for level in range(int(levels[str(message.author.id)])):
                     xpreq += 25
                     if xpreq >= 5000:
                         break
                     else:
                         pass
-            if int(xp[message.author.id]) >= xpreq:
-                xp[message.author.id] -= xp[message.author.id]
-                levels[message.author.id] += 1
-                await message.channel.send(f"{message.author.mention} You just leveled up to level **{levels[message.author.id]}**!")
+            if int(xp[str(message.author.id)]) >= xpreq:
+                xp[str(message.author.id)] -= xp[str(message.author.id)]
+                levels[str(message.author.id)] += 1
+                await message.channel.send(f"{message.author.mention} You just leveled up to level **{levels[str(message.author.id)]}**!")
             else:
                 pass
             xpreq = 0
             self.save()
             if any(x in message.content.lower() for x in bad):     
-                if message.author.id not in warnings:
-                    warnings[message.author.id] = 0
+                if str(message.author.id) not in warnings:
+                    warnings[str(message.author.id)] = 0
                 if message.guild.id not in swearfilter:
                     swearfilter[message.guild.id] = 0
                 if swearfilter[message.guild.id] == 1:
                     await message.delete()
                     await message.channel.send(f"{message.author.mention} Watch your language")
-                    warnings[message.author.id] += 1
+                    warnings[str(message.author.id)] += 1
                     self.save()                                                             
                 else:
                     pass
@@ -243,29 +272,33 @@ class MainCog(commands.Cog):
     
     @commands.command(aliases=["vs"])
     async def viewsettings(self, ctx):
-        em = discord.Embed(description=f"Passive mode: {passiveUsers[ctx.message.author.id]}\nSwear filter: {swearfilter[ctx.message.guild.id]}", color=discord.Colour.random())
+        self.load()
+        em = discord.Embed(description=f"Passive mode: {passiveUsers[str(ctx.message.author.id)]}\nSwear filter: {swearfilter[ctx.message.guild.id]}", color=discord.Colour.random())
         await ctx.reply(embed=em, mention_author=False)
 
     @commands.command()
     async def shop(self, ctx):
+        self.load()
         em = discord.Embed(title=f"Arch bot shop", description=f"Windows 10 key\nDescription: Windows 10 lisence key, too expensive for an os\nCost: 69420\nId: `windows10`\n\nBronze coin\nCost: 50000 coins\nId: `bronzecoin`\n\nSilver coin\nCost: 250000 coins\nId: `silvercoin`\n\nGold coin\nCost: 1000000 coins\nId: `goldcoin`", color=discord.Colour.random())
         em.set_footer(text="Tip: type .buy <item_id> [amount] to buy an item")
         await ctx.reply(embed=em, mention_author=False)
              
     @commands.command(aliases=['inv'])
     async def inventory(self, ctx, user : discord.User=None):
+        self.load()
         if user == None:
-            em = discord.Embed(title=f"{ctx.message.author.display_name}'s inventory", description=f"Windows 10 keys: {windows10[ctx.message.author.id]}\nBronze coins: {bronzecoin[ctx.message.author.id]}\nSilver coins: {silvercoin[ctx.message.author.id]}\nGold coins: {goldcoin[ctx.message.author.id]}\nDaily boxes: {dailybox[ctx.message.author.id]}\nDeveloper boxes: {devbox[ctx.message.author.id]}", color=discord.Colour.random())
+            em = discord.Embed(title=f"{ctx.message.author.display_name}'s inventory", description=f"Windows 10 keys: {windows10[str(ctx.message.author.id)]}\nBronze coins: {bronzecoin[str(ctx.message.author.id)]}\nSilver coins: {silvercoin[str(ctx.message.author.id)]}\nGold coins: {goldcoin[str(ctx.message.author.id)]}\nDaily boxes: {dailybox[str(ctx.message.author.id)]}\nDeveloper boxes: {devbox[str(ctx.message.author.id)]}", color=discord.Colour.random())
             await ctx.reply(embed=em, mention_author=False)
         else:
-            em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[user.id]}\nBronze coins: {bronzecoin[user.id]}\nSilver coins: {silvercoin[user.id]}\nGold coins: {goldcoin[user.id]}\nDaily boxes: {dailybox[user.id]}\nDeveloper boxes: {devbox[user.id]}", color=discord.Colour.random())
+            em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[str(user.id)]}\nBronze coins: {bronzecoin[str(user.id)]}\nSilver coins: {silvercoin[str(user.id)]}\nGold coins: {goldcoin[str(user.id)]}\nDaily boxes: {dailybox[str(user.id)]}\nDeveloper boxes: {devbox[str(user.id)]}", color=discord.Colour.random())
             await ctx.reply(embed=em, mention_author=False)
      
     @commands.command(aliases=["open"])
     async def use(self, ctx, item:str, amount:int=None):
+        self.load()
         if str(item) == "developer" or str(item) == "devbox":
             if amount == None or int(amount) == 1:
-                if int(devbox[ctx.message.author.id]) < 1:
+                if int(devbox[str(ctx.message.author.id)]) < 1:
                     await ctx.reply("You don\'t own this item")
                     return
                 else:
@@ -278,22 +311,22 @@ class MainCog(commands.Cog):
                     msg = await ctx.reply("Opening developer box...")
                     async with ctx.typing():
                         await asyncio.sleep(2)
-                    devbox[ctx.message.author.id] -= 1
+                    devbox[str(ctx.message.author.id)] -= 1
                     if rnd == "coins":
                         c = random.randint(100000, 69696969696969)
-                        wallet[ctx.message.author.id] += c
+                        wallet[str(ctx.message.author.id)] += c
                         await msg.edit(content=f"You earned {c} coins from a developer box!")
                         self.save()
                         return
                     elif rnd == "windows10":
                         w = random.randint(69, 69420)
-                        windows10[ctx.message.author.id] += w
+                        windows10[str(ctx.message.author.id)] += w
                         await msg.edit(content=f"You earned {w} windows 10 keys from a developer box!")
                         self.save()
                         return
                     elif rnd == "goldcoin":
                         g = random.randint(6969, 6969420)
-                        goldcoin[ctx.message.author.id] += g
+                        goldcoin[str(ctx.message.author.id)] += g
                         await msg.edit(content=f"You earned {g} golden coins from a developer box!")
                         self.save()
                         return
@@ -304,7 +337,7 @@ class MainCog(commands.Cog):
                 await ctx.reply("Don\'t try to break me")
                 return
             else:
-                if int(devbox[ctx.message.author.id]) < int(amount):
+                if int(devbox[str(ctx.message.author.id)]) < int(amount):
                     await ctx.reply("You don\'t own this item")
                     return
                 else:
@@ -336,10 +369,10 @@ class MainCog(commands.Cog):
                     msg = await ctx.reply(f"Opening {amount} developer boxes...")
                     async with ctx.typing():
                         await asyncio.sleep(2)
-                    windows10[ctx.message.author.id] += int(win1)
-                    wallet[ctx.message.author.id] += int(coin1)
-                    goldcoin[ctx.message.author.id] += int(gold1)
-                    devbox[ctx.message.author.id] -= int(amount)
+                    windows10[str(ctx.message.author.id)] += int(win1)
+                    wallet[str(ctx.message.author.id)] += int(coin1)
+                    goldcoin[str(ctx.message.author.id)] += int(gold1)
+                    devbox[str(ctx.message.author.id)] -= int(amount)
                     self.save()
                     embed = discord.Embed(description="You earned:", color=discord.Colour.random())
                     if c != 0:
@@ -356,7 +389,7 @@ class MainCog(commands.Cog):
                     return
         elif str(item) == "daily" or str(item) == "dailybox":
             if amount == None or int(amount) == 1:
-                if int(dailybox[ctx.message.author.id]) < 1:
+                if int(dailybox[str(ctx.message.author.id)]) < 1:
                     await ctx.reply("You don\'t own this item")
                     return
                 else:
@@ -371,34 +404,34 @@ class MainCog(commands.Cog):
                     msg = await ctx.reply("Opening daily box...")
                     async with ctx.typing():
                         await asyncio.sleep(2)
-                    dailybox[ctx.message.author.id] -= 1
+                    dailybox[str(ctx.message.author.id)] -= 1
                     if rnd == "coins":
                         c = random.randint(1000, 100000)
-                        wallet[ctx.message.author.id] += c
+                        wallet[str(ctx.message.author.id)] += c
                         await msg.edit(content=f"You earned {c} coins from a daily box!")
                         self.save()
                         return
                     elif rnd == "windows10":
                         w = random.randint(1, 2)
-                        windows10[ctx.message.author.id] += w
+                        windows10[str(ctx.message.author.id)] += w
                         await msg.edit(content=f"You earned {w} windows 10 keys from a daily box!")
                         self.save()
                         return
                     elif rnd == "bronzecoin":
                         b = random.randint(1, 2)
-                        bronzecoin[ctx.message.author.id] += b
+                        bronzecoin[str(ctx.message.author.id)] += b
                         await msg.edit(content=f"You earned {b} bronze coins from a daily box!")
                         self.save()
                         return
                     elif rnd == "silvercoin":
                         s = random.randint(1, 2)
-                        silvercoin[ctx.message.author.id] += s
+                        silvercoin[str(ctx.message.author.id)] += s
                         await msg.edit(content=f"You earned {s} silver coins from a daily box!")
                         self.save()
                         return
                     elif rnd == "goldcoin":
                         g = random.randint(1, 2)
-                        goldcoin[ctx.message.author.id] += g
+                        goldcoin[str(ctx.message.author.id)] += g
                         await msg.edit(content=f"You earned {g} golden coins from a daily box!")
                         self.save()
                         return
@@ -409,7 +442,7 @@ class MainCog(commands.Cog):
                 await ctx.reply("Don\'t try to break me")
                 return
             else:
-                if int(dailybox[ctx.message.author.id]) < int(amount):
+                if int(dailybox[str(ctx.message.author.id)]) < int(amount):
                     await ctx.reply("You don\'t own this item")
                     return
                 else:
@@ -455,10 +488,10 @@ class MainCog(commands.Cog):
                     msg = await ctx.reply(f"Opening {amount} daily boxes...")
                     async with ctx.typing():
                         await asyncio.sleep(2)
-                    windows10[ctx.message.author.id] += int(win1)
-                    wallet[ctx.message.author.id] += int(coin1)
-                    goldcoin[ctx.message.author.id] += int(gold1)
-                    dailybox[ctx.message.author.id] -= int(amount)
+                    windows10[str(ctx.message.author.id)] += int(win1)
+                    wallet[str(ctx.message.author.id)] += int(coin1)
+                    goldcoin[str(ctx.message.author.id)] += int(gold1)
+                    dailybox[str(ctx.message.author.id)] -= int(amount)
                     self.save()
                     embed = discord.Embed(description="You earned:", color=discord.Colour.random())
                     if c != 0:
@@ -479,16 +512,17 @@ class MainCog(commands.Cog):
                     
     @commands.command()
     async def add_item(self, ctx, user : discord.User, item:str, amount:int=None):
-        if ctx.message.author.id not in ids:
+        self.load()
+        if str(ctx.message.author.id) not in ids:
             await ctx.reply("You cant use this")
             return
         else:
             if str(item) == "windows10":
                 if amount == None or int(amount) == 1:
-                    if user.id not in windows10:
-                        windows10[user.id] = 0
+                    if str(user.id) not in windows10:
+                        windows10[str(user.id)] = 0
                         self.save()
-                    windows10[user.id] += 1
+                    windows10[str(user.id)] += 1
                     self.save()
                     await ctx.reply(f"Added 1 `windows10` to {user.display_name}", mention_author=False)
                     return
@@ -496,19 +530,19 @@ class MainCog(commands.Cog):
                     await ctx.reply(f"You don\'t need to run the command to give 0 items", mention_author=False)
                     return
                 else:
-                    if user.id not in windows10:
-                        windows10[user.id] = 0
+                    if str(user.id) not in windows10:
+                        windows10[str(user.id)] = 0
                         self.save()
-                    windows10[user.id] += int(amount)
+                    windows10[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"Added {amount} windows 10 keys to {user.display_name}")
                     return
             elif str(item) == "bronzecoin":
                 if amount == None or int(amount) == 1:
-                    if user.id not in bronzecoin:
-                        bronzecoin[user.id] = 0
+                    if str(user.id) not in bronzecoin:
+                        bronzecoin[str(user.id)] = 0
                         self.save()
-                    bronzecoin[user.id] += 1
+                    bronzecoin[str(user.id)] += 1
                     self.save()
                     await ctx.reply(f"Added 1 `bronzecoin` to {user.display_name}", mention_author=False)
                     return
@@ -516,19 +550,19 @@ class MainCog(commands.Cog):
                     await ctx.reply(f"You don\'t need to run the command to give 0 items", mention_author=False)
                     return
                 else:
-                    if user.id not in bronzecoin:
-                        bronzecoin[user.id] = 0
+                    if str(user.id) not in bronzecoin:
+                        bronzecoin[str(user.id)] = 0
                         self.save()
-                    bronzecoin[user.id] += int(amount)
+                    bronzecoin[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"Added {amount} bronze coins to {user.display_name}")
                     return
             elif str(item) == "silvercoin":
                 if amount == None or int(amount) == 1:
-                    if user.id not in silvercoin:
-                        silvercoin[user.id] = 0
+                    if str(user.id) not in silvercoin:
+                        silvercoin[str(user.id)] = 0
                         self.save()
-                    silvercoin[user.id] += 1
+                    silvercoin[str(user.id)] += 1
                     self.save()
                     await ctx.reply(f"Added 1 `silvercoin` to {user.display_name}", mention_author=False)
                     return
@@ -536,19 +570,19 @@ class MainCog(commands.Cog):
                     await ctx.reply(f"You don\'t need to run the command to give 0 items", mention_author=False)
                     return
                 else:
-                    if user.id not in silvercoin:
-                        silvercoin[user.id] = 0
+                    if str(user.id) not in silvercoin:
+                        silvercoin[str(user.id)] = 0
                         self.save()
-                    silvercoin[user.id] += int(amount)
+                    silvercoin[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"Added {amount} silver coins to {user.display_name}")
                     return
             elif str(item) == "goldcoin":
                 if amount == None or int(amount) == 1:
-                    if user.id not in goldcoin:
-                        goldcoin[user.id] = 0
+                    if str(user.id) not in goldcoin:
+                        goldcoin[str(user.id)] = 0
                         self.save()
-                    goldcoin[user.id] += 1
+                    goldcoin[str(user.id)] += 1
                     self.save()
                     await ctx.reply(f"Added 1 `goldcoin` to {user.display_name}", mention_author=False)
                     return
@@ -556,20 +590,20 @@ class MainCog(commands.Cog):
                     await ctx.reply(f"You don\'t need to run the command to give 0 items", mention_author=False)
                     return
                 else:
-                    if user.id not in goldcoin:
-                        goldcoin[user.id] = 0
+                    if str(user.id) not in goldcoin:
+                        goldcoin[str(user.id)] = 0
                         self.save()
-                    goldcoin[user.id] += int(amount)
+                    goldcoin[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"Added {amount} gold coins to {user.display_name}")
                     return
             elif str(item) == "devbox":
                 if amount == None or int(amount) == 1:
-                    if user.id not in devbox:
-                        devbox[user.id] = 0
+                    if str(user.id) not in devbox:
+                        devbox[str(user.id)] = 0
                         self.save()
                         pass
-                    devbox[user.id] += 1
+                    devbox[str(user.id)] += 1
                     self.save()
                     await ctx.reply(f"Added 1 `developer box` to {user.display_name}", mention_author=False)
                     return
@@ -577,20 +611,20 @@ class MainCog(commands.Cog):
                     await ctx.reply(f"You don\'t need to run the command to give 0 items", mention_author=False)
                     return
                 else:
-                    if user.id not in devbox:
-                        devbox[user.id] = 0
+                    if str(user.id) not in devbox:
+                        devbox[str(user.id)] = 0
                         self.save()
-                    devbox[user.id] += int(amount)
+                    devbox[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"Added {amount} developer boxes to {user.display_name}")
                     return
             elif str(item) == "dailybox":
                 if amount == None or int(amount) == 1:
-                    if user.id not in dailybox:
-                        dailybox[user.id] = 0
+                    if str(user.id) not in dailybox:
+                        dailybox[str(user.id)] = 0
                         self.save()
                         pass
-                    dailybox[user.id] += 1
+                    dailybox[str(user.id)] += 1
                     self.save()
                     await ctx.reply(f"Added 1 `daily box` to {user.display_name}", mention_author=False)
                     return
@@ -598,57 +632,57 @@ class MainCog(commands.Cog):
                     await ctx.reply(f"You don\'t need to run the command to give 0 items", mention_author=False)
                     return
                 else:
-                    if user.id not in dailybox:
-                        devbox[user.id] = 0
+                    if str(user.id) not in dailybox:
+                        devbox[str(user.id)] = 0
                         self.save()
-                    dailybox[user.id] += int(amount)
+                    dailybox[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"Added {amount} daily boxes to {user.display_name}")
                     return
             elif str(item) == "all":
                 if amount == None or int(amount) == 1:
-                    if user.id not in windows10:
-                        windows10[user.id] = 0
-                    if user.id not in bronzecoin:
-                        bronzecoin[user.id] = 0
-                    if user.id not in silvercoin:
-                        silvercoin[user.id] = 0
-                    if user.id not in goldcoin:
-                        goldcoin[user.id] = 0
-                    if user.id not in devbox:
-                        devbox[user.id] = 0
-                    if user.id not in dailybox:
-                        dailybox[user.id] = 0
+                    if str(user.id) not in windows10:
+                        windows10[str(user.id)] = 0
+                    if str(user.id) not in bronzecoin:
+                        bronzecoin[str(user.id)] = 0
+                    if str(user.id) not in silvercoin:
+                        silvercoin[str(user.id)] = 0
+                    if str(user.id) not in goldcoin:
+                        goldcoin[str(user.id)] = 0
+                    if str(user.id) not in devbox:
+                        devbox[str(user.id)] = 0
+                    if str(user.id) not in dailybox:
+                        dailybox[str(user.id)] = 0
                     self.save()
-                    windows10[user.id] += 1
-                    bronzecoin[user.id] += 1
-                    silvercoin[user.id] += 1
-                    goldcoin[user.id] += 1
-                    devbox[user.id] += 1
-                    dailybox[user.id] += 1
+                    windows10[str(user.id)] += 1
+                    bronzecoin[str(user.id)] += 1
+                    silvercoin[str(user.id)] += 1
+                    goldcoin[str(user.id)] += 1
+                    devbox[str(user.id)] += 1
+                    dailybox[str(user.id)] += 1
                     self.save()
                     await ctx.reply(f"Added all items once in {user.display_name}\'s profile", mention_author=False)
                     return
                 else:
-                    if user.id not in windows10:
-                        windows10[user.id] = 0
-                    if user.id not in bronzecoin:
-                        bronzecoin[user.id] = 0
-                    if user.id not in silvercoin:
-                        silvercoin[user.id] = 0
-                    if user.id not in goldcoin:
-                        goldcoin[user.id] = 0
-                    if user.id not in devbox:
-                        devbox[user.id] = 0
-                    if user.id not in dailybox:
-                        dailybox[user.id] = 0
+                    if str(user.id) not in windows10:
+                        windows10[str(user.id)] = 0
+                    if str(user.id) not in bronzecoin:
+                        bronzecoin[str(user.id)] = 0
+                    if str(user.id) not in silvercoin:
+                        silvercoin[str(user.id)] = 0
+                    if str(user.id) not in goldcoin:
+                        goldcoin[str(user.id)] = 0
+                    if str(user.id) not in devbox:
+                        devbox[str(user.id)] = 0
+                    if str(user.id) not in dailybox:
+                        dailybox[str(user.id)] = 0
                     self.save()
-                    windows10[user.id] += int(amount)
-                    bronzecoin[user.id] += int(amount)
-                    silvercoin[user.id] += int(amount)
-                    goldcoin[user.id] += int(amount)
-                    devbox[user.id] += int(amount)
-                    dailybox[user.id] += int(amount)
+                    windows10[str(user.id)] += int(amount)
+                    bronzecoin[str(user.id)] += int(amount)
+                    silvercoin[str(user.id)] += int(amount)
+                    goldcoin[str(user.id)] += int(amount)
+                    devbox[str(user.id)] += int(amount)
+                    dailybox[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"Added all items {amount} times in {user.display_name}\'s profile", mention_author=False)
                     return
@@ -657,15 +691,16 @@ class MainCog(commands.Cog):
                       
     @commands.command()
     async def buy(self, ctx, item:str, amount:int=None):
+        self.load()
         if str(item) == "windows10":
             if amount == None or int(amount) == 1:
-                if wallet[ctx.message.author.id] < 69420:
-                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {round(69420 - wallet[ctx.message.author.id])} more coins to buy this.", mention_author=False)
+                if wallet[str(ctx.message.author.id)] < 69420:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {round(69420 - wallet[str(ctx.message.author.id)])} more coins to buy this.", mention_author=False)
                     return
                 else:
-                    await ctx.reply(f"You bought a windows 10 key! Now you have {round(wallet[ctx.message.author.id] - 69420)} coins in your wallet.", mention_author=False)
-                    wallet[ctx.message.author.id] -= 69420
-                    windows10[ctx.message.author.id] += 1
+                    await ctx.reply(f"You bought a windows 10 key! Now you have {round(wallet[str(ctx.message.author.id)] - 69420)} coins in your wallet.", mention_author=False)
+                    wallet[str(ctx.message.author.id)] -= 69420
+                    windows10[str(ctx.message.author.id)] += 1
                     self.save()
                     return
             elif int(amount) < 0:
@@ -676,24 +711,24 @@ class MainCog(commands.Cog):
                 return
             else:
                 a = 69420 * amount
-                if wallet[ctx.message.author.id] < a:
-                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[ctx.message.author.id]} more coins")
+                if wallet[str(ctx.message.author.id)] < a:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[str(ctx.message.author.id)]} more coins")
                     return
                 else:
-                    await ctx.reply(f"You bought {amount} windows 10 keys for {a} coins. Now you have {wallet[ctx.message.author.id] - a} coins in your wallet")
-                    wallet[ctx.message.author.id] -= a
-                    windows10[ctx.message.author.id] += amount
+                    await ctx.reply(f"You bought {amount} windows 10 keys for {a} coins. Now you have {wallet[str(ctx.message.author.id)] - a} coins in your wallet")
+                    wallet[str(ctx.message.author.id)] -= a
+                    windows10[str(ctx.message.author.id)] += amount
                     self.save()
                     return
         if str(item) == "bronzecoin":
             if amount == None or int(amount) == 1:
-                if wallet[ctx.message.author.id] < 50000:
-                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {50000 - wallet[ctx.message.author.id]} more coins to buy this.", mention_author=False)
+                if wallet[str(ctx.message.author.id)] < 50000:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {50000 - wallet[str(ctx.message.author.id)]} more coins to buy this.", mention_author=False)
                     return
                 else:
-                    await ctx.reply(f"You bought a bronze coin! Now you have {wallet[ctx.message.author.id] - 50000} coins in your wallet.", mention_author=False)
-                    wallet[ctx.message.author.id] -= 50000
-                    bronzecoin[ctx.message.author.id] += 1
+                    await ctx.reply(f"You bought a bronze coin! Now you have {wallet[str(ctx.message.author.id)] - 50000} coins in your wallet.", mention_author=False)
+                    wallet[str(ctx.message.author.id)] -= 50000
+                    bronzecoin[str(ctx.message.author.id)] += 1
                     self.save()
                     return
             elif int(amount) < 0:
@@ -704,24 +739,24 @@ class MainCog(commands.Cog):
                 return
             else:
                 a = 50000 * amount
-                if wallet[ctx.message.author.id] < a:
-                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[ctx.message.author.id]} more coins")
+                if wallet[str(ctx.message.author.id)] < a:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[str(ctx.message.author.id)]} more coins")
                     return
                 else:
-                    await ctx.reply(f"You bought {amount} bronze coins for {a} coins. Now you have {wallet[ctx.message.author.id] - a} coins in your wallet")
-                    wallet[ctx.message.author.id] -= a
-                    bronzecoin[ctx.message.author.id] += amount
+                    await ctx.reply(f"You bought {amount} bronze coins for {a} coins. Now you have {wallet[str(ctx.message.author.id)] - a} coins in your wallet")
+                    wallet[str(ctx.message.author.id)] -= a
+                    bronzecoin[str(ctx.message.author.id)] += amount
                     self.save()
                     return
         if str(item) == "silvercoin":
             if amount == None or int(amount) == 1:
-                if wallet[ctx.message.author.id] < 250000:
-                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {250000 - wallet[ctx.message.author.id]} more coins to buy this.", mention_author=False)
+                if wallet[str(ctx.message.author.id)] < 250000:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {250000 - wallet[str(ctx.message.author.id)]} more coins to buy this.", mention_author=False)
                     return
                 else:
-                    await ctx.reply(f"You bought a silver coin! Now you have {wallet[ctx.message.author.id] - 250000} coins in your wallet.", mention_author=False)
-                    wallet[ctx.message.author.id] -= 250000
-                    bronzecoin[ctx.message.author.id] += 1
+                    await ctx.reply(f"You bought a silver coin! Now you have {wallet[str(ctx.message.author.id)] - 250000} coins in your wallet.", mention_author=False)
+                    wallet[str(ctx.message.author.id)] -= 250000
+                    bronzecoin[str(ctx.message.author.id)] += 1
                     self.save()
                     return
             elif int(amount) < 0:
@@ -732,24 +767,24 @@ class MainCog(commands.Cog):
                 return
             else:
                 a = 250000 * amount
-                if wallet[ctx.message.author.id] < a:
-                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[ctx.message.author.id]} more coins")
+                if wallet[str(ctx.message.author.id)] < a:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[str(ctx.message.author.id)]} more coins")
                     return
                 else:
-                    await ctx.reply(f"You bought {amount} silver coins for {a} coins. Now you have {wallet[ctx.message.author.id] - a} coins in your wallet")
-                    wallet[ctx.message.author.id] -= a
-                    silvercoin[ctx.message.author.id] += amount
+                    await ctx.reply(f"You bought {amount} silver coins for {a} coins. Now you have {wallet[str(ctx.message.author.id)] - a} coins in your wallet")
+                    wallet[str(ctx.message.author.id)] -= a
+                    silvercoin[str(ctx.message.author.id)] += amount
                     self.save()
                     return
         if str(item) == "goldcoin":
             if amount == None or int(amount) == 1:
-                if wallet[ctx.message.author.id] < 1000000:
-                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {1000000 - wallet[ctx.message.author.id]} more coins to buy this.", mention_author=False)
+                if wallet[str(ctx.message.author.id)] < 1000000:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {1000000 - wallet[str(ctx.message.author.id)]} more coins to buy this.", mention_author=False)
                     return
                 else:
-                    await ctx.reply(f"You bought gold coin! Now you have {wallet[ctx.message.author.id] - 1000000} coins in your wallet.", mention_author=False)
-                    wallet[ctx.message.author.id] -= 1000000
-                    goldcoin[ctx.message.author.id] += 1
+                    await ctx.reply(f"You bought gold coin! Now you have {wallet[str(ctx.message.author.id)] - 1000000} coins in your wallet.", mention_author=False)
+                    wallet[str(ctx.message.author.id)] -= 1000000
+                    goldcoin[str(ctx.message.author.id)] += 1
                     self.save()
                     return
             elif int(amount) < 0:
@@ -760,13 +795,13 @@ class MainCog(commands.Cog):
                 return
             else:
                 a = 1000000 * amount
-                if wallet[ctx.message.author.id] < a:
-                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[ctx.message.author.id]} more coins")
+                if wallet[str(ctx.message.author.id)] < a:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[str(ctx.message.author.id)]} more coins")
                     return
                 else:
-                    await ctx.reply(f"You bought {amount} gold coins for {a} coins. Now you have {wallet[ctx.message.author.id] - a} coins in your wallet")
-                    wallet[ctx.message.author.id] -= a
-                    goldcoin[ctx.message.author.id] += amount
+                    await ctx.reply(f"You bought {amount} gold coins for {a} coins. Now you have {wallet[str(ctx.message.author.id)] - a} coins in your wallet")
+                    wallet[str(ctx.message.author.id)] -= a
+                    goldcoin[str(ctx.message.author.id)] += amount
                     self.save()
                     return
         else:
@@ -776,6 +811,7 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def sweartoggle(self, ctx):
+        self.load()
         if int(swearfilter[ctx.message.guild.id]) == 0:
             swearfilter[ctx.message.guild.id] = 1
             self.save()
@@ -791,41 +827,42 @@ class MainCog(commands.Cog):
 
     @commands.command(aliases=['xp'])
     async def rank(self, ctx, user : discord.User=None):
+        self.load()
         if user == None:
             xpreq = 0
-            if levels[ctx.message.author.id] == 0:
+            if levels[str(ctx.message.author.id)] == 0:
                 xpreq = 25
             else:
-                for level in range(int(levels[ctx.message.author.id])):
+                for level in range(int(levels[str(ctx.message.author.id)])):
                     xpreq += 25
                     if xpreq >= 5000:
                         break
                     else:
                         pass
             embed = discord.Embed(title=f"{ctx.message.author.display_name}'s Rank", color=discord.Colour.random())
-            embed.add_field(name="Level", value=str(levels[ctx.message.author.id]))
-            xpv = f"{xp[ctx.message.author.id]}/{xpreq}"
+            embed.add_field(name="Level", value=str(levels[str(ctx.message.author.id)]))
+            xpv = f"{xp[str(ctx.message.author.id)]}/{xpreq}"
             embed.add_field(name="Exp", value=str(xpv))
             embed.set_footer(text=f'Leveling api made by {owner}')
             await ctx.send(embed=embed)
         else:
             xpreq = 0
-            if user.id not in levels:
-                levels[user.id] = 1
-            if user.id not in xp:
-                xp[user.id] = 0
-            if levels[user.id] == 1:
+            if str(user.id) not in levels:
+                levels[str(user.id)] = 1
+            if str(user.id) not in xp:
+                xp[str(user.id)] = 0
+            if levels[str(user.id)] == 1:
                 xpreq = 25
             else:
-                for level in range(int(levels[user.id])):
+                for level in range(int(levels[str(user.id)])):
                     xpreq += 25
                     if xpreq >= 5000:
                         break
                     else:
                         pass
             embed = discord.Embed(title=f"{user.display_name}'s Rank", color=0xff0000)
-            embed.add_field(name="Level", value=str(levels[user.id]))
-            xpv = f"{xp[user.id]}/{xpreq}"
+            embed.add_field(name="Level", value=str(levels[str(user.id)]))
+            xpv = f"{xp[str(user.id)]}/{xpreq}"
             embed.add_field(name="Exp", value=str(xpv))
             embed.set_footer(text=f'Leveling api made by {owner}')
             await ctx.send(embed=embed)
@@ -833,16 +870,17 @@ class MainCog(commands.Cog):
     blAdd_xp = True
     @commands.command()
     async def add_xp(self, ctx, user : discord.User, amount:int):
-        if ctx.message.author.id not in ids:
+        self.load()
+        if str(ctx.message.author.id) not in ids:
             await ctx.reply(f'101% sure that this command doesn\'t exist :eyes:')
         else:
             if amount.isdigit:
                 if not currency:
                     return
                 else:
-                    if user.id not in xp:
-                        xp[user.id] = 0
-                    xp[user.id] += int(amount)
+                    if str(user.id) not in xp:
+                        xp[str(user.id)] = 0
+                    xp[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f'Added {amount} xp to {user.display_name}')
             else:
@@ -851,12 +889,13 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 3600, commands.BucketType.user)
     async def passive(self, ctx):
-        if passiveUsers[ctx.message.author.id] == 1:
-            passiveUsers[ctx.message.author.id] = 0
+        self.load()
+        if passiveUsers[str(ctx.message.author.id)] == 1:
+            passiveUsers[str(ctx.message.author.id)] = 0
             self.save()
             await ctx.reply(f"Disabled passive mode")
         else:
-            passiveUsers[ctx.message.author.id] = 1
+            passiveUsers[str(ctx.message.author.id)] = 1
             self.save()
             await ctx.reply(f"Enabled passive mode")
 
@@ -879,15 +918,16 @@ class MainCog(commands.Cog):
     blAdd_lvl = True
     @commands.command()
     async def add_lvl(self, ctx, user : discord.User, *, arg1):
+        self.load()
         if ctx.message.author.id not in ids:
             pass
         else:
             if arg1.isdigit:
                 if int(arg1) > sys.maxsize:
                     pass
-                if user.id not in levels:
-                    levels[user.id] = 1
-                levels[user.id] += int(arg1)
+                if str(user.id) not in levels:
+                    levels[str(user.id)] = 1
+                levels[str(user.id)] += int(arg1)
                 self.save()
                 await ctx.reply(f"Added {int(arg1)} levels to {user.display_name}")
             else:
@@ -1175,22 +1215,24 @@ class MainCog(commands.Cog):
 
     @commands.command(aliases=['warnings'])
     async def warns(self, ctx, *, user : discord.User=None):
+        self.load()
         if user == None:
-            if ctx.message.author.id not in warnings:
-                warnings[ctx.message.author.id] = 0
-            await ctx.reply(f"You have {warnings[ctx.message.author.id]} warnings")
+            if str(ctx.message.author.id) not in warnings:
+                warnings[str(ctx.message.author.id)] = 0
+            await ctx.reply(f"You have {warnings[str(ctx.message.author.id)]} warnings")
         else:
-            if user.id not in warnings:
-                warnings[user.id] = 0
-            await ctx.reply(f"{user.display_name} has {warnings[user.id]} warnings")
+            if str(user.id) not in warnings:
+                warnings[str(user.id)] = 0
+            await ctx.reply(f"{user.display_name} has {warnings[str(user.id)]} warnings")
 
     @commands.command()
     @commands.has_permissions(manage_messages=True)
     async def warn(self, ctx, *, user : discord.User, reason:str):
-        if user.id not in warnings:
-            warnings[user.id] = 0
+        self.load()
+        if str(user.id) not in warnings:
+            warnings[str(user.id)] = 0
         await ctx.reply(f"**{user.display_name} has been warned with reason: {reason}")
-        warnings[user.id] += 1
+        warnings[str(user.id)] += 1
         self.save()
         return
     
@@ -1441,11 +1483,12 @@ class MainCog(commands.Cog):
     @commands.command(aliases=['hl'])
     @commands.cooldown(1, 40, commands.BucketType.user)
     async def highlow(self, ctx):
+        self.load()
         now = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
         numb = randint(1, 100)
         numb2 = randint(1, 100)
-        id = ctx.message.author.id
+        id = str(ctx.message.author.id)
         coins = randint(300, 1000)
 
         def check(msg):
@@ -1456,7 +1499,7 @@ class MainCog(commands.Cog):
         if msg.content == 'low':
             if numb > numb2:
                 await ctx.send(f'Congrats, your number was {numb2} and you earned {coins} coins')
-                wallet[ctx.message.author.id] += coins
+                wallet[str(ctx.message.author.id)] += coins
                 self.save()
                 if bool(log) == True:
                     print(f'[{current_time}]{ctx.message.author.display_name} earned {coins} coins')
@@ -1470,7 +1513,7 @@ class MainCog(commands.Cog):
             if numb == numb2:
                 coins2 = randint(1000000, 5000000)
                 await ctx.send(f'Congrats, your number was {numb2} and you earned {coins2} coins gg!')
-                wallet[ctx.message.author.id] += coins2
+                wallet[str(ctx.message.author.id)] += coins2
                 self.save()
                 if bool(log) == True:
                     print(f'[{current_time}]{ctx.message.author.display_name} earned {coins2} coins')
@@ -1481,7 +1524,7 @@ class MainCog(commands.Cog):
         if msg.content == 'high':
             if numb < numb2:
                 await ctx.send(f'Congrats, your number was {numb2} and you earned {coins} coins')
-                wallet[ctx.message.author.id] += coins
+                wallet[str(ctx.message.author.id)] += coins
                 self.save_member_data(id, member_data)
                 if bool(log) == True:
                     print(f'[{current_time}]{ctx.message.author.display_name} earned {coins} coins')
@@ -1576,13 +1619,14 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def guess(self, ctx, num:int):
+        self.load()
         now = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
         x = randint(1, 10)
         if num == x:
             coins = randint(100, 1000)
             await ctx.reply(f'Correct! You got {coins} coins')
-            wallet[ctx.message.author.id] += coins
+            wallet[str(ctx.message.author.id)] += coins
             self.save()
         else:
             await ctx.reply(f'Nope it was {x}')
@@ -1604,6 +1648,7 @@ class MainCog(commands.Cog):
     @commands.command(aliases=['pm'])
     @commands.cooldown(1, 40, commands.BucketType.user)
     async def postmeme(self, ctx):
+        self.load()
         now = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
         await ctx.send(f'{ctx.message.author.mention} What type of meme you want to post?\n`f` Fresh meme\n`d` Dank meme\n`c` Copypasta\n*more comming soon*')
@@ -1618,7 +1663,7 @@ class MainCog(commands.Cog):
             await ctx.send(f'{ctx.message.author.mention} You earned 0 coins xD')
         else:
             await ctx.send(f'You earned {x} coins')
-            wallet[ctx.message.author.id] += x
+            wallet[str(ctx.message.author.id)] += x
             self.save()
             if bool(log) == True:
                 print(f'[{current_time}]{colors.cyan}{ctx.message.author.display_name}{colors.end} has earned {colors.green}{x}{colors.end} coins')
@@ -1631,90 +1676,91 @@ class MainCog(commands.Cog):
 
     @commands.command(aliases=['gift'])
     async def give(self, ctx, user : discord.User, amount:int, item:str=None):
+        self.load()
         if user.id == ctx.message.author.id:
             await ctx.reply('You can\'t gift yourself')
             return
-        if passiveUsers[ctx.message.author.id] == 1:
+        if passiveUsers[str(ctx.message.author.id)] == 1:
             await ctx.reply("You have passive mode enabled, you can\'t gigt to other users", mention_author=False)
             return
-        if passiveUsers[user.id] == 1:
+        if passiveUsers[str(user.id)] == 1:
             await ctx.reply("This user has passive mode enabled. Leave them alone!", mention_author=False)
             return
         else:
             if item == None:
-                if wallet[ctx.message.author.id] < int(amount):
+                if wallet[str(ctx.message.author.id)] < int(amount):
                     await ctx.reply('You don\'t have that many coins in your wallet')
                     return
                 elif int(amount) < 0 or int(amount) == 0:
                     await ctx.reply('Don\'t try to break me **dood**')
                     return
                 else:
-                    wallet[ctx.message.author.id] -= int(amount)
+                    wallet[str(ctx.message.author.id)] -= int(amount)
                     self.save()
-                    wallet[user.id] += int(amount)
+                    wallet[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f'You gave {amount} coins to {user.display_name}')
             elif item == "windows10":
-                if windows10[ctx.message.author.id] < int(amount):
+                if windows10[str(ctx.message.author.id)] < int(amount):
                     await ctx.reply("You don\'t have that many items")
                     return
                 elif int(amount) < 0 or int(amount) == 0:
                     await ctx.reply("Don\'t try to break me **dood**")
                     return
                 else:
-                    if user.id not in windows10:
-                        windows10[user.id] = 0
-                    windows10[ctx.message.author.id] -= int(amount)
+                    if str(user.id) not in windows10:
+                        windows10[str(user.id)] = 0
+                    windows10[str(ctx.message.author.id)] -= int(amount)
                     self.save()
-                    windows10[user.id] += int(amount)
+                    windows10[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"You gave {amount} windows 10 keys to {user.display_name}")
                     return
             elif item == "bronzecoin":
-                if bronzecoin[ctx.message.author.id] < int(amount):
+                if bronzecoin[str(ctx.message.author.id)] < int(amount):
                     await ctx.reply("You don\'t have that many items")
                     return
                 elif int(amount) < 0 or int(amount) == 0:
                     await ctx.reply("Don\'t try to break me **dood**")
                     return
                 else:
-                    if user.id not in bronzecoin:
-                        bronzecoin[user.id] = 0
-                    bronzecoin[ctx.message.author.id] -= int(amount)
+                    if str(user.id) not in bronzecoin:
+                        bronzecoin[str(user.id)] = 0
+                    bronzecoin[str(ctx.message.author.id)] -= int(amount)
                     self.save()
-                    bronzecoin[user.id] += int(amount)
+                    bronzecoin[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"You gave {amount} bronze coins to {user.display_name}")
                     return
             elif item == "silvercoin":
-                if silvercoin[ctx.message.author.id] < int(amount):
+                if silvercoin[str(ctx.message.author.id)] < int(amount):
                     await ctx.reply("You don\'t have that many items")
                     return
                 elif int(amount) < 0 or int(amount) == 0:
                     await ctx.reply("Don\'t try to break me **dood**")
                     return
                 else:
-                    if user.id not in silvercoin:
-                        silvercoin[user.id] = 0
-                    silvercoin[ctx.message.author.id] -= int(amount)
+                    if str(user.id) not in silvercoin:
+                        silvercoin[str(user.id)] = 0
+                    silvercoin[str(ctx.message.author.id)] -= int(amount)
                     self.save()
-                    silvercoin[user.id] += int(amount)
+                    silvercoin[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"You gave {amount} silver coins keys to {user.display_name}")
                     return
             elif item == "goldcoin":
-                if goldcoin[ctx.message.author.id] < int(amount):
+                if goldcoin[str(ctx.message.author.id)] < int(amount):
                     await ctx.reply("You don\'t have that many items")
                     return
                 elif int(amount) < 0 or int(amount) == 0:
                     await ctx.reply("Don\'t try to break me **dood**")
                     return
                 else:
-                    if user.id not in goldcoin:
-                        goldcoin[user.id] = 0
-                    goldcoin[ctx.message.author.id] -= int(amount)
+                    if str(user.id) not in goldcoin:
+                        goldcoin[str(user.id)] = 0
+                    goldcoin[str(ctx.message.author.id)] -= int(amount)
                     self.save()
-                    goldcoin[user.id] += int(amount)
+                    goldcoin[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"You gave {amount} gold coins keys to {user.display_name}")
                     return
@@ -1724,23 +1770,24 @@ class MainCog(commands.Cog):
             
     @commands.command()
     async def add(self, ctx, user:discord.User, amount:int, place:str=None):
+        self.load()
         if ctx.message.author.id not in ids:
             return
         else:
             if user == None:
                 if place == None or str(place) == "wallet":
-                    if user.id not in wallet:
-                        wallet[ctx.message.author.id] = 0
+                    if str(user.id) not in wallet:
+                        wallet[str(ctx.message.author.id)] = 0
                         self.save()
-                    wallet[ctx.message.author.id] += int(amount)
+                    wallet[str(ctx.message.author.id)] += int(amount)
                     await ctx.reply(f"Added {amount} coins to your wallet")
                     self.save()
                     return
                 elif place == "bank":
-                    if user.id not in bank:
-                        bank[ctx.message.author.id] = 0
+                    if str(user.id) not in bank:
+                        bank[str(ctx.message.author.id)] = 0
                         self.save()
-                    bank[ctx.message.author.id] += int(amount)
+                    bank[str(ctx.message.author.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"Added {amount} coins to your bank")
                     return
@@ -1748,18 +1795,18 @@ class MainCog(commands.Cog):
                     raise BadArgument
             else:
                 if place == None or str(place) == "wallet":
-                    if user.id not in wallet:
-                        wallet[user.id] = 0
+                    if str(user.id) not in wallet:
+                        wallet[str(user.id)] = 0
                         self.save()
-                    wallet[user.id] += int(amount)
+                    wallet[str(user.id)] += int(amount)
                     await ctx.reply(f"Added {amount} coins to {user.display_name}")
                     self.save()
                     return
                 elif place == "bank":
-                    if user.id not in bank:
-                        bank[user.id] = 0
+                    if str(user.id) not in bank:
+                        bank[str(user.id)] = 0
                         self.save()
-                    bank[user.id] += int(amount)
+                    bank[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"Added {amount} coins in {user.display_name}\'s bank")
                     return
@@ -1768,35 +1815,36 @@ class MainCog(commands.Cog):
      
     @commands.command(name="invest")
     async def _invest(self, ctx, action:str):
-        if ctx.message.author.id not in invest:
-            invest[ctx.message.author.id] = 0
+        self.load()
+        if str(ctx.message.author.id) not in invest:
+            invest[str(ctx.message.author.id)] = 0
             self.save()
         if str(action) == "claim":
-            if ctx.message.author.id not in invest or invest[ctx.message.author.id] == 0:
+            if str(ctx.message.author.id) not in invest or invest[str(ctx.message.author.id)] == 0:
                 await ctx.reply("You didnt invest any coins. Type `.invest <amount>` to invest some coins")
                 return
-            i = datetime.datetime.now() - cd[ctx.message.author.id]
+            i = datetime.datetime.now() - cd[str(ctx.message.author.id)]
             if i is None or i.seconds > invest_time:
-                cd[ctx.message.author.id] = datetime.datetime.now()
+                cd[str(ctx.message.author.id)] = datetime.datetime.now()
                 pass
             else:
                 await ctx.reply("You cant claim your money yet")
                 return
             rnd = ''.join(map(str, random.choices([1.25, 1.5, 1.75, 2, 2.5, 5], weights=[35, 10, 5, 3, 1, 0.5], k=1)))
-            a = round(invest[ctx.message.author.id] * rnd)
-            wallet[ctx.message.author.id] += a
-            invest[ctx.message.author.id] = 0
+            a = round(invest[str(ctx.message.author.id)] * rnd)
+            wallet[str(ctx.message.author.id)] += a
+            invest[str(ctx.message.author.id)] = 0
             self.save()
             await ctx.reply(f"You claimed {a} coins with {rnd} profit")
             return
         elif str(action) == "all" or str(action) == "max":
-            if wallet[ctx.message.author.id] < 10000:
+            if wallet[str(ctx.message.author.id)] < 10000:
                 await ctx.reply("You can\'t invest less than 10000 coins")
                 return
             else:
                 m = round(sys.maxsize / 5)
                 maxv = m - 1
-                if wallet[ctx.message.author.id] > maxv:
+                if wallet[str(ctx.message.author.id)] > maxv:
                     await ctx.reply(f"You can\'t invest more than {maxv} coins (int64 max value divided by 5) due to an OverflowError")
                     return
                 else:
@@ -1804,31 +1852,31 @@ class MainCog(commands.Cog):
                 def check(msg):
                     return msg.author == ctx.message.author and msg.channel == ctx.message.channel and (msg.content)
 
-                await ctx.reply(f"Are you sure you want to invest {wallet[ctx.message.author.id]} coins? If you invest them you wont have them in your wallet for some time\nYou can claim after the coins after some time using `.invest claim`\nType yes or no")
+                await ctx.reply(f"Are you sure you want to invest {wallet[str(ctx.message.author.id)]} coins? If you invest them you wont have them in your wallet for some time\nYou can claim after the coins after some time using `.invest claim`\nType yes or no")
                 msg = await self.client.wait_for("message", check=check)
                 if msg.content == "no":
                     await ctx.send("Ok guess you are not gonna invest today")
                     return
                 elif msg.content == "yes":
                     try:
-                        i = datetime.datetime.now() - cd[ctx.message.author.id] 
+                        i = datetime.datetime.now() - cd[str(ctx.message.author.id)]
                     except KeyError:
                         i = None
-                        cd[ctx.message.author.id] = datetime.datetime.now()
+                        cd[str(ctx.message.author.id)] = datetime.datetime.now()
                     if i is None or i.seconds > invest_time:
-                        cd[ctx.message.author.id] = datetime.datetime.now()
+                        cd[str(ctx.message.author.id)] = datetime.datetime.now()
                         pass
                     else:
                         await ctx.reply("You already have invested coins")
                         return
-                    if invest[ctx.message.author.id] == 0:
+                    if invest[str(ctx.message.author.id)] == 0:
                         pass
                     else:
                         await ctx.send("There are unclaimed coins. Type `.invest claim` to claim them")
                         return
-                    invest[ctx.message.author.id] += wallet[ctx.message.author.id]
-                    await ctx.send(f"You invested {wallet[ctx.message.author.id]} coins. Come back in {round(invest_time / 3600)} hours to claim your coins")
-                    wallet[ctx.message.author.id] -= wallet[ctx.message.author.id]
+                    invest[str(ctx.message.author.id)] += wallet[str(ctx.message.author.id)]
+                    await ctx.send(f"You invested {wallet[str(ctx.message.author.id)]} coins. Come back in {round(invest_time / 3600)} hours to claim your coins")
+                    wallet[str(ctx.message.author.id)] -= wallet[str(ctx.message.author.id)]
                     self.save()
                     return
                 else:
@@ -1840,7 +1888,7 @@ class MainCog(commands.Cog):
                     await ctx.reply("You can\'t invest less than 10000 coins")
                     return
                 else:
-                    if int(action) > wallet[ctx.message.author.id]:
+                    if int(action) > wallet[str(ctx.message.author.id)]:
                         await ctx.reply("You dont have that many coins in your wallet")
                         return
                     else:
@@ -1859,23 +1907,23 @@ class MainCog(commands.Cog):
                             return
                         elif msg.content == "yes":
                             try:
-                                i = datetime.datetime.now() - cd[ctx.message.author.id] 
+                                i = datetime.datetime.now() - cd[str(ctx.message.author.id)]
                             except KeyError:
                                 i = None
-                                cd[ctx.message.author.id] = datetime.datetime.now()
+                                cd[str(ctx.message.author.id)] = datetime.datetime.now()
                             if i is None or i.seconds > invest_time:
-                                cd[ctx.message.author.id] = datetime.datetime.now()
+                                cd[str(ctx.message.author.id)] = datetime.datetime.now()
                                 pass
                             else:
                                 await ctx.reply("You already have invested coins")
                                 return
-                            if invest[ctx.message.author.id] == 0:
+                            if invest[str(ctx.message.author.id)] == 0:
                                 pass
                             else:
                                 await ctx.send("There are unclaimed coins. Type `.invest claim` to claim them")
                                 return
-                            invest[ctx.message.author.id] += int(action)
-                            wallet[ctx.message.author.id] -= int(action)
+                            invest[str(ctx.message.author.id)] += int(action)
+                            wallet[str(ctx.message.author.id)] -= int(action)
                             self.save()
                             await ctx.send(f"You invested {action} coins. Come back in {round(invest_time / 3600)} hours to claim your coins")
                             return
@@ -1887,62 +1935,63 @@ class MainCog(commands.Cog):
             
     @commands.command()
     async def work(self, ctx, *, arg1=None):
+        self.load()
         if arg1 == None:
-            if ctx.message.author.id not in jobs:
+            if str(ctx.message.author.id) not in jobs:
                 await ctx.reply("You dont have a job yet. Type `.work list` to see the list of jobs")
                 return
             else:
                 try:
-                    last_work = datetime.datetime.now() - on_cooldown[ctx.message.author.id] 
+                    last_work = datetime.datetime.now() - on_cooldown[str(ctx.message.author.id)]
                 except KeyError:
                     last_work = None
-                    on_cooldown[ctx.message.author.id] = datetime.datetime.now()
-                j = jobs[ctx.message.author.id]
+                    on_cooldown[str(ctx.message.author.id)] = datetime.datetime.now()
+                j = jobs[str(ctx.message.author.id)]
                 if last_work is None or last_work.seconds > work_cooldown:
-                      on_cooldown[ctx.message.author.id] = datetime.datetime.now()
+                      on_cooldown[str(ctx.message.author.id)] = datetime.datetime.now()
                       pass
                 else:
                     await ctx.reply("This command is on cooldown")
                     return
                 if j == "mod":
                     await ctx.reply("You earned 5000 coins from Discord Moderator job")
-                    wallet[ctx.message.author.id] += 5000
+                    wallet[str(ctx.message.author.id)] += 5000
                     self.save()
                     return
                 elif j == "yt":
                     await ctx.reply("You earned 6000 coins from YouTuber job")
-                    wallet[ctx.message.author.id] += 6000
+                    wallet[str(ctx.message.author.id)] += 6000
                     self.save()
                     return
                 elif j == "ts":
                     await ctx.reply("You earned 6900 coins from Twitch Streamer job")
-                    wallet[ctx.message.author.id] += 6900
+                    wallet[str(ctx.message.author.id)] += 6900
                     self.save()
                     return
                 elif j == "pg":
                     await ctx.reply("You earned 15000 coins from Pro Gamer job")
-                    wallet[ctx.message.author.id] += 15000
+                    wallet[str(ctx.message.author.id)] += 15000
                     self.save()
                     return
                 elif j == "dc":
                     await ctx.reply("You earned 20000 coins from Doctor job")
-                    wallet[ctx.message.author.id] += 20000
+                    wallet[str(ctx.message.author.id)] += 20000
                     self.save()
                     return
                 elif j == "dev":
                     await ctx.reply("You earned 25000 coins from Developer job")
-                    wallet[ctx.message.author.id] += 25000
+                    wallet[str(ctx.message.author.id)] += 25000
                     self.save()
                     return
                 elif j == "sc":
                     await ctx.reply("You earned 75000 coins from Scientist job")
-                    wallet[ctx.message.author.id] += 75000
+                    wallet[str(ctx.message.author.id)] += 75000
                     self.save()
                     return
                 elif j == "ab":
                     await ctx.reply("You earned 169420 coins and a **developer box** from Arch bot developer job")
-                    wallet[ctx.message.author.id] += 169420
-                    devbox[ctx.message.author.id] += 1
+                    wallet[str(ctx.message.author.id)] += 169420
+                    devbox[str(ctx.message.author.id)] += 1
                     self.save()
                     return
         elif str(arg1) == "list":
@@ -1951,17 +2000,17 @@ class MainCog(commands.Cog):
             await ctx.reply(embed=em, mention_author=False)
             return
         elif str(arg1) == "resign":
-            if ctx.message.author.id not in jobs:
+            if str(ctx.message.author.id) not in jobs:
                 await ctx.reply("You dont have a job")
                 return
             else:
-                del jobs[ctx.message.author.id]
+                del jobs[str(ctx.message.author.id)]
                 await ctx.reply("You resigned from your job.")
                 self.save()
                 return
         elif str(arg1) == "mod":
-            if ctx.message.author.id not in jobs:
-                jobs[ctx.message.author.id] = "mod"
+            if str(ctx.message.author.id) not in jobs:
+                jobs[str(ctx.message.author.id)] = "mod"
                 await ctx.reply("You are working as a **Discord Moderator** now!")
                 self.save()
                 return
@@ -1969,9 +2018,9 @@ class MainCog(commands.Cog):
                 await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
                 return
         elif str(arg1) == "yt":
-            if ctx.message.author.id not in jobs:
-                if levels[ctx.message.author.id] >= 5:
-                    jobs[ctx.message.author.id] = "yt"
+            if str(ctx.message.author.id) not in jobs:
+                if levels[str(ctx.message.author.id)] >= 5:
+                    jobs[str(ctx.message.author.id)] = "yt"
                     self.save()
                     await ctx.reply("You are now working as a **YouTuber**")
                     return
@@ -1982,9 +2031,9 @@ class MainCog(commands.Cog):
                 await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
                 return
         elif str(arg1) == "ts":
-            if ctx.message.author.id not in jobs:
-                if levels[ctx.message.author.id] >= 5:
-                    jobs[ctx.message.author.id] = "ts"
+            if str(ctx.message.author.id) not in jobs:
+                if levels[str(ctx.message.author.id)] >= 5:
+                    jobs[str(ctx.message.author.id)] = "ts"
                     self.save()
                     await ctx.reply("You are now working as a **Twitch Streamer**")
                     return
@@ -1995,9 +2044,9 @@ class MainCog(commands.Cog):
                 await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
                 return
         elif str(arg1) == "pg":
-            if ctx.message.author.id not in jobs:
-                if levels[ctx.message.author.id] >= 10:
-                    jobs[ctx.message.author.id] = "pg"
+            if str(ctx.message.author.id) not in jobs:
+                if levels[str(ctx.message.author.id)] >= 10:
+                    jobs[str(ctx.message.author.id)] = "pg"
                     self.save()
                     await ctx.reply("You are now working as a **Pro Gamer**")
                     return
@@ -2008,9 +2057,9 @@ class MainCog(commands.Cog):
                 await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
                 return
         elif str(arg1) == "dc":
-            if ctx.message.author.id not in jobs:
-                if levels[ctx.message.author.id] >= 15:
-                    jobs[ctx.message.author.id] = "dc"
+            if str(ctx.message.author.id) not in jobs:
+                if levels[str(ctx.message.author.id)] >= 15:
+                    jobs[str(ctx.message.author.id)] = "dc"
                     self.save()
                     await ctx.reply("You are now working as a **Doctor**")
                     return
@@ -2021,9 +2070,9 @@ class MainCog(commands.Cog):
                 await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
                 return
         elif str(arg1) == "dev":
-            if ctx.message.author.id not in jobs:
-                if levels[ctx.message.author.id] >= 20:
-                    jobs[ctx.message.author.id] = "dev"
+            if str(ctx.message.author.id) not in jobs:
+                if levels[str(ctx.message.author.id)] >= 20:
+                    jobs[str(ctx.message.author.id)] = "dev"
                     self.save()
                     await ctx.reply("You are now working as a **Developer**")
                     return
@@ -2034,9 +2083,9 @@ class MainCog(commands.Cog):
                 await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
                 return
         elif str(arg1) == "sc":
-            if ctx.message.author.id not in jobs:
-                if levels[ctx.message.author.id] >= 50:
-                    jobs[ctx.message.author.id] = "sc"
+            if str(ctx.message.author.id) not in jobs:
+                if levels[str(ctx.message.author.id)] >= 50:
+                    jobs[str(ctx.message.author.id)] = "sc"
                     self.save()
                     await ctx.reply("You are now working as a **Scientist**")
                     return
@@ -2047,9 +2096,9 @@ class MainCog(commands.Cog):
                 await ctx.reply("You already have a job. Type `.work resign` to quit your job.")
                 return
         elif str(arg1) == "ab":
-            if ctx.message.author.id not in jobs:
-                if levels[ctx.message.author.id] >= 69:
-                    jobs[ctx.message.author.id] = "ab"
+            if str(ctx.message.author.id) not in jobs:
+                if levels[str(ctx.message.author.id)] >= 69:
+                    jobs[str(ctx.message.author.id)] = "ab"
                     self.save()
                     await ctx.reply("You are now working as a **Arch bot developer**")
                     return
@@ -2066,16 +2115,18 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def beg(self, ctx):
+        self.load()
         now = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
         coins = randint(1, 500)
-        wallet[ctx.message.author.id] += coins
+        wallet[str(ctx.message.author.id)] += coins
         await ctx.send(f'You earned {coins} coins.')
         self.save()
 
     @commands.command()
     @commands.cooldown(1, 86400, commands.BucketType.user)
     async def daily(self, ctx):
+        self.load()
         if bool(currency) == False:
             await ctx.reply('Currency is disabled')
             return
@@ -2083,7 +2134,7 @@ class MainCog(commands.Cog):
             pass
         now = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S") 
-        wallet[ctx.message.author.id] += 10000
+        wallet[str(ctx.message.author.id)] += 10000
         await ctx.send('You claimed 10,000 coins')
         self.save()
         if bool(log) == True:
@@ -2093,25 +2144,26 @@ class MainCog(commands.Cog):
 
     @commands.command(aliases=['dep'])
     async def deposit(self, ctx, *, arg1):
+        self.load()
         if bool(currency) == False:
             await ctx.send('Currency is disabled')
             return
         else:
             if arg1 == 'all' or arg1 == 'max':
-                if wallet[ctx.message.author.id] == 0:
+                if wallet[str(ctx.message.author.id)] == 0:
                     await ctx.send('You don\'t have any coins in your wallet')
                     return
                 else:
-                    if wallet[ctx.message.author.id] == 1:
+                    if wallet[str(ctx.message.author.id)] == 1:
                         await ctx.reply(f'You deposited 1 coin')
                     else:
-                        await ctx.reply(f'You deposited {wallet[ctx.message.author.id]} coins')    
-                    bank[ctx.message.author.id] += int(wallet[ctx.message.author.id])
-                    wallet[ctx.message.author.id] -= int(wallet[ctx.message.author.id])
+                        await ctx.reply(f'You deposited {wallet[str(ctx.message.author.id)]} coins')
+                    bank[str(ctx.message.author.id)] += int(wallet[str(ctx.message.author.id)])
+                    wallet[str(ctx.message.author.id)] -= int(wallet[str(ctx.message.author.id)])
                     self.save()
                     return
             elif arg1.isdigit:
-                if int(arg1) > wallet[ctx.message.author.id]:
+                if int(arg1) > wallet[str(ctx.message.author.id)]:
                     await ctx.reply('You don\'t have that many coins in your wallet')
                     return
                 elif int(arg1) < 0:
@@ -2119,8 +2171,8 @@ class MainCog(commands.Cog):
                     return
                 else:
                     await ctx.send(f'You deposited {arg1} coins')
-                    wallet[ctx.message.author.id] -= int(arg1)
-                    bank[ctx.message.author.id] += int(arg1)
+                    wallet[str(ctx.message.author.id)] -= int(arg1)
+                    bank[str(ctx.message.author.id)] += int(arg1)
                     self.save()
                     return
             else:
@@ -2128,25 +2180,26 @@ class MainCog(commands.Cog):
 
     @commands.command(aliases=['with'])
     async def withdraw(self, ctx, *, arg1):
+        self.load()
         if bool(currency) == False:
             await ctx.send('Currency is disabled')
             return
         else:
             if arg1 == 'all' or arg1 == 'max':
-                if bank[ctx.message.author.id] == 0:
+                if bank[str(ctx.message.author.id)] == 0:
                     await ctx.send('You don\'t have any coins in your bank')
                     return
                 else:
-                    if bank[ctx.message.author.id] == 1:
-                        await ctx.reply(f'You withdrawn {bank[ctx.message.author.id]} coin')
+                    if bank[str(ctx.message.author.id)] == 1:
+                        await ctx.reply(f'You withdrawn {bank[str(ctx.message.author.id)]} coin')
                     else:
-                        await ctx.reply(f'You withdrawn {bank[ctx.message.author.id]} coins')    
-                    wallet[ctx.message.author.id] += int(bank[ctx.message.author.id])
-                    bank[ctx.message.author.id] -= int(bank[ctx.message.author.id])
+                        await ctx.reply(f'You withdrawn {bank[str(ctx.message.author.id)]} coins')
+                    wallet[str(ctx.message.author.id)] += int(bank[str(ctx.message.author.id)])
+                    bank[str(ctx.message.author.id)] -= int(bank[str(ctx.message.author.id)])
                     self.save()
                     return
             elif arg1.isdigit:
-                if int(arg1) > bank[ctx.message.author.id]:
+                if int(arg1) > bank[str(ctx.message.author.id)]:
                     await ctx.reply('You don\'t have that many coins in your bank')
                     return
                 elif int(arg1) < 0:
@@ -2154,8 +2207,8 @@ class MainCog(commands.Cog):
                     return
                 else:
                     await ctx.send(f'You withdrawn {arg1} coins')
-                    wallet[ctx.message.author.id] += int(arg1)
-                    bank[ctx.message.author.id] -= int(arg1)
+                    wallet[str(ctx.message.author.id)] += int(arg1)
+                    bank[str(ctx.message.author.id)] -= int(arg1)
                     self.save()
                     return
             else:
@@ -2164,6 +2217,7 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 60, commands.BucketType.user)
     async def rob(self, ctx, *, user : discord.User):
+        self.load()
         if bool(currency) == False:
             await ctx.send('Currency is disabled')
             return
@@ -2175,33 +2229,34 @@ class MainCog(commands.Cog):
             await ctx.send('you cant rob yourself xd')
             return
         else:
-            if user.id not in wallet:
-                wallet[user.id] = 0
-            if user.id not in passiveUsers:
-                passiveUsers[user.id] = 0
-            if passiveUsers[ctx.message.author.id] == 1:
+            if str(user.id) not in wallet:
+                wallet[str(user.id)] = 0
+            if str(user.id) not in passiveUsers:
+                passiveUsers[str(user.id)] = 0
+            if passiveUsers[str(ctx.message.author.id)] == 1:
                 await ctx.reply(f"You are on passive mode. You can\'t rob other people")
                 return
-            if passiveUsers[user.id] == 1:
+            if passiveUsers[str(user.id)] == 1:
                 await ctx.reply(f"{user.display_name} has passive mode turned on. You can\'t rob them")
                 return
-            if wallet[user.id] < 500:
+            if wallet[str(user.id)] < 500:
                 await ctx.send('This user has less than 500 coins')
-            elif wallet[user.id] >= 500:
-                coins = randint(500, wallet[user.id])
+            elif wallet[str(user.id)] >= 500:
+                coins = randint(500, wallet[str(user.id)])
                 if bool(log) == True:
                     print(f'[{current_time}]{ctx.message.author.display_name} stole {coins} coins from {user.display_name}')
                 else:
                     pass
-                wallet[user.id] -= coins
+                wallet[str(user.id)] -= coins
                 self.save()
-                wallet[ctx.message.author.id] += coins
+                wallet[str(ctx.message.author.id)] += coins
                 self.save()
                 await ctx.send(f'You stole {coins} coins from **{user.display_name}**')
 
     @commands.command()
     @commands.cooldown(1, 604800, commands.BucketType.user)
     async def weekly(self, ctx):
+        self.load()
         if bool(currency) == False:
             await ctx.send('Currency is disabled')
             return
@@ -2209,7 +2264,7 @@ class MainCog(commands.Cog):
             pass
         now = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
-        wallet[ctx.message.author.id] += 50000
+        wallet[str(ctx.message.author.id)] += 50000
         await ctx.reply('You claimed 50,000 coins')
         self.save()
         if bool(log) == True:
@@ -2220,6 +2275,7 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 2592000, commands.BucketType.user)
     async def monthly(self, ctx):
+        self.load()
         if bool(currency) == False:
             await ctx.send('Currency is disabled')
             return
@@ -2227,7 +2283,7 @@ class MainCog(commands.Cog):
             pass
         now = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
-        wallet[ctx.message.author.id] += 100000
+        wallet[str(ctx.message.author.id)] += 100000
         await ctx.send('You claimed 100,000 coins')
         self.save()
         if bool(log) == True:
@@ -2237,6 +2293,7 @@ class MainCog(commands.Cog):
 
     @commands.command(aliases=['bal'])
     async def balance(self, ctx, user : discord.User=None):
+        self.load()
         colors = [
             0x000000,
             0xff0000,
@@ -2255,53 +2312,53 @@ class MainCog(commands.Cog):
         else:
             pass
         if user == None:
-            if ctx.message.author.id not in wallet:
-                wallet[ctx.message.author.id] = 0
-            if ctx.message.author.id not in bank:
-                bank[ctx.message.author.id] = 0
-            if ctx.message.author.id not in windows10:
-                windows10[ctx.message.author.id] = 0
-            if ctx.message.author.id not in bronzecoin:
-                bronzecoin[ctx.message.author.id] = 0
-            if ctx.message.author.id not in silvercoin:
-                silvercoin[ctx.message.author.id] = 0
-            if ctx.message.author.id not in goldcoin:
-                goldcoin[ctx.message.author.id] = 0
+            if str(ctx.message.author.id) not in wallet:
+                wallet[str(ctx.message.author.id)] = 0
+            if str(ctx.message.author.id) not in bank:
+                bank[str(ctx.message.author.id)] = 0
+            if str(ctx.message.author.id) not in windows10:
+                windows10[str(ctx.message.author.id)] = 0
+            if str(ctx.message.author.id) not in bronzecoin:
+                bronzecoin[str(ctx.message.author.id)] = 0
+            if str(ctx.message.author.id) not in silvercoin:
+                silvercoin[str(ctx.message.author.id)] = 0
+            if str(ctx.message.author.id) not in goldcoin:
+                goldcoin[str(ctx.message.author.id)] = 0
             self.save()
-            win10v = windows10[ctx.message.author.id] * 69420
-            bcoinv = bronzecoin[ctx.message.author.id] * 50000
-            scoinv = silvercoin[ctx.message.author.id] * 250000
-            gcoinv = goldcoin[ctx.message.author.id] * 1000000
-            networth = wallet[ctx.message.author.id] + bank[ctx.message.author.id] + win10v + bcoinv + scoinv + gcoinv
+            win10v = windows10[str(ctx.message.author.id)] * 69420
+            bcoinv = bronzecoin[str(ctx.message.author.id)] * 50000
+            scoinv = silvercoin[str(ctx.message.author.id)] * 250000
+            gcoinv = goldcoin[str(ctx.message.author.id)] * 1000000
+            networth = wallet[str(ctx.message.author.id)] + bank[str(ctx.message.author.id)] + win10v + bcoinv + scoinv + gcoinv
             embed = discord.Embed(title=f"{ctx.message.author.display_name}'s Balance", color=discord.Colour.random())
-            embed.add_field(name="Wallet", value=str(wallet[ctx.message.author.id]))
-            embed.add_field(name="Bank", value=str(bank[ctx.message.author.id]))
+            embed.add_field(name="Wallet", value=str(wallet[str(ctx.message.author.id)]))
+            embed.add_field(name="Bank", value=str(bank[str(ctx.message.author.id)]))
             embed.add_field(name="Networth", value=str(networth))
-            embed.add_field(name="Invested coins", value=str(invest[ctx.message.author.id]))
+            embed.add_field(name="Invested coins", value=str(invest[str(ctx.message.author.id)]))
             embed.set_footer(text=f'Currency api made by {owner}')
             await ctx.send(embed=embed)
         else:
-            if user.id not in wallet:
-                wallet[user.id] = 0
-            if user.id not in bank:
-                bank[user.id] = 0
-            if user.id not in windows10:
-                windows10[user.id] = 0
-            if user.id not in bronzecoin:
-                bronzecoin[user.id] = 0
-            if user.id not in silvercoin:
-                silvercoin[user.id] = 0
-            if user.id not in goldcoin:
-                goldcoin[user.id] = 0
+            if str(user.id) not in wallet:
+                wallet[str(user.id)] = 0
+            if str(user.id) not in bank:
+                bank[str(user.id)] = 0
+            if str(user.id) not in windows10:
+                windows10[str(user.id)] = 0
+            if str(user.id) not in bronzecoin:
+                bronzecoin[str(user.id)] = 0
+            if str(user.id) not in silvercoin:
+                silvercoin[str(user.id)] = 0
+            if str(user.id) not in goldcoin:
+                goldcoin[str(user.id)] = 0
             self.save()
-            win10v = windows10[user.id] * 69420
-            bcoinv = bronzecoin[user.id] * 50000
-            scoinv = silvercoin[user.id] * 250000
-            gcoinv = goldcoin[user.id] * 1000000
-            networth = wallet[user.id] + bank[user.id] + win10v + bcoinv + scoinv + gcoinv
+            win10v = windows10[str(user.id)] * 69420
+            bcoinv = bronzecoin[str(user.id)] * 50000
+            scoinv = silvercoin[str(user.id)] * 250000
+            gcoinv = goldcoin[str(user.id)] * 1000000
+            networth = wallet[str(user.id)] + bank[str(user.id)] + win10v + bcoinv + scoinv + gcoinv
             embed = discord.Embed(title=f"{user.display_name}'s Balance", color=discord.Colour.random())
-            embed.add_field(name="Wallet", value=str(wallet[user.id]))
-            embed.add_field(name="Bank", value=str(bank[user.id]))
+            embed.add_field(name="Wallet", value=str(wallet[str(user.id)]))
+            embed.add_field(name="Bank", value=str(bank[str(user.id)]))
             embed.add_field(name="Networth", value=str(networth))
             embed.set_footer(text=f'Currency api made by {owner}')
             await ctx.send(embed=embed)
@@ -2430,6 +2487,7 @@ class MainCog(commands.Cog):
             await ctx.reply('An internal error occured')
         else:
             await ctx.reply(f'Undefined status code: {r.status_code}\nsend this to {owner}')
-### Commands end ###        
+### Commands end ###     
+
 def setup(client):
     client.add_cog(MainCog(client))

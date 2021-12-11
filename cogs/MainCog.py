@@ -513,7 +513,7 @@ class MainCog(commands.Cog):
     @commands.command()
     async def add_item(self, ctx, user : discord.User, item:str, amount:int=None):
         self.load()
-        if str(ctx.message.author.id) not in ids:
+        if ctx.message.author.id not in ids:
             await ctx.reply("You cant use this")
             return
         else:
@@ -871,7 +871,7 @@ class MainCog(commands.Cog):
     @commands.command()
     async def add_xp(self, ctx, user : discord.User, amount:int):
         self.load()
-        if str(ctx.message.author.id) not in ids:
+        if ctx.message.author.id not in ids:
             await ctx.reply(f'101% sure that this command doesn\'t exist :eyes:')
         else:
             if amount.isdigit:

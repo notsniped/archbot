@@ -14,13 +14,10 @@ import asyncio
 import datetime
 import requests
 import threading
-import traceback
-import itertools
 from keep_alive import keep_alive
 from time import sleep
 import multiprocessing
 from random import randint
-from functools import partial
 from discord.utils import get
 from discord.ext import tasks
 from discord import TextChannel
@@ -29,8 +26,6 @@ from async_timeout import timeout
 from discord.ext.commands import *
 from discord import FFmpegPCMAudio
 from discord.voice_client import VoiceClient
-from discord_slash import SlashCommand, SlashContext
-from discord_slash.utils.manage_commands import create_choice, create_option
 ### Modules end ###
 
 ### Startup/variables ###
@@ -45,7 +40,6 @@ if os.name == 'nt':
 else:
     os.system('clear')
 client = commands.Bot(command_prefix=".", intents=intents)
-slash = SlashCommand(client, sync_commands=False)
 global startTime
 startTime = time.time()
 client.remove_command('help')
@@ -75,6 +69,10 @@ b.start()
 ## Events ###
 @client.event
 async def on_ready():
+    count = 0
+    for guild in len(client.guilds):
+        count += guild.members
+    print(count)    
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds | .help"))
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
@@ -197,4 +195,5 @@ async def reload(ctx, *, arg1):
     client.load_extension(f'cogs.{arg1}')
     await ctx.send("Reloaded Cog")
 
+keep_alive()
 client.run("ODU5ODY5OTQxNTM1OTk3OTcy.YNy-SQ.WBkUfwsxxaBfUnvGmPvuViqXyrE")

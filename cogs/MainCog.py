@@ -2575,12 +2575,6 @@ class MainCog(commands.Cog):
                 page3
             ]
             message = await ctx.send(embed = page1)
-            await message.add_reaction('◀')
-            await message.add_reaction('▶')
-            
-            def check(reaction, user):
-                return user == ctx.author
-            
             i = 0
             reaction = None
             while True:
@@ -2589,15 +2583,15 @@ class MainCog(commands.Cog):
                         i -= 1
                         await message.edit(embed = pages[i])
                 elif str(reaction) == '▶':
-                    if i < 2:
+                    if i < 1:
                         i += 1
-                        await message.edit(embed = pages[i])        
+                        await message.edit(embed = pages[i])
                 try:
                     reaction, user = await self.client.wait_for('reaction_add', timeout = 30.0, check = check)
                     await message.remove_reaction(reaction, user)
-                except:
+                except Exception as e:
+                    print(e)
                     break
-                    
             await message.clear_reactions()
             return
         elif str(arg1) == "resign":

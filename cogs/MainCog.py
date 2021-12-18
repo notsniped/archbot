@@ -2593,7 +2593,7 @@ class MainCog(commands.Cog):
                         i += 1
                         await message.edit(embed = pages[i])        
                 try:
-                    reaction, user = await client.wait_for('reaction_add', timeout = 30.0, check = check)
+                    reaction, user = await self.client.wait_for('reaction_add', timeout = 30.0, check = check)
                     await message.remove_reaction(reaction, user)
                 except:
                     break

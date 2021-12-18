@@ -2553,10 +2553,52 @@ class MainCog(commands.Cog):
             color = discord.Colour.random()
             page1 = discord.Embed(
                 title="Jobs list",
+                description="**Discord Mod**\nRequirement: `level 1`\nSalary: `5000 coins`\nId: `mod`\n\n**YouTuber**\nRequirememt: `level 5`\nSalary: `6000 coins`\nId: `yt`\n\n**Twitch streamer**\nRequirement: `level 5`\nSalary: `6900 coins`\nId: `ts`",
                 color=color
             )
-            em.set_footer(text="Tip: type .work <job_id> to start a job")
+            page2 = discord.Embed(
+                title="Jobs list",
+                description="**Pro Gamer**\nRequirement: `level 10`\nSalary: `15000 coins`\nId: `pg`\n\n**Doctor**\nRequirement: `level 15`\nSalary: `20000 coins`\nId: `dc`\n\n**Developer**\nRequirement: `level 20`\nSalary: `25000 coins`\nId: `dev`",
+                color=color
+            )
+            page3 = discord.Embed(
+                title="Jobs list",
+                description="**Scientist**\nRequirement: `level 50`\nSalary: `75000 coins`\nId: `sc`\n\n**Arch Bot Developer**\nRequirement: `level 69`\nSalary: `169420 coins`\nId: `ab`",
+                color=color
+            )
+            page1.set_footer(text="Tip: type .work <job_id> to start a job")
+            page2.set_footer(text="Tip: type .work <job_id> to start a job")
+            page3.set_footer(text="Tip: type .work <job_id> to start a job")
+            pages = [
+                page1,
+                page2, 
+                page3
+            ]
+            message = await ctx.send(embed = page1)
+            await message.add_reaction('◀')
+            await message.add_reaction('▶')
             
+            def check(reaction, user):
+                return user == ctx.author
+            
+            i = 0
+            reaction = None
+            while True:
+                if str(reaction) == '◀':
+                    if i > 0:
+                        i -= 1
+                        await message.edit(embed = pages[i])
+                elif str(reaction) == '▶':
+                    if i < 2:
+                        i += 1
+                        await message.edit(embed = pages[i])        
+                try:
+                    reaction, user = await client.wait_for('reaction_add', timeout = 30.0, check = check)
+                    await message.remove_reaction(reaction, user)
+                except:
+                    break
+                    
+            await message.clear_reactions()
             return
         elif str(arg1) == "resign":
             if str(ctx.message.author.id) not in jobs:

@@ -53,6 +53,15 @@ bad = [
     "asshole",
     "bitch"
 ]
+links = [
+    "https://",
+    "http://"
+    "www."
+    "ww1.",
+    "www1.",
+    "ww2.",
+    "www2"
+]
 global startTime
 startTime = time.time()
 owner = 'thatOneArchUser#5794'
@@ -119,6 +128,9 @@ with open(f'{cwd}/database/dailybox.json', 'r') as f:
 with open(f'{cwd}/database/link.json', 'r') as f:
     global link
     link = json.load(f)
+with open(f'{cwd}/database/normalbox.json', 'r') as f:
+    global normalbox
+    normalbox = json.load(f)
 
 ### Commands ###
 class MainCog(commands.Cog):
@@ -163,6 +175,8 @@ class MainCog(commands.Cog):
             json.dump(dailybox, f)
         with open(f'{cwd}/database/link.json', 'w+') as f:
             json.dump(link, f)
+        with open(f'{cwd}/database/normalbox.json', 'w+') as f:
+            json.dump(normalbox, f)
 
     def convert(self, time):
         pos = ["s", "m", "h", "d", "w"]
@@ -277,6 +291,18 @@ class MainCog(commands.Cog):
                     await message.channel.send(f"{message.author.mention} Watch your language")
                     warnings[str(message.author.id)] += 1
                     self.save()                                                             
+                else:
+                    pass
+            if any(x in message.content.lower() for x in links):
+                if str(message.author.id) not in warnings:
+                    warnings[str(message.author.id)] = 0
+                if str(message.guild.id) not in link:
+                    link[str(message.guild.id)] = 0
+                if link[str(message.guild.id)] == 1:
+                    await message.delete()
+                    await message.channel.send(f"{message.author.mention} No links")
+                    warnings[str(message.author.id)] += 1
+                    self.save()
                 else:
                     pass
             else:   
@@ -542,6 +568,124 @@ class MainCog(commands.Cog):
                     embed.set_footer(text=f"These rewards are from {amount} daily boxes")
                     await msg.edit(embed=embed)
                     return
+        elif str(item) == "normal" or str(item) == "normalbox":
+            if amount == None or int(amount) == 1:
+                if int(normalbox[str(ctx.message.author.id)]) < 1:
+                    await ctx.reply("You don\'t own this item")
+                    return
+                else:
+                    items = [
+                        "coins",
+                        "windows10",
+                        "bronzecoin",
+                        "silvercoin",
+                        "goldcoin"
+                    ]
+                    rnd = rnd = ''.join(map(str, random.choices(items, weights=[40, 2.5, 1.5, 0.5, 0.01], k=1)))
+                    msg = await ctx.reply("Opening normal box...")
+                    async with ctx.typing():
+                        await asyncio.sleep(2)
+                    normalbox[str(ctx.message.author.id)] -= 1
+                    if rnd == "coins":
+                        c = random.randint(1000, 10000)
+                        wallet[str(ctx.message.author.id)] += c
+                        await msg.edit(content=f"You earned {c} coins from a normal box!")
+                        self.save()
+                        return
+                    elif rnd == "windows10":
+                        windows10[str(ctx.message.author.id)] += 1
+                        await msg.edit(content=f"You earned 1 windows 10 key from a normal box!")
+                        self.save()
+                        return
+                    elif rnd == "bronzecoin":
+                        bronzecoin[str(ctx.message.author.id)] += 1
+                        await msg.edit(content=f"You earned 1 bronze coin from a daily box!")
+                        self.save()
+                        return
+                    elif rnd == "silvercoin":
+                        silvercoin[str(ctx.message.author.id)] += 1
+                        await msg.edit(content=f"You earned silver coin from a daily box!")
+                        self.save()
+                        return
+                    elif rnd == "goldcoin":
+                        goldcoin[str(ctx.message.author.id)] += 1
+                        await msg.edit(content=f"You earned golden coin from a daily box!")
+                        self.save()
+                        return
+            elif int(amount) == 0:
+                await ctx.reply(f"Oppened 0 normal boxes and got......................\nNOTHING!!!")
+                return
+            elif int(amount) < 0:
+                await ctx.reply("Don\'t try to break me")
+                return
+            else:
+                if int(normalbox[str(ctx.message.author.id)]) < int(amount):
+                    await ctx.reply("You don\'t have that many normal boxes")
+                    return
+                elif int(normalbox[str(ctx.message.author.id)] == 0:
+                    await ctx.reply("You don\'t own this item")
+                    return
+                else:
+                    items = [
+                        "coins",
+                        "windows10",
+                        "bronzecoin",
+                        "silvercoin",
+                        "goldcoin"
+                    ]
+                    c = 0
+                    w = 0
+                    g = 0
+                    b = 0
+                    s = 0
+                    for i in range(int(amount)):
+                        rnd = rnd = ''.join(map(str, random.choices(items, weights=[40, 2.5, 1.5, 0.5, 0.01], k=1)))
+                        if rnd == "coins":
+                            c += 1
+                        elif rnd == "windows10":
+                            w += 1
+                        elif rnd == "goldcoin":
+                            g += 1
+                        elif rnd == "silvercoin":
+                            s += 1
+                        elif rnd == "bronzecoin":
+                            b += 1
+                    if c != 0:
+                        coin0 = random.randint(1000, 10000)
+                        coin1 = round(coin0 * c)
+                    if w != 0:
+                        win0 = 1
+                        win1 = round(win0 * w)
+                    if g != 0:
+                        gold0 = 1
+                        gold1 = round(gold0 * g)
+                    if s != 0:
+                        silver0 = 1
+                        silver1 = round(silver0 * s)
+                    if b != 0:
+                        b0 = 1
+                        b1 = round(b0 * b)
+                    msg = await ctx.reply(f"Opening {amount} normal boxes...")
+                    async with ctx.typing():
+                        await asyncio.sleep(2)
+                    windows10[str(ctx.message.author.id)] += int(win1)
+                    wallet[str(ctx.message.author.id)] += int(coin1)
+                    goldcoin[str(ctx.message.author.id)] += int(gold1)
+                    normalbox[str(ctx.message.author.id)] -= int(amount)
+                    self.save()
+                    embed = discord.Embed(description="You earned:", color=discord.Colour.random())
+                    if c != 0:
+                        embed.add_field(name="Coins", value=str(coin1))
+                        pass
+                    if w != 0:
+                        embed.add_field(name="Windows 10 keys", value=str(win1))
+                        pass
+                    if g != 0:
+                        embed.add_field(name="Golden coins", value=str(gold1))
+                        pass
+                    embed.set_footer(text=f"These rewards are from {amount} normal boxes")
+                    await msg.edit(embed=embed)
+                    return
         else:
             await ctx.reply(f"No such item: {item}")
             return
@@ -572,6 +716,26 @@ class MainCog(commands.Cog):
                     windows10[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"Added {amount} windows 10 keys to {user.display_name}")
+                    return
+            elif str(item) == "normalbox":
+                if amount == None or int(amount) == 1:
+                    if str(user.id) not in normalbox:
+                        normalbox[str(user.id)] = 0
+                        self.save()
+                    normalbox[str(user.id)] += 1
+                    self.save()
+                    await ctx.reply(f"Added 1 `normalbox` to {user.display_name}", mention_author=False)
+                    return
+                elif int(amount) == 0:
+                    await ctx.reply(f"You don\'t need to run the command to give 0 items", mention_author=False)
+                    return
+                else:
+                    if str(user.id) not in normalbox:
+                        normalbox[str(user.id)] = 0
+                        self.save()
+                    normalbox[str(user.id)] += int(amount)
+                    self.save()
+                    await ctx.reply(f"Added {amount} normal boxes to {user.display_name}")
                     return
             elif str(item) == "bronzecoin":
                 if amount == None or int(amount) == 1:
@@ -689,6 +853,8 @@ class MainCog(commands.Cog):
                         devbox[str(user.id)] = 0
                     if str(user.id) not in dailybox:
                         dailybox[str(user.id)] = 0
+                    if str(user.id) not in normalbox:
+                        normalbox[str(user.id)] = 0
                     self.save()
                     windows10[str(user.id)] += 1
                     bronzecoin[str(user.id)] += 1
@@ -696,6 +862,7 @@ class MainCog(commands.Cog):
                     goldcoin[str(user.id)] += 1
                     devbox[str(user.id)] += 1
                     dailybox[str(user.id)] += 1
+                    normalbox[str(user.id)] += 1
                     self.save()
                     await ctx.reply(f"Added all items once in {user.display_name}\'s profile", mention_author=False)
                     return
@@ -712,6 +879,8 @@ class MainCog(commands.Cog):
                         devbox[str(user.id)] = 0
                     if str(user.id) not in dailybox:
                         dailybox[str(user.id)] = 0
+                    if str(user.id) not in normalbox:
+                        normalbox[str(user.id)] = 0
                     self.save()
                     windows10[str(user.id)] += int(amount)
                     bronzecoin[str(user.id)] += int(amount)
@@ -719,6 +888,7 @@ class MainCog(commands.Cog):
                     goldcoin[str(user.id)] += int(amount)
                     devbox[str(user.id)] += int(amount)
                     dailybox[str(user.id)] += int(amount)
+                    normalbox[str(user.id)] += int(amount)
                     self.save()
                     await ctx.reply(f"Added all items {amount} times in {user.display_name}\'s profile", mention_author=False)
                     return

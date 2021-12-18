@@ -333,15 +333,15 @@ class MainCog(commands.Cog):
     @commands.has_permissions(manage_guild=True)
     async def linktoggle(self, ctx):
         if str(ctx.message.guild.id) not in link:
-            link[str(ctx.message.guild.id) = 0
-        if link[str(ctx.message.guild.id) == 0:
+            link[str(ctx.message.guild.id)] = 0
+        if link[str(ctx.message.guild.id)] == 0:
             await ctx.reply("Enabled link blocker.")
-            link[str(ctx.message.guild.id) = 1
+            link[str(ctx.message.guild.id)] = 1
             self.save()
             return
-        elif link[str(ctx.message.guild.id) == 1:
+        elif link[str(ctx.message.guild.id)] == 1:
             await ctx.reply("Disabled link blocker")
-            link[str(ctx.message.guild.id) = 0
+            link[str(ctx.message.guild.id)] = 0
             self.save()
             return
     

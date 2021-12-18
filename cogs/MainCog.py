@@ -622,7 +622,7 @@ class MainCog(commands.Cog):
                 if int(normalbox[str(ctx.message.author.id)]) < int(amount):
                     await ctx.reply("You don\'t have that many normal boxes")
                     return
-                elif int(normalbox[str(ctx.message.author.id)] == 0:
+                elif int(normalbox[str(ctx.message.author.id)]) == 0:
                     await ctx.reply("You don\'t own this item")
                     return
                 else:

@@ -2575,6 +2575,10 @@ class MainCog(commands.Cog):
                 page3
             ]
             message = await ctx.send(embed = page1)
+            await message.add_reaction('◀')
+            await message.add_reaction('▶')
+            def check(reaction, user):
+                return user == ctx.author
             i = 0
             reaction = None
             while True:

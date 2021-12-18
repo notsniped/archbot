@@ -347,16 +347,16 @@ class MainCog(commands.Cog):
     
     @commands.command()
     async def shop(self, ctx):
-        self.load()
+        color = discord.Colour.random()
         page1 = discord.Embed(
             title=f"Arch bot shop",
             description=f"Windows 10 key\nDescription: Windows 10 lisence key, too expensive for an os\nCost: 69420\nId: `windows10`\n\nBronze coin\nCost: 50000 coins\nId: `bronzecoin`\n\nSilver coin\nCost: 250000 coins\nId: `silvercoin`",
-            color=discord.Colour.random()
+            color=color
         )
         page2 = discord.Embed(
             title=f"Arch bot shop",
             description=f"Gold coin\nCost: 1000000 coins\nId: `goldcoin`\n\nDeveloper box\nCost: 69000000000000 coins\nId: `devbox`\n\nNormal box\nCost: 5000 coins\nId: `normalbox`",
-            color=discord.Colour.random()
+            color=color
         )
         page1.set_footer(text="Tip: type .buy <item_id> [amount] to buy an item")
         page2.set_footer(text="Tip: type .buy <item_id> [amount] to buy an item")
@@ -2488,7 +2488,7 @@ class MainCog(commands.Cog):
             else:
                 raise BadArgument
             
-    @commands.command()
+    @commands.command(aliases=["job"])
     async def work(self, ctx, *, arg1=None):
         self.load()
         if arg1 == None:
@@ -2550,9 +2550,13 @@ class MainCog(commands.Cog):
                     self.save()
                     return
         elif str(arg1) == "list":
-            em = discord.Embed(title="Jobs list", description="**Discord Mod**\nRequirement: `level 1`\nSalary: `5000 coins`\nId: `mod`\n\n**YouTuber**\nRequirememt: `level 5`\nSalary: `6000 coins`\nId: `yt`\n\n**Twitch streamer**\nRequirement: `level 5`\nSalary: `6900 coins`\nId: `ts`\n\n**Pro Gamer**\nRequirement: `level 10`\nSalary: `15000 coins`\nId: `pg`\n\n**Doctor**\nRequirement: `level 15`\nSalary: `20000 coins`\nId: `dc`\n\n**Developer**\nRequirement: `level 20`\nSalary: `25000 coins`\nId: `dev`\n\n**Scientist**\nRequirement: `level 50`\nSalary: `75000 coins`\nId: `sc`\n\n**Arch Bot Developer**\nRequirement: `level 69`\nSalary: `169420 coins`\nId: `ab`")
+            color = discord.Colour.random()
+            page1 = discord.Embed(
+                title="Jobs list",
+                color=color
+            )
             em.set_footer(text="Tip: type .work <job_id> to start a job")
-            await ctx.reply(embed=em, mention_author=False)
+            
             return
         elif str(arg1) == "resign":
             if str(ctx.message.author.id) not in jobs:

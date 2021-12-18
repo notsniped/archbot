@@ -429,11 +429,13 @@ class MainCog(commands.Cog):
   
     @commands.command(aliases=["open"])
     async def use(self, ctx, item:str, amount:int=None):
-        self.load()
+        if int(amount) >= sys.maxsize:
+            await ctx.reply("no more than int64 limit")
+            return
         if str(item) == "developer" or str(item) == "devbox":
             if amount == None or int(amount) == 1:
                 if int(devbox[str(ctx.message.author.id)]) < 1:
-                    await ctx.reply("You don\'t own this item")
+                    await ctx.reply("You don\'t owm this item")
                     return
                 else:
                     items = [
@@ -472,7 +474,7 @@ class MainCog(commands.Cog):
                 return
             else:
                 if int(devbox[str(ctx.message.author.id)]) < int(amount):
-                    await ctx.reply("You don\'t own this item")
+                    await ctx.reply("You don\'t have that many developer boxes")
                     return
                 else:
                     items = [
@@ -577,7 +579,7 @@ class MainCog(commands.Cog):
                 return
             else:
                 if int(dailybox[str(ctx.message.author.id)]) < int(amount):
-                    await ctx.reply("You don\'t own this item")
+                    await ctx.reply("You don\'t have that many daily boxes")
                     return
                 else:
                     items = [

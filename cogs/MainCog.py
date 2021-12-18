@@ -2129,17 +2129,20 @@ class MainCog(commands.Cog):
                     await ctx.send("Ok guess you are not gonna invest today")
                     return
                 elif msg.content == "yes":
-                    try:
-                        i = datetime.datetime.now() - cd[str(ctx.message.author.id)]
-                    except KeyError:
-                        i = None
-                        cd[str(ctx.message.author.id)] = datetime.datetime.now()
-                    if i is None or i.seconds > invest_time:
-                        cd[str(ctx.message.author.id)] = datetime.datetime.now()
-                        pass
+                    if ctx.message.author.id not in no_invest_cooldown:
+                        try:
+                            i = datetime.datetime.now() - cd[str(ctx.message.author.id)]
+                        except KeyError:
+                            i = None
+                            cd[str(ctx.message.author.id)] = datetime.datetime.now()
+                        if i is None or i.seconds > invest_time:
+                            cd[str(ctx.message.author.id)] = datetime.datetime.now()
+                            pass
+                        else:
+                            await ctx.reply("You already have invested coins")
+                            return
                     else:
-                        await ctx.reply("You already have invested coins")
-                        return
+                        pass
                     if invest[str(ctx.message.author.id)] == 0:
                         pass
                     else:
@@ -2182,17 +2185,20 @@ class MainCog(commands.Cog):
                             await ctx.send("Ok guess you are not gonna invest today")
                             return
                         elif msg.content == "yes":
-                            try:
-                                i = datetime.datetime.now() - cd[str(ctx.message.author.id)]
-                            except KeyError:
-                                i = None
-                                cd[str(ctx.message.author.id)] = datetime.datetime.now()
-                            if i is None or i.seconds > invest_time:
-                                cd[str(ctx.message.author.id)] = datetime.datetime.now()
-                                pass
+                            if ctx.message.author.id not in no_invest_cooldown:
+                                try:
+                                    i = datetime.datetime.now() - cd[str(ctx.message.author.id)]
+                                except KeyError:
+                                    i = None
+                                    cd[str(ctx.message.author.id)] = datetime.datetime.now()
+                                if i is None or i.seconds > invest_time:
+                                    cd[str(ctx.message.author.id)] = datetime.datetime.now()
+                                    pass
+                                else:
+                                    await ctx.reply("You already have invested coins")
+                                    return
                             else:
-                                await ctx.reply("You already have invested coins")
-                                return
+                                pass
                             if invest[str(ctx.message.author.id)] == 0:
                                 pass
                             else:

@@ -2587,7 +2587,7 @@ class MainCog(commands.Cog):
                         i -= 1
                         await message.edit(embed = pages[i])
                 elif str(reaction) == '▶':
-                    if i < 1:
+                    if i < 2:
                         i += 1
                         await message.edit(embed = pages[i])
                 try:

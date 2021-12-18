@@ -348,18 +348,53 @@ class MainCog(commands.Cog):
     @commands.command()
     async def shop(self, ctx):
         self.load()
-        em = discord.Embed(title=f"Arch bot shop", description=f"Windows 10 key\nDescription: Windows 10 lisence key, too expensive for an os\nCost: 69420\nId: `windows10`\n\nBronze coin\nCost: 50000 coins\nId: `bronzecoin`\n\nSilver coin\nCost: 250000 coins\nId: `silvercoin`\n\nGold coin\nCost: 1000000 coins\nId: `goldcoin`\n\nDeveloper box\nCost: 69000000000000", color=discord.Colour.random())
-        em.set_footer(text="Tip: type .buy <item_id> [amount] to buy an item")
-        await ctx.reply(embed=em, mention_author=False)
-             
+        page1 = discord.Embed(
+            title=f"Arch bot shop",
+            description=f"Windows 10 key\nDescription: Windows 10 lisence key, too expensive for an os\nCost: 69420\nId: `windows10`\n\nBronze coin\nCost: 50000 coins\nId: `bronzecoin`\n\nSilver coin\nCost: 250000 coins\nId: `silvercoin`",
+            color=discord.Colour.random()
+        )
+        page2 = discord.Embed(
+            title=f"Arch bot shop",
+            description=f"Gold coin\nCost: 1000000 coins\nId: `goldcoin`\n\nDeveloper box\nCost: 69000000000000 coins\nId: `devbox`\n\nNormal box\nCost: 5000 coins\nId: `normalbox`",
+            color=discord.Colour.random()
+        )
+        page1.set_footer(text="Tip: type .buy <item_id> [amount] to buy an item")
+        page2.set_footer(text="Tip: type .buy <item_id> [amount] to buy an item")
+        pages = [
+            page1,
+            page2
+        ]
+        message = await ctx.send(embed = page1)
+        await message.add_reaction('◀')
+        await message.add_reaction('▶')
+        def check(reaction, user):
+            return user == ctx.author
+        i = 0
+        reaction = None
+        while True:
+            if str(reaction) == '◀':
+                if i > 0:
+                    i -= 1
+                    await message.edit(embed = pages[i])
+            elif str(reaction) == '▶':
+                if i < 1:
+                    i += 1
+                    await message.edit(embed = pages[i])
+            try:
+                reaction, user = await self.client.wait_for('reaction_add', timeout = 30.0, check = check)
+                await message.remove_reaction(reaction, user)
+            except:
+                break
+        await message.clear_reactions()
+        
     @commands.command(aliases=['inv'])
     async def inventory(self, ctx, user : discord.User=None):
         self.load()
         if user == None:
-            em = discord.Embed(title=f"{ctx.message.author.display_name}'s inventory", description=f"Windows 10 keys: {windows10[str(ctx.message.author.id)]}\nBronze coins: {bronzecoin[str(ctx.message.author.id)]}\nSilver coins: {silvercoin[str(ctx.message.author.id)]}\nGold coins: {goldcoin[str(ctx.message.author.id)]}\nDaily boxes: {dailybox[str(ctx.message.author.id)]}\nDeveloper boxes: {devbox[str(ctx.message.author.id)]}", color=discord.Colour.random())
+            em = discord.Embed(title=f"{ctx.message.author.display_name}'s inventory", description=f"Windows 10 keys: {windows10[str(ctx.message.author.id)]}\nBronze coins: {bronzecoin[str(ctx.message.author.id)]}\nSilver coins: {silvercoin[str(ctx.message.author.id)]}\nGold coins: {goldcoin[str(ctx.message.author.id)]}\nDaily boxes: {dailybox[str(ctx.message.author.id)]}\nDeveloper boxes: {devbox[str(ctx.message.author.id)]}\nNormal boxes: {normalbox[str(ctx.message.author.id)]}", color=discord.Colour.random())
             await ctx.reply(embed=em, mention_author=False)
         else:
-            em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[str(user.id)]}\nBronze coins: {bronzecoin[str(user.id)]}\nSilver coins: {silvercoin[str(user.id)]}\nGold coins: {goldcoin[str(user.id)]}\nDaily boxes: {dailybox[str(user.id)]}\nDeveloper boxes: {devbox[str(user.id)]}", color=discord.Colour.random())
+            em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {windows10[str(user.id)]}\nBronze coins: {bronzecoin[str(user.id)]}\nSilver coins: {silvercoin[str(user.id)]}\nGold coins: {goldcoin[str(user.id)]}\nDaily boxes: {dailybox[str(user.id)]}\nDeveloper boxes: {devbox[str(user.id)]}\nNormal boxes: {normalbox[str(user.id)]}", color=discord.Colour.random())
             await ctx.reply(embed=em, mention_author=False)
 
     @commands.command()
@@ -1220,6 +1255,34 @@ class MainCog(commands.Cog):
                     await ctx.reply(f"You bought {amount} developer boxes for {a} coins. Now you have {wallet[str(ctx.message.author.id)] - a} coins in your wallet")
                     wallet[str(ctx.message.author.id)] -= a
                     devbox[str(ctx.message.author.id)] += amount
+                    self.save()
+                    return
+        elif str(item) == "normalbox":
+            if amount == None or int(amount) == 1:
+                if wallet[str(ctx.message.author.id)] < 5000:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {round(5000 - wallet[str(ctx.message.author.id)])} more coins to buy this.", mention_author=False)
+                    return
+                else:
+                    await ctx.reply(f"You bought a normal box! Now you have {round(wallet[str(ctx.message.author.id)] - 5000)} coins in your wallet.", mention_author=False)
+                    wallet[str(ctx.message.author.id)] -= 5000
+                    normalbox[str(ctx.message.author.id)] += 1
+                    self.save()
+                    return
+            elif int(amount) < 0:
+                await ctx.reply("Don\'t try to break me **dood**")
+                return
+            elif int(amount) == 0:
+                await ctx.reply("Here you go, 0 normal boxes for 0 coins!")
+                return
+            else:
+                a = 5000 * amount
+                if wallet[str(ctx.message.author.id)] < a:
+                    await ctx.reply(f"You don\'t have enough coins to buy this. You need {a - wallet[str(ctx.message.author.id)]} more coins")
+                    return
+                else:
+                    await ctx.reply(f"You bought {amount} normal boxes for {a} coins. Now you have {wallet[str(ctx.message.author.id)] - a} coins in your wallet")
+                    wallet[str(ctx.message.author.id)] -= a
+                    normalbox[str(ctx.message.author.id)] += amount
                     self.save()
                     return
         else:

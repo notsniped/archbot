@@ -330,6 +330,22 @@ class MainCog(commands.Cog):
         await ctx.reply(embed=em, mention_author=False)
 
     @commands.command()
+    @commands.has_permissions(manage_guild=True)
+    async def linktoggle(self, ctx):
+        if str(ctx.message.guild.id) not in link:
+            link[str(ctx.message.guild.id) = 0
+        if link[str(ctx.message.guild.id) == 0:
+            await ctx.reply("Enabled link blocker.")
+            link[str(ctx.message.guild.id) = 1
+            self.save()
+            return
+        elif link[str(ctx.message.guild.id) == 1:
+            await ctx.reply("Disabled link blocker")
+            link[str(ctx.message.guild.id) = 0
+            self.save()
+            return
+    
+    @commands.command()
     async def shop(self, ctx):
         self.load()
         em = discord.Embed(title=f"Arch bot shop", description=f"Windows 10 key\nDescription: Windows 10 lisence key, too expensive for an os\nCost: 69420\nId: `windows10`\n\nBronze coin\nCost: 50000 coins\nId: `bronzecoin`\n\nSilver coin\nCost: 250000 coins\nId: `silvercoin`\n\nGold coin\nCost: 1000000 coins\nId: `goldcoin`\n\nDeveloper box\nCost: 69000000000000", color=discord.Colour.random())

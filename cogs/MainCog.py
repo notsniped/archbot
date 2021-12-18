@@ -376,7 +376,7 @@ class MainCog(commands.Cog):
         rich_id2 = keys[values.index(max(values))]
         user2 = self.client.get_user(int(rich_id2))
         amount2 = max(values)
-        rmmax(rich2_id)
+        rmmax(rich_id2)
         em = discord.Embed(title="People in arch bot database", description=f"#1 {user1} {amount1}\n#2 {user2} {amount2}", color=discord.Colour.random()) 
         await ctx.send(embed=em)
   

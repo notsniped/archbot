@@ -364,11 +364,20 @@ class MainCog(commands.Cog):
 
     @commands.command()
     async def rich(self, ctx):
+        def rmmax(rich_id):
+            values.remove(max(values))
+            keys.remove(rich_id)
         keys = list(wallet.keys())
         values = list(wallet.values())
-        rich_id = keys[values.index(max(values))]
-        user = self.client.get_user(int(rich_id))
-        em = discord.Embed(title="Richest person in Arch bot\'s database", description=f"Name: {user}\nCoins amount: {max(values)}", color=discord.Colour.random()) 
+        rich_id1 = keys[values.index(max(values))]
+        user1 = self.client.get_user(int(rich_id1))
+        amount1 = max(values)
+        rmmax(rich_id1)
+        rich_id2 = keys[values.index(max(values))]
+        user2 = self.client.get_user(int(rich_id2))
+        amount2 = max(values)
+        rmmax(rich2_id)
+        em = discord.Embed(title="People in arch bot database", description=f"#1 {user1} {amount1}\n#2 {user2} {amount2}", color=discord.Colour.random()) 
         await ctx.send(embed=em)
   
     @commands.command(aliases=["open"])

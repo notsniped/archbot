@@ -1,31 +1,13 @@
 ### Modules ###
 import os
-import sys
 import time
-import praw
-import math
-import random
-import pickle
-import string
 import os.path
 import discord
 import json
-import asyncio
 import datetime
-import requests
 import threading
 from keep_alive import keep_alive
-from time import sleep
-import multiprocessing
-from random import randint
-from discord.utils import get
-from discord.ext import tasks
-from discord import TextChannel
 from discord.ext import commands
-from async_timeout import timeout
-from discord.ext.commands import *
-from discord import FFmpegPCMAudio
-from discord.voice_client import VoiceClient
 ### Modules end ###
 
 ### Startup/variables ###
@@ -39,7 +21,16 @@ if os.name == 'nt':
     os.system('cls')
 else:
     os.system('clear')
-client = commands.Bot(command_prefix=".", intents=intents)
+
+def get_prefix(client, message):
+    with open(f"{cwd}/database/prefixes.json", 'r') as f:
+        prefixes = json.load(f)
+    
+    if str(message.guild.id) not in prefixes:
+        prefixes[str(message.guild.id)] = "."   
+    return prefixes[str(message.guild.id)]
+
+client = commands.Bot(command_prefix=get_prefix, intents=intents)
 global startTime
 startTime = time.time()
 client.remove_command('help')
@@ -58,9 +49,9 @@ class Data:
 def foo():
     v = 1
     while True:
+        time.sleep(300)
         print(f"hit {v}")
         v += 1
-        time.sleep(300)
 
 b = threading.Thread(target=foo)
 b.daemon = True
@@ -70,15 +61,12 @@ b.start()
 @client.event
 async def on_ready():
     count = 0
-    for guild in len(client.guilds):
-        count += guild.members
-    print(count)    
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds | .help"))
+    for guild in client.guilds:
+        count += guild.member_count
+    await client.change_presence(status="idle", activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds, {count} users | .help"))
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
             if filename == "Events.py":
-                pass
-            elif filename == "Music.py":
                 pass
             else:
                 client.load_extension(f'cogs.{filename[:-3]}')
@@ -131,12 +119,66 @@ async def on_message_delete(message):
 
 @client.event
 async def on_guild_join(guild):
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds | .help"))
+    count = 0
+    for guild in client.guilds:
+        count += guild.member_count
+    prefix[str(guild.id)] = "."
+    await client.change_presence(status="idle", activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds, {count} users | .help"))
 
 @client.event
 async def on_guild_remove(guild):
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds | .help"))
+    count = 0
+    for guild in client.guilds:
+        count += guild.member_count
+    await client.change_presence(status="idle", activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds, {count} users | .help"))
+
+@client.event
+async def on_member_join(member):
+    count = 0
+    for guild in client.guilds:
+        count += guild.member_count
+    with open(f"{os.getcwd()}/database/welcome.json", "r") as f:
+        welcome = json.load(f)
+    if str(guild.id) not in welcome:
+        pass
+    else:
+        await member.send(f"{welcome[str(guild.id)]}")
+    await client.change_presence(status="idle", activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds, {count} users | .help"))
+
+@client.event
+async def on_member_remove(member):
+    count = 0
+    for guild in client.guilds:
+        count += guild.member_count
+    await client.change_presence(status="idle", activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds, {count} users | .help"))
+
+@client.event
+async def on_message(message):
+    try:
+        if message.mentions[0] == client.user:
+            with open(f"{cwd}/database/prefixes.json", 'r') as f:
+                prefixes = json.load(f)
+            if str(message.guild.id) not in prefixes:
+                prefix = "."
+            else:
+                prefix = prefixes[str(message.guild.id)]
+            await message.channel.send(f"My prefix for this guild is {prefix}")
+    except:
+        pass
+
+    await client.process_commands(message)
 ### Events end ###
+
+@client.command()
+@commands.has_permissions(administrator=True)
+async def prefix(ctx, prefix:str):
+    with open(f"{cwd}/database/prefixes.json", "r") as f:
+        prefixes = json.load(f)
+    
+    prefixes[str(ctx.guild.id)] = prefix
+    await ctx.reply(f"Set server prefix to {prefix}")
+    with open(f"{cwd}/database/prefixes.json", "w+") as f:
+        json.dump(prefixes, f)
 
 @client.command()
 async def snipe(ctx):
@@ -196,4 +238,4 @@ async def reload(ctx, *, arg1):
     await ctx.send("Reloaded Cog")
 
 keep_alive()
-client.run("ODU5ODY5OTQxNTM1OTk3OTcy.YNy-SQ.WBkUfwsxxaBfUnvGmPvuViqXyrE")
+client.run("ODU5ODY5OTQxNTM1OTk3OTcy.YNy-SQ.atzJwjb8kssaYgeDSDR_UYnQyHA")

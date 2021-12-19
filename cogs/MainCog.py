@@ -44,15 +44,6 @@ ids = [
 beta = [
     778241840562044960
 ]
-bad = [
-    "fuck",
-    "dick",
-    "nigga",
-    "nigger",
-    "cock",
-    "asshole",
-    "bitch"
-]
 links = [
     "https://",
     "http://"
@@ -131,6 +122,9 @@ with open(f'{cwd}/database/link.json', 'r') as f:
 with open(f'{cwd}/database/normalbox.json', 'r') as f:
     global normalbox
     normalbox = json.load(f)
+with open(f'{cwd}/database/bad.json', 'r') as f:
+    global bad
+    bad = json.load(f)
 
 ### Commands ###
 class MainCog(commands.Cog):
@@ -177,6 +171,8 @@ class MainCog(commands.Cog):
             json.dump(link, f)
         with open(f'{cwd}/database/normalbox.json', 'w+') as f:
             json.dump(normalbox, f)
+        with open(f'{cwd}/database/bad.json', 'w+') as f:
+            json.dump(bad, f)
 
     def convert(self, time):
         pos = ["s", "m", "h", "d", "w"]
@@ -192,6 +188,11 @@ class MainCog(commands.Cog):
 
         return val * time_dict[unit]
 
+    def addv(dic, key, valarr):
+        if key not in dic:
+            dic[key] = list()
+        dic[key].extend(valarr)
+    
     @commands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):
         global author
@@ -281,18 +282,21 @@ class MainCog(commands.Cog):
                 pass
             xpreq = 0
             self.save()
-            if any(x in message.content.lower() for x in bad):
-                if str(message.author.id) not in warnings:
-                    warnings[str(message.author.id)] = 0
-                if str(message.guild.id) not in swearfilter:
-                    swearfilter[str(message.guild.id)] = 0
-                if swearfilter[str(message.guild.id)] == 1:
-                    await message.delete()
-                    await message.channel.send(f"{message.author.mention} Watch your language")
-                    warnings[str(message.author.id)] += 1
-                    self.save()                                                             
-                else:
-                    pass
+            if str(message.guild.id) not in bad:
+                pass
+            else:
+                if any(x in message.content.lower() for x in bad[str(message.guild.id)]):
+                    if str(message.author.id) not in warnings:
+                        warnings[str(message.author.id)] = 0
+                    if str(message.guild.id) not in swearfilter:
+                        swearfilter[str(message.guild.id)] = 0
+                    if swearfilter[str(message.guild.id)] == 1:
+                        await message.delete()
+                        await message.channel.send(f"{message.author.mention} Watch your language")
+                        warnings[str(message.author.id)] += 1
+                        self.save()                                                             
+                    else:
+                        pass
             if any(x in message.content.lower() for x in links):
                 if str(message.author.id) not in warnings:
                     warnings[str(message.author.id)] = 0
@@ -307,7 +311,6 @@ class MainCog(commands.Cog):
                     pass
             else:   
                 pass
-        #await self.client.process_commands(message)
     
     @commands.command()
     async def pulldb(self, ctx):
@@ -318,6 +321,28 @@ class MainCog(commands.Cog):
                     #await channel.send(file=discord.File(f"./database/{filename}"))
                      await ctx.send(file=discord.File(f"./database/{filename}"))
 
+    @commands.command()
+    @commands.has_permissons(administrator=True)
+    async def bannedwords(self, ctx, *wordlist:str=None):
+        if wordlist == None:
+            if str(ctx.guild.id) not in bad:
+                await ctx.reply(f"You don\'t have any banned words saved, type `{prefix[str(ctx.guild.id)]}bannedwords <words>` to setup.")
+                return
+            words = ''.join(bad[str(ctx.guild.id)])
+            await ctx.reply(f"Your banned words are: {words}")
+            return
+        else:
+            arr = [ ]
+            for word in wordlist:
+                arr.append(word)
+            try:
+                del bad[str(ctx.guild.id)
+            except KeyError:
+                pass
+            self.addv(bad, str(ctx.guild.id), arr)
+            self.save()
+            await ctx.reply("Updated banned word list")
+    
     @commands.command()
     async def credits(self, ctx):
         em = discord.Embed(title="Arch bot developers team", description="thatOneArchUser#5794, Main developer\nnotsniped#0002, made purge command, bot administrator\nMarios1Gr#3949, made deposit/withdraw\nαrchιshα#5518, bot administrator\ngalaxy#2203, tester\nxristos_hal#4383, bot administrator", color=discord.Colour.random())

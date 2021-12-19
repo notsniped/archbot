@@ -326,9 +326,9 @@ class MainCog(commands.Cog):
     async def bannedwords(self, ctx, *wordlist:str=None):
         if wordlist == None:
             if str(ctx.guild.id) not in bad:
-                await ctx.reply(f"You don\'t have any banned words saved, type `{prefix[str(ctx.guild.id)]}bannedwords <words>` to setup.")
+                await ctx.reply(f"You don\'t have any banned words saved, type `{prefix[str(ctx.message.guild.id)]}bannedwords <words>` to setup.")
                 return
-            words = ''.join(bad[str(ctx.guild.id)])
+            words = ''.join(bad[str(ctx.message.guild.id)])
             await ctx.reply(f"Your banned words are: {words}")
             return
         else:
@@ -336,12 +336,23 @@ class MainCog(commands.Cog):
             for word in wordlist:
                 arr.append(word)
             try:
-                del bad[str(ctx.guild.id)
+                del bad[str(ctx.message.guild.id)
             except KeyError:
                 pass
-            self.addv(bad, str(ctx.guild.id), arr)
+            self.addv(bad, str(ctx.message.guild.id), arr)
             self.save()
             await ctx.reply("Updated banned word list")
+    
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def welcomemsg(self, ctx, message:str):
+        try:
+            del welcome[str(ctx.message.guild.id)
+        except KeyError:
+            pass
+        welcome[str(ctx.message.guild.id)] = str(message)
+        await ctx.reply(f"Updated the welcome message.")
+        self.save()
     
     @commands.command()
     async def credits(self, ctx):
@@ -1321,6 +1332,9 @@ class MainCog(commands.Cog):
     async def sweartoggle(self, ctx):
         self.load()
         if int(swearfilter[str(ctx.message.guild.id)]) == 0:
+            if str(ctx.message.guild.id) not in bad:
+                await ctx.reply(f"You don\'t have any banned words saved, type `{prefix[str(ctx.message.guild.id)]}}bannedwords <words>` to add banned words")
+                return
             swearfilter[str(ctx.message.guild.id)] = 1
             self.save()
             await ctx.reply("Enabled swear filter for this server")

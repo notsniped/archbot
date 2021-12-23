@@ -1,20 +1,24 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from threading import Thread
 import random
 
 app = Flask('')
 
 @app.route('/')
-async def main():
+def main():
     return render_template("root.html")
 
 @app.route('/status', methods=["GET"])
 def status():
-    return "Your bot is alive!"
+    return redirect("https://stats.uptimerobot.com/J14lqcByrn")
 
 @app.route('/amogus', methods=["GET"])
 def amogus():
     return render_template("amogus.html")
+
+@app.route('/credits', methods=["GET"])
+def about():
+  return render_template("credits.html")
 
 def getrnd():
     rnd = random.randint(1000,9999)

@@ -20,6 +20,10 @@ def amogus():
 def about():
   return render_template("credits.html")
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("not_found.html"), 404
+
 def getrnd():
     rnd = random.randint(1000,9999)
     if rnd == 6969:

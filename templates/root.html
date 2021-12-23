@@ -57,22 +57,31 @@
         border: none;
       }
 
-      .vertical-center {
+      .center {
         margin: 0;
         position: absolute;
         top: 50%;
-        -ms-transform: translateY(-50%);
-        transform: translateY(-50%);
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
       }
+      
       body {
         background-image: url("https://i.pinimg.com/originals/d1/de/05/d1de05fd1cb0f0e30cd0024ba7986869.jpg");
         background-repeat: no-repeat;
+        
+        .cum{
+          font-family: arial;
+          color: white;
+          text-align: center;
+        }
     </style>
   </head>
   <body>
+    <h2 class="cum">Arch bot invite page</h2>
     <div class="container">
-      <div class="vertical-center">
-        <h3>Arch bot invite page</h3>
+      <div class="center">
+        <button class="button-64" role="button"><span class="text">click</span></button>
       </div>
     </div>
   </body>

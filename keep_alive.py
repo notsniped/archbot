@@ -8,8 +8,14 @@ app = Flask('')
 def main():
     return "Your bot is alive!"
 
+@app.route('/amogus', methods=["GET"])
+def amogus():
+    return render_template("amogus.html")
+
 def getrnd():
-    random.randint(1000,9999)
+    rnd = random.randint(1000,9999)
+    if rnd == 6969:
+        rnd = random.randint(1000, 9999)
     return rnd
 
 def run():

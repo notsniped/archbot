@@ -5,7 +5,11 @@ import random
 app = Flask('')
 
 @app.route('/')
-def main():
+async def main():
+    return render_template("root.html")
+
+@app.route('/status', methods=["GET"])
+def status():
     return "Your bot is alive!"
 
 @app.route('/amogus', methods=["GET"])

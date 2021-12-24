@@ -188,7 +188,7 @@ class MainCog(commands.Cog):
 
         return val * time_dict[unit]
 
-    def addv(dic, key, valarr):
+    def addv(self, dic, key, valarr):
         if key not in dic:
             dic[key] = list()
         dic[key].extend(valarr)
@@ -336,7 +336,7 @@ class MainCog(commands.Cog):
             for word in wordlist:
                 arr.append(word)
             try:
-                del bad[str(ctx.message.guild.id)
+                del bad[str(ctx.message.guild.id)]
             except KeyError:
                 pass
             self.addv(bad, str(ctx.message.guild.id), arr)

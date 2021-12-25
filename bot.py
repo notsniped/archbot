@@ -195,15 +195,12 @@ async def resetprefix(ctx):
         
 @client.command()
 async def snipe(ctx):
-    bad = [
-    "fuck",
-    "dick",
-    "nigga",
-    "nigger",
-    "cock",
-    "asshole",
-    "bitch"
-    ]
+    with open(f"{os.getcwd()}/database/bannedwords.json", "r"):
+        bannedwords = json.load(f)
+    try:
+        bad = bannedwords[str(ctx.guild.id)]
+    except KeyError:
+        bad = list()
     channel = ctx.channel
     try:
         if any(x in snipe_message_content[channel.id].lower() for x in bad):

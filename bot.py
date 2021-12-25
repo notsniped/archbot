@@ -6,6 +6,7 @@ import discord
 import json
 import datetime
 import threading
+from discord_slash import SlashCommand
 from keep_alive import keep_alive
 from discord.ext import commands
 ### Modules end ###
@@ -31,6 +32,7 @@ def get_prefix(client, message):
     return prefixes[str(message.guild.id)]
 
 client = commands.Bot(command_prefix=commands.when_mentioned_or(get_prefix), intents=intents)
+slash = SlashCommand(client)
 global startTime
 startTime = time.time()
 client.remove_command('help')

@@ -71,6 +71,9 @@ class colors:
     green = '\033[92m'
     end = '\033[0m'
 
+class UserNotAdmin(Exception):
+    pass
+
 with open(f'{cwd}/database/wallet.json', 'r') as f:
     global wallet
     wallet = json.load(f)
@@ -804,8 +807,7 @@ class MainCog(commands.Cog):
     async def add_item(self, ctx, user : discord.User, item:str, amount:int=None):
         self.load()
         if ctx.message.author.id not in ids:
-            await ctx.reply("You cant use this")
-            return
+            raise UserNotAdmin(f"{ctx.message.author.display_name}")
         else:
             if str(item) == "windows10":
                 if amount == None or int(amount) == 1:
@@ -1394,7 +1396,7 @@ class MainCog(commands.Cog):
     async def add_xp(self, ctx, user : discord.User, amount:int):
         self.load()
         if str(ctx.message.author.id) not in ids:
-            await ctx.reply(f'101% sure that this command doesn\'t exist :eyes:')
+            raise UserNotAdmin(f"{ctx.message.author.display_name}")
         else:
             if amount.isdigit:
                 if not currency:
@@ -1442,7 +1444,7 @@ class MainCog(commands.Cog):
     async def add_lvl(self, ctx, user : discord.User, *, arg1):
         self.load()
         if ctx.message.author.id not in ids:
-            pass
+            raise UserNotAdmin(f"{ctx.message.author.display_name}")
         else:
             if arg1.isdigit:
                 if int(arg1) > sys.maxsize:
@@ -2052,7 +2054,7 @@ class MainCog(commands.Cog):
             else:
                 await ctx.send(f'What is {msg.content}? You are supposed to reply with yes or no')
         else:
-            await ctx.send(f'101% that this command doesn\'t exist :eyes:')
+            raise UserNotAdmin(f"{ctx.message.author.display_name}")
 
     blHighlow = True
     @commands.command(aliases=['hl'])
@@ -2352,7 +2354,7 @@ class MainCog(commands.Cog):
     async def add(self, ctx, user:discord.User, amount:int, place:str=None):
         self.load()
         if ctx.message.author.id not in ids:
-            return
+            raise UserNotAdmin(f"{ctx.message.author.display_name}")
         else:
             if user == None:
                 if place == None or str(place) == "wallet":

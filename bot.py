@@ -30,7 +30,7 @@ def get_prefix(client, message):
         prefixes[str(message.guild.id)] = "."   
     return prefixes[str(message.guild.id)]
 
-client = commands.Bot(command_prefix=get_prefix, intents=intents)
+client = commands.Bot(command_prefix=commands.when_mentioned_or(get_prefix), intents=intents)
 global startTime
 startTime = time.time()
 client.remove_command('help')
@@ -181,6 +181,17 @@ async def prefix(ctx, prefix:str):
         json.dump(prefixes, f)
 
 @client.command()
+@commands.has_permissions(administrator=True)
+async def resetprefix(ctx):
+    with open(f"{cwd}/database/prefixes.json", "r") as f:
+        prefixes = json.load(f)
+    
+    prefixes[str(ctx.guild.id)] = "."
+    await ctx.reply("The prefix has been reset")
+    with open(f"{cwd}/database/prefixes.json", "w+") as f:
+        json.dump(prefixes, f)
+        
+@client.command()
 async def snipe(ctx):
     bad = [
     "fuck",
@@ -212,8 +223,12 @@ async def load(ctx, *, arg1):
     else:
         await ctx.reply(f"You can\'t use this command")
         return
-    client.load_extension(f'cogs.{arg1}')
-    await ctx.send("Loaded Cog")
+    try:
+        client.load_extension(f'cogs.{arg1}')
+        await ctx.send("Loaded Cog")
+        return
+    except Exception as e:
+        await ctx.send(e)
 
 @client.command()
 async def unload(ctx, *, arg1):
@@ -222,8 +237,12 @@ async def unload(ctx, *, arg1):
     else:
         await ctx.reply(f"You can\'t use this command")
         return
-    client.unload_extension(f'cogs.{arg1}')
-    await ctx.send("Unloaded Cog")
+    try:
+        client.unload_extension(f'cogs.{arg1}')
+        await ctx.send("Unloaded Cog")
+        return
+    except Exception as e:
+        await ctx.send(e)
 
 
 @client.command()
@@ -233,9 +252,13 @@ async def reload(ctx, *, arg1):
     else:
         await ctx.reply(f"You can\'t use this command")
         return
-    client.unload_extension(f'cogs.{arg1}')
-    client.load_extension(f'cogs.{arg1}')
-    await ctx.send("Reloaded Cog")
+    try:
+        client.unload_extension(f'cogs.{arg1}')
+        client.load_extension(f'cogs.{arg1}')
+        await ctx.send("Reloaded Cog")
+        return
+    except Exception as e:
+        await ctx.send(e)
 
 keep_alive()
 client.run("ODU5ODY5OTQxNTM1OTk3OTcy.YNy-SQ.atzJwjb8kssaYgeDSDR_UYnQyHA")

@@ -25,9 +25,9 @@ from discord.ext import tasks
 from discord import TextChannel
 from discord.ext import commands
 from discord.ext.commands import *
-from discord_slash import cog_ext
-from discord_slash import SlashContext
-from discord_slash.utils.manage_commands import create_option
+#from discord_slash import cog_ext
+#from discord_slash import SlashContext
+#from discord_slash.utils.manage_commands import create_option
 ### Modules end ###
 on_cooldown = {}
 cd = {}
@@ -42,7 +42,7 @@ ids = [
     705462972415213588,
     695640751933096027,
     706697300872921088,
-    884765170184896562
+    884765170184896562,
 ]
 beta = [
     778241840562044960
@@ -125,6 +125,9 @@ with open(f'{cwd}/database/bad.json', 'r') as f:
 with open(f'{cwd}/database/welcome.json', 'r') as f:
     global welcome
     welcome = json.load(f)
+with open(f"{cwd}/database/lvlupc.json", "r") as f:
+    global lvlupc
+    lvlupc = json.load(f)
 
 class ErrorHandler(commands.Cog):
     def __init__(self, client):
@@ -678,6 +681,8 @@ class MainCog(commands.Cog):
             json.dump(bad, f)
         with open(f'{cwd}/database/welcome.json', 'w+') as f:
             json.dump(welcome, f)
+        with open(f"{cwd}/database/lvlupc.json", "w+") as f:
+            json.dump(lvlupc, f)
 
     def convert(self, time):
         pos = ["s", "m", "h", "d", "w"]
@@ -772,7 +777,11 @@ class MainCog(commands.Cog):
             if int(xp[str(message.author.id)]) >= xpreq:
                 xp[str(message.author.id)] -= xp[str(message.author.id)]
                 levels[str(message.author.id)] += 1
-                await message.channel.send(f"{message.author.mention} You just leveled up to level **{levels[str(message.author.id)]}**!")
+                if str(message.guild.id) not in lvlupc:
+                    await message.channel.send(f"{message.author.mention} You just leveled up to level **{levels[str(message.author.id)]}**!")
+                else:
+                    channel = self.client.get_channel(int(lvlupc[str(message.guild.id)]))
+                    await channel.send(f"{message.author.mention} You just leveled up to level **{levels[str(message.author.id)]}**!")
             else:
                 pass
             xpreq = 0
@@ -1795,22 +1804,176 @@ class MainCog(commands.Cog):
             return
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
-    async def sweartoggle(self, ctx):
-        with open(f"{cwd}/database/prefixes.json", "r") as f:
-            prefixes = json.load(f)
-        self.load()
-        if int(swearfilter[str(ctx.message.guild.id)]) == 0:
-            if str(ctx.message.guild.id) not in bad:
-                await ctx.reply(f"You don\'t have any banned words saved, type `{prefixes[str(ctx.message.guild.id)]}bannedwords <words>` to add banned words")
+    @commands.has_permissions(manage_guild=True)
+    async def config(self, ctx, setting:str=None, value:str=None):
+        gid = str(ctx.guild.id)
+        gname = self.client.get_guild(gid)
+        if value == None:
+            if setting == None:
+                if gid not in swearfilter:
+                    swearfilter[gid] = 0
+                if gid not in bad:
+                    bad[gid] = list()
+                if gid not in link:
+                    link[gid] = 0
+                if gid not in lvlupc:
+                    lvlupc[gid] = 0
+                self.save()
+                if swearfilter[gid] == 0:
+                    swear = "disabled"
+                else:
+                    swear = "enabled"
+                if not bad[gid]:
+                    banwrd = False
+                else:
+                    banwrd = ' '.join(bad[gid])
+                if link[gid] == 0:
+                    lnk = "disabled"
+                else:
+                    lnk = "enabled"
+                em = discord.Embed(
+                    title=f"{gname} config",
+                    color=discord.Colour.random()
+                )
+                em.add_field(name="Swear filter", value=swear)
+                em.add_field(name="Link blocker", value=lnk)
+                if gid not in welcome:
+                    pass
+                else:
+                    em.add_field(name=f"Welcome message", value=welcome[gid])
+                if lvlupc[gid] == 0:
+                    pass
+                else:
+                    channel = int(lvlupc[gid])
+                    cname = self.client.get_channel(channel)
+                    em.add_field(name="Level up channel", value=cname)
+                if banwrd == False:
+                    pass
+                else:
+                    em.add_field(name="Banned words", value=f"||{banwrd}||")
+                await ctx.reply(embed=em)
                 return
-            swearfilter[str(ctx.message.guild.id)] = 1
-            self.save()
-            await ctx.reply("Enabled swear filter for this server")
-        elif int(swearfilter[str(ctx.message.guild.id)]) == 1:
-            swearfilter[str(ctx.message.guild.id)] = 0
-            self.save()
-            await ctx.reply("Disabled swear filter for this server")
+            else:
+                if str(setting) == "swearfilter":
+                    if gid not in swearfilter:
+                        swearfilter[gid] = 0
+                    if swearfilter[gid] == 0:
+                        swear = "disabled"
+                    else:
+                        swear = "enabled"
+                    self.save()
+                    em = discord.Embed(
+                        title=f"Swear filter status for {gname}",
+                        description=f"status: {swear}",
+                        color=discord.Colour.random()
+                    )
+                    await ctx.reply(embed=em)
+                elif str(setting) == "bannedwords":
+                    if gid not in bad:
+                        await ctx.reply(f"This server doesn\'t have any blacklisted words.")
+                        bad[gid] = list()
+                        self.save()
+                    else:
+                        arr = ''.join(bad[gid])
+                        em = discord.Embed(
+                            title=f"Banned words list for {gname}",
+                            description=f"words: {arr}",
+                            color=discord.Colour.random()
+                        )
+                        await ctx.reply(embed=em)
+                elif str(setting) == "linkblocker":
+                    if gid not in link:
+                        link[gid] = 0
+                        self.save()
+                    if link[gid] == 0:
+                        lnk = "disabled"
+                    else:
+                        lnk = "enabled"
+                    em = discord.Embed(
+                        title=f"Link blocker status for {gname}",
+                        description=f"status: {lnk}",
+                        color=discord.Colour.random()
+                    )
+                    await ctx.reply(embed=em)
+                elif str(setting) == "levelupchannel":
+                    if lvlupc[gid] != 0:
+                        channel = lvlupc[gid]
+                        cid = self.client.get_channel(channel)
+                        pass
+                    else:
+                        await ctx.reply("This server doesn\'t have a level up channel")
+                        return
+                    em = discord.Embed(
+                        title=f"Level up channel for {gname}",
+                        description=f"channel: {cid}",
+                        color=discord.Colour.random()
+                    )
+                    await ctx.reply(embed=em)
+                else:
+                    await ctx.reply("Invalid setting")
+                    return
+        else:
+            try:
+                int(value)
+            except Exception as e:
+                return await ctx.reply(e)
+            if str(setting) == "swearfilter":
+                arr = [0, 1]
+                if int(value) not in arr:
+                    return await ctx.reply("Invalid value. Use:\n1 to enable\n0 to disable")
+                if int(value) == 0:
+                    swearfilter[gid] = 0
+                    self.save()
+                    return await ctx.reply(f"Disabled swear filter")
+                else:
+                    if gid not in swearfilter:
+                        swearfilter[gid] = 1
+                        self.save()
+                        return await ctx.reply("Enabled swear filter")
+                    swearfilter[gid] = 1
+                    self.save()
+                    return await ctx.reply("Enabled swear filter")
+            elif str(setting) == "linkblocker":
+                arr = [0, 1]
+                if int(value) not in arr:
+                    return await ctx.reply("Invalid value. Use:\n1 to enable\n0 to disable")
+                if int(value) == 0:
+                    link[gid] = 0
+                    self.save()
+                    return await ctx.reply(f"Disabled link blocker")
+                else:
+                    if gid not in link:
+                        link[gid] = 1
+                        self.save()
+                        return await ctx.reply("Enabled link blocker")
+                    link[gid] = 1
+                    self.save()
+                    return await ctx.reply("Enabled link blocker")
+            elif str(setting) == "levelupchannel":
+                try:
+                    channel = self.client.get_channel(int(value))
+                except Exception as e:
+                    return await ctx.reply(e)
+                lvlupc[gid] = int(value)
+                self.save()
+                return await ctx.reply(f"Set {channel} as level up messages channel")
+            elif str(setting) == "bannedwords":
+                with open(f"{cwd}/database/prefixes.json", "r") as f:
+                    prefixes = json.load(f)
+                return await ctx.reply(f"Use `{prefixes[gid]}help bannedwords`")
+            elif str(setting) == "welcome" or str(setting) == "welcomemsg":
+                with open(f"{cwd}/database/prefixes.json", "r") as f:
+                    prefixes = json.load(f)
+                return await ctx.reply(f"Use `{prefixes[gid]}help welcomemsg`")
+            else:
+                return await ctx.reply(f"Invalid setting: {setting}")
+
+    @commands.command(aliases=["levelup"])
+    @commands.has_permissions(manage_guild=True)
+    async def levelupchannel(self, ctx, channel:discord.TextChannel):
+        lvlupc[str(ctx.guild.id)] = channel.id
+        self.save()
+        await ctx.reply(f"Updated level up channel")
 
     @commands.command(aliases=['goldfish'])
     async def fstab(self, ctx):
@@ -1860,22 +2023,19 @@ class MainCog(commands.Cog):
 
     blAdd_xp = True
     @commands.command()
-    async def add_xp(self, ctx, user : discord.User, amount:int):
-        self.load()
-        if str(ctx.message.author.id) not in ids:
+    async def add_xp(self, ctx, user : discord.User, amount:str):
+        if ctx.message.author.id not in ids:
             await ctx.reply(f'101% sure that this command doesn\'t exist :eyes:')
         else:
-            if amount.isdigit:
-                if not currency:
-                    return
-                else:
-                    if str(user.id) not in xp:
-                        xp[str(user.id)] = 0
-                    xp[str(user.id)] += int(amount)
-                    self.save()
-                    await ctx.reply(f'Added {amount} xp to {user.display_name}')
-            else:
-                await ctx.reply(f'{amount} is not a number')
+            try:
+                int(amount)
+            except Exception as e:
+                return await ctx.reply(e)
+            if str(user.id) not in xp:
+                xp[str(user.id)] = 0
+            xp[str(user.id)] += int(amount)
+            self.save()
+            await ctx.reply(f'Added {amount} xp to {user.display_name}')
 
     @commands.command()
     @commands.cooldown(1, 3600, commands.BucketType.user)
@@ -1976,7 +2136,7 @@ class MainCog(commands.Cog):
             rnd = random.choice(colors)
             return int(hex(rnd))
         if arg1 == None:
-            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob, invest, use\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle, viewsettings, edit_snipe, warn\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, windowsmeme, stroke, say, rank, isSus, kill, slap, 8ball, credits, giveaway, reroll, poll\n\nMusic\nsummon, play, leave, queue, join, volume, now, pause, resume, stop, skip, remove, loop', color=discord.Colour.random())
+            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob, invest, use\n\nModeration\nban, kick, purge, nuke, snipe, warns, config, edit_snipe, warn, bannedwords, welcomemsg\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, windowsmeme, stroke, say, rank, isSus, kill, slap, 8ball, credits, giveaway, reroll, poll\n\nMusic\nsummon, play, leave, queue, join, volume, now, pause, resume, stop, skip, remove, loop', color=discord.Colour.random())
             helpMain.set_footer(text='*type .help [command] to get more info about a command*')
             await ctx.reply(embed = helpMain)
         elif arg1 == 'beg':
@@ -2198,8 +2358,14 @@ class MainCog(commands.Cog):
             em63 = discord.Embed(title='\'poll\'command use', description="Starts a poll with 10 max options\nUsage: `.poll <\"question\"> <option1> <option2> [option3-10]")
             await ctx.reply(embed=em63)
         elif arg1 == "reddit":
-            em65 = discord.Embed(title='\'reddit\' command use', description="Gets random image from a selected subreddit.\nUsage: `.reddit <subreddit>`")
+            em64 = discord.Embed(title='\'reddit\' command use', description="Gets random image from a selected subreddit.\nUsage: `.reddit <subreddit>`")
             await ctx.reply(embed=em65)
+        elif arg1 == "config":
+            em65 = discord.Embed(title='\'config\' command use', description="Shows the server config or sets new config.\nUsage: `.config [setting] [value]\nPermissions: Manage server\nArguments:\nsetting: bannedwords, swearfilter, linkblocker, welcomemsg, levelupchannel.\nvalue: __must be int__. 0 disabled, 1 enabled")
+            await ctx.reply(embed=em66)
+        elif arg1 == "bannedwords":
+            em66 = discord.Embed(title='\'bannedwords\' command use', description="Adds blacklisted words to config. If you have any words set up they will be overwritten\nUsage: `.bannedwords <wordlist>`\nExample: `.bannedwords word1 word2`\nPermissions: manage server")
+            await ctx.reply(embed=em67)
         elif arg1 == 'help':
             await ctx.reply('You want help for help command?')
             def check(msg):
@@ -4897,7 +5063,7 @@ class Slash(commands.Cog):
             rnd = random.choice(colors)
             return int(hex(rnd))
         if command == None:
-            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob, invest, use\n\nModeration\nban, kick, purge, nuke, snipe, warns, sweartoggle, viewsettings, edit_snipe, warn\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, windowsmeme, stroke, say, rank, isSus, kill, slap, 8ball, credits, giveaway, reroll, poll\n\nMusic\nsummon, play, leave, queue, join, volume, now, pause, resume, stop, skip, remove, loop', color=discord.Colour.random())
+            helpMain = discord.Embed(title='**COMMAND LIST**', description='Economy\nbeg, balance, daily, weekly, monthly, postmeme, work, guess, give, deposit, withdraw, shop, buy, inventory, passive, highlow, rob, invest, use\n\nModeration\nban, kick, purge, nuke, snipe, warns, config, edit_snipe, warn, bannedwords, welcomemsg\n\nMisc\nmeme, linuxmeme, softwaregore, ihadastroke, windowsmeme, stroke, say, rank, isSus, kill, slap, 8ball, credits, giveaway, reroll, poll\n\nMusic\nsummon, play, leave, queue, join, volume, now, pause, resume, stop, skip, remove, loop', color=discord.Colour.random())
             helpMain.set_footer(text='*type .help [command] to get more info about a command*')
             await ctx.reply(embed = helpMain)
         elif command == 'beg':
@@ -5119,8 +5285,14 @@ class Slash(commands.Cog):
             em63 = discord.Embed(title='\'poll\'command use', description="Starts a poll with 10 max options\nUsage: `.poll <\"question\"> <option1> <option2> [option3-10]")
             await ctx.reply(embed=em63)
         elif command == "reddit":
-            em65 = discord.Embed(title='\'reddit\' command use', description="Gets random image from a selected subreddit.\nUsage: `.reddit <subreddit>`")
+            em64 = discord.Embed(title='\'reddit\' command use', description="Gets random image from a selected subreddit.\nUsage: `.reddit <subreddit>`")
             await ctx.reply(embed=em65)
+        elif command == "config":
+            em65 = discord.Embed(title='\'config\' command use', description="Shows the server config or sets new config.\nUsage: `.config [setting] [value]\nPermissions: Manage server\nArguments:\nsetting: bannedwords, swearfilter, linkblocker, welcomemsg, levelupchannel.\nvalue: __must be int__. 0 disabled, 1 enabled")
+            await ctx.reply(embed=em66)
+        elif command == "bannedwords":
+            em66 = discord.Embed(title='\'bannedwords\' command use', description="Adds blacklisted words to config. If you have any words set up they will be overwritten\nUsage: `.bannedwords <wordlist>`\nExample: `.bannedwords word1 word2`\nPermissions: manage server")
+            await ctx.reply(embed=em67)
         elif command == 'help':
             await ctx.reply('You want help for help command?')
             def check(msg):
@@ -5128,9 +5300,6 @@ class Slash(commands.Cog):
 
             msg = await self.client.wait_for("message", check=check)
             if msg.content == 'yes':
-                await ctx.send('ok gimme a sec')
-                async with ctx.typing():
-                    await asyncio.sleep(2)
                 h = discord.Embed(title='\'Help\' command use', description='helps\nusage: .help [command]', color=discord.Colour.random())
                 h.set_footer(text='why the fk do u need help with this command')
                 await ctx.send(embed=h)
@@ -6452,15 +6621,4 @@ class Slash(commands.Cog):
             e = discord.Embed(title=f'Lowest BIN for {item}', description=f'{lbin} coins')
             await ctx.send(embed=e)
         elif r.status_code == 404:
-            await ctx.reply(f'No such item ({item})')
-        elif r.status_code == 500:
-            await ctx.reply('An internal error occured')
-        else:
-            await ctx.reply(f'Undefined status code: {r.status_code}\nsend this to {owner}')
-### Slash commands end ###
-
-def setup(client):
-    client.add_cog(ErrorHandler(client))
-    client.add_cog(Music(client))
-    client.add_cog(MainCog(client))
-    client.add_cog(Slash(client))
+            await ctx.reply(f'No such item ({item})'

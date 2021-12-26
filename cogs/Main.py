@@ -25,9 +25,6 @@ from discord.ext import tasks
 from discord import TextChannel
 from discord.ext import commands
 from discord.ext.commands import *
-#from discord_slash import cog_ext
-#from discord_slash import SlashContext
-#from discord_slash.utils.manage_commands import create_option
 ### Modules end ###
 on_cooldown = {}
 cd = {}
@@ -3783,97 +3780,7 @@ class MainCog(commands.Cog):
             await ctx.reply("Usage of this command: `.add_item <user> <item/all> [amount]`")
 ### Command exceptions end ###
 
-### Slash commands ###
-class Slash(commands.Cog):
-    def __init__(self, client : commands.Bot):
-        self.client = client
-
-    def load(self):
-        return
-
-    def save(self):
-        with open(f'{cwd}/database/xp.json', 'w+') as f:
-            json.dump(xp, f)
-        with open(f'{cwd}/database/levels.json', 'w+') as f:
-            json.dump(levels, f)
-        with open(f'{cwd}/database/passiveUsers.json', 'w+') as f:
-            json.dump(passiveUsers, f)
-        with open(f'{cwd}/database/warnings.json', 'w+') as f:
-            json.dump(warnings, f)
-        with open(f'{cwd}/database/money.json', 'w+') as f:
-            json.dump(money, f)
-        with open(f'{cwd}/database/swearfilter.json', 'w+') as f:
-            json.dump(swearfilter, f)
-        with open(f'{cwd}/database/windows10.json', 'w+') as f:
-            json.dump(windows10, f)
-        with open(f'{cwd}/database/bronzecoin.json', 'w+') as f:
-            json.dump(bronzecoin, f)
-        with open(f'{cwd}/database/silvercoin.json', 'w+') as f:
-            json.dump(silvercoin, f)
-        with open(f'{cwd}/database/goldcoin.json', 'w+') as f:
-            json.dump(goldcoin, f)
-        with open(f'{cwd}/database/jobs.json', 'w+') as f:
-            json.dump(jobs, f)
-        with open(f'{cwd}/database/devbox.json', 'w+') as f:
-            json.dump(devbox, f)
-        with open(f'{cwd}/database/dailybox.json', 'w+') as f:
-            json.dump(dailybox, f)
-        with open(f'{cwd}/database/link.json', 'w+') as f:
-            json.dump(link, f)
-        with open(f'{cwd}/database/normalbox.json', 'w+') as f:
-            json.dump(normalbox, f)
-        with open(f'{cwd}/database/bad.json', 'w+') as f:
-            json.dump(bad, f)
-        with open(f'{cwd}/database/welcome.json', 'w+') as f:
-            json.dump(welcome, f)
-
-    def convert(self, time):
-        pos = ["s", "m", "h", "d", "w"]
-        time_dict = {"s": 1, "m": 60, "h": 3600, "d": 3600 * 24, "w": 3600 * 24 * 7}
-        unit = time[-1]
-
-        if unit not in pos:
-            return -1
-        try:
-            val = int(time[:-1])
-        except:
-            return -2
-
-        return val * time_dict[unit]
-
-    def addv(self, dic, key, valarr):
-        if key not in dic:
-            dic[key] = list()
-        dic[key].extend(valarr)
-
-    @cog_ext.cog_slash(
-        name="welcomemsg",
-        description="changes the welcome message",
-        options=[
-            create_option(
-                name="message",
-                description=".",
-                option_type=3,
-                required=True
-            )
-        ]
-    )
-    async def welcomemsg(self, ctx:SlashContext, message:str):
-        if not ctx.author.guild_permissions.administrator:
-            raise MissingPermissions
-            return
-        try:
-            del welcome[str(ctx.message.guild.id)]
-        except KeyError:
-            pass
-        welcome[str(ctx.message.guild.id)] = str(message)
-        await ctx.reply(f"Updated the welcome message.")
-        self.save()
-
-    @cog_ext.cog_slash(
-        name="credits",
-        description="."
-    )
-    async def credits(self, ctx:SlashContext):
-        em = discord.Embed(title="Arch bot developers team", description="thatOneArchUser#5794, Main developer\nnotsniped#0002, made purge command, bot administrator\nMarios1Gr#3949, made deposit/withdraw\nαrchιshα#5518, bot administrator\ngalaxy#2203, tester\nxristos_hal#4383, bot administrator", color=discord.Colour.random())
-        await ctx.reply(embed=em, mention_author=False)
+def setup(client):
+    client.add_cog(ErrorHandler(client))
+    client.add_cog(Music(client))
+    client.add_cog(MainCog(client))

@@ -19,6 +19,12 @@ import itertools
 import youtube_dl
 import traceback
 from time import sleep
+from contextlib import redirect_stdout
+import base64
+import traceback
+import io
+import inspect
+import textwrap
 from random import randint
 from discord.utils import get
 from discord.ext import tasks
@@ -30,9 +36,10 @@ on_cooldown = {}
 cd = {}
 work_cooldown = 1700
 invest_time = 18000
-no_invest_cooldown = [
+no_cooldowns = [
     705462972415213588,
-    884765170184896562
+    884765170184896562,
+    706697300872921088
 ]
 ids = [
     738290097170153472,
@@ -125,6 +132,9 @@ with open(f'{cwd}/database/welcome.json', 'r') as f:
 with open(f"{cwd}/database/lvlupc.json", "r") as f:
     global lvlupc
     lvlupc = json.load(f)
+with open(f"{cwd}/database/whitelist.json", "r") as f:
+    global whitelist
+    whitelist = json.load(f)
 
 class ErrorHandler(commands.Cog):
     def __init__(self, client):
@@ -298,7 +308,6 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
         return ', '.join(duration)
 
-
 class Song:
     __slots__ = ('source', 'requester')
 
@@ -386,10 +395,6 @@ class VoiceState:
             self.next.clear()
 
             if not self.loop:
-                # Try to get the next song within 3 minutes.
-                # If no song will be added to the queue in time,
-                # the player will disconnect due to performance
-                # reasons.
                 try:
                     async with timeout(180):  # 3 minutes
                         self.current = await self.songs.get()
@@ -680,6 +685,8 @@ class MainCog(commands.Cog):
             json.dump(welcome, f)
         with open(f"{cwd}/database/lvlupc.json", "w+") as f:
             json.dump(lvlupc, f)
+        with open(f"{cwd}/database/whitelist.json", "w+") as f:
+            json.dump(whitelist, f)
 
     def convert(self, time):
         pos = ["s", "m", "h", "d", "w"]
@@ -792,10 +799,15 @@ class MainCog(commands.Cog):
                     if str(message.guild.id) not in swearfilter:
                         swearfilter[str(message.guild.id)] = 0
                     if swearfilter[str(message.guild.id)] == 1:
-                        await message.delete()
-                        await message.channel.send(f"{message.author.mention} Watch your language")
-                        warnings[str(message.author.id)] += 1
-                        self.save()
+                        if str(message.guild.id) not in whitelist:
+                            whitelist[str(message.guild.id)] = 0
+                        if message.channel.id == whitelist[str(message.guild.id)]:
+                            pass
+                        else:
+                            await message.delete()
+                            await message.channel.send(f"{message.author.mention} Watch your language")
+                            warnings[str(message.author.id)] += 1
+                            self.save()
                     else:
                         pass
             if any(x in message.content.lower() for x in links):
@@ -938,9 +950,10 @@ class MainCog(commands.Cog):
 
     @commands.command(aliases=["open"])
     async def use(self, ctx, item:str, amount:int=None):
-        if int(amount) >= 65535:
-            await ctx.reply("no more than unsigned int16 (65,535)")
-            return
+        if isinstance(amount, int):
+            if int(amount) >= 65535:
+                await ctx.reply("no more than unsigned int16 (65,535)")
+                return
         if str(item) == "developer" or str(item) == "devbox":
             if amount == None or int(amount) == 1:
                 if int(devbox[str(ctx.message.author.id)]) < 1:
@@ -1804,7 +1817,7 @@ class MainCog(commands.Cog):
     @commands.has_permissions(manage_guild=True)
     async def config(self, ctx, setting:str=None, value:str=None):
         gid = str(ctx.guild.id)
-        gname = self.client.get_guild(gid)
+        gname = self.client.get_guild(ctx.guild.id)
         if value == None:
             if setting == None:
                 if gid not in swearfilter:
@@ -1815,6 +1828,10 @@ class MainCog(commands.Cog):
                     link[gid] = 0
                 if gid not in lvlupc:
                     lvlupc[gid] = 0
+                if gid not in welcome:
+                    welcome[gid] = 0
+                if gid not in whitelist:
+                    whitelist[gid] = 0
                 self.save()
                 if swearfilter[gid] == 0:
                     swear = "disabled"
@@ -1844,6 +1861,12 @@ class MainCog(commands.Cog):
                     channel = int(lvlupc[gid])
                     cname = self.client.get_channel(channel)
                     em.add_field(name="Level up channel", value=cname)
+                if whitelist[gid] == 0:
+                    pass
+                else:
+                    channel = int(whitelist[gid])
+                    cname = self.client.get_channel(channel)
+                    em.add_field(name="Whitelisted channel", value=cname)
                 if banwrd == False:
                     pass
                 else:
@@ -1906,6 +1929,20 @@ class MainCog(commands.Cog):
                         color=discord.Colour.random()
                     )
                     await ctx.reply(embed=em)
+                elif str(setting) == "whitelist":
+                    if whitelist[gid] != 0:
+                        channel = whitelist[gid]
+                        cid = self.client.get_channel(channel)
+                        pass
+                    else:
+                        await ctx.reply("This server doesn\'t have a whitelisted channel")
+                        return
+                    em = discord.Embed(
+                        title=f"Whitelisted for {gname}",
+                        description=f"channel: {cid}",
+                        color=discord.Colour.random()
+                    )
+                    await ctx.reply(embed=em)
                 else:
                     await ctx.reply("Invalid setting")
                     return
@@ -1947,13 +1984,31 @@ class MainCog(commands.Cog):
                     self.save()
                     return await ctx.reply("Enabled link blocker")
             elif str(setting) == "levelupchannel":
-                try:
-                    channel = self.client.get_channel(int(value))
-                except Exception as e:
-                    return await ctx.reply(e)
-                lvlupc[gid] = int(value)
-                self.save()
-                return await ctx.reply(f"Set {channel} as level up messages channel")
+                if int(value) == 0:
+                    lvlupc[gid] = 0
+                    self.save()
+                    return await ctx.reply("Level up channel has been reset")
+                else:
+                    try:
+                        channel = self.client.get_channel(int(value))
+                    except Exception as e:
+                        return await ctx.reply(e)
+                    lvlupc[gid] = int(value)
+                    self.save()
+                    return await ctx.reply(f"Set {channel} as level up messages channel")
+            elif str(setting) == "whitelist":
+                if int(value) == 0:
+                    whitelist[gid] = 0
+                    self.save()
+                    return await ctx.reply("Removed the whitelisted channel")
+                else:
+                    try:
+                        channel = self.client.get_channel(int(value))
+                    except Exception as e:
+                        return await ctx.reply(e)
+                    whitelist[gid] = int(value)
+                    self.save()
+                    return await ctx.reply(f"Set {channel} as swear filter whitelisted channel")
             elif str(setting) == "bannedwords":
                 with open(f"{cwd}/database/prefixes.json", "r") as f:
                     prefixes = json.load(f)
@@ -1971,6 +2026,14 @@ class MainCog(commands.Cog):
         lvlupc[str(ctx.guild.id)] = channel.id
         self.save()
         await ctx.reply(f"Updated level up channel")
+
+
+    @commands.command()
+    @commands.has_permissions(manage_guild=True)
+    async def whitelist(self, ctx, channel:discord.TextChannel):
+        whitelist[str(ctx.guild.id)] = channel.id
+        self.save()
+        await ctx.reply(f"Updated swear filter whitelisted channel")
 
     @commands.command(aliases=['goldfish'])
     async def fstab(self, ctx):
@@ -2770,32 +2833,20 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, *, member : discord.Member):
-        now = datetime.datetime.now()
-        current_time = now.strftime("%H:%M:%S")
         if member == ctx.message.author:
             raise BadArgument
         else:
             await member.kick()
         await ctx.send(f'{member} has been kicked from the server')
-        if bool(log) == True:
-            print(f'[{current_time}]{ctx.message.author.display_name} kicked {member.display_name} from {ctx.message.guild.name}')
-        else:
-            pass
 
     @commands.command()
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, *, member : discord.Member):
-        now = datetime.datetime.now()
-        current_time = now.strftime("%H:%M:%S")
         if member == ctx.message.author:
             raise BadArgument
         else:
             await member.ban()
             await ctx.send(f'{member} has been banned from the server')
-            if bool(log) == True:
-                print(f'[{current_time}]{ctx.message.author.display_name} banned {member.display_name} from {ctx.message.guild.name}')
-            else:
-                pass
 
     @commands.command()
     async def slap(self, ctx, user : discord.User):
@@ -2881,10 +2932,6 @@ class MainCog(commands.Cog):
             await ctx.send(f'You earned {x} coins')
             money[str(ctx.message.author.id)][0] += x
             self.save()
-            if bool(log) == True:
-                print(f'[{current_time}]{colors.cyan}{ctx.message.author.display_name}{colors.end} has earned {colors.green}{x}{colors.end} coins')
-            else:
-                pass
 
     @commands.command()
     async def null(self, ctx):
@@ -3031,15 +3078,48 @@ class MainCog(commands.Cog):
 
     @commands.command(name="invest")
     async def _invest(self, ctx, action:str):
-        self.load()
         if str(ctx.message.author.id) not in money:
             self.addv(money, str(ctx.message.author.id), [0, 0, 0])
             self.save()
+        if ctx.message.author.id not in no_cooldowns:
+            pass
+        else:
+            if str(action) == "all" or str(action) == "max":
+                money[str(ctx.message.author.id)][2] += money[str(ctx.message.author.id)][0]
+                money[str(ctx.message.author.id)][0] = 0
+                self.save()
+                rnd = ''.join(map(str, random.choices([3, 5, 10, 25, 50, 100, 1000], weights=[40, 25, 15, 10, 5, 2.5, 1], k=1)))
+                a = round(money[str(ctx.message.author.id)][2] * float(rnd))
+                money[str(ctx.message.author.id)][0] += a 
+                money[str(ctx.message.author.id)][2] = 0
+                self.save()
+                return await ctx.reply(f"You claimed {a} coins with {rnd}x profit")
+            try:
+                int(action)
+            except Exception as e:
+                return await ctx.reply(e)
+            if int(action) <= 0:
+                return await ctx.reply("Don\'t try to break me dood")
+            else:
+                money[str(ctx.message.author.id)][2] += int(action)
+                money[str(ctx.message.author.id)][0] -= int(action)
+                self.save()
+                rnd = ''.join(map(str, random.choices([0, 0.5, 0.75, 1.25, 1.5, 1.75, 2, 2.5, 5], weights=[0.5, 3, 5, 35, 10, 5, 3, 1, 0.5], k=1)))
+                a = round(money[str(ctx.message.author.id)][2] * float(rnd))
+                money[str(ctx.message.author.id)][0] += a
+                money[str(ctx.message.author.id)][2] = 0
+                self.save()
+                if rnd < 0:
+                    return await ctx.reply(f"You claimed {a} coins with a {rnd} loss")
+                elif rnd == 0:
+                    return await ctx.reply(f"You lost all your coins.")
+                else:
+                    return await ctx.reply(f"You claimed {a} coins with {rnd} profit")
         if str(action) == "claim":
             if str(ctx.message.author.id) not in money == 0:
                 await ctx.reply("You didnt invest any coins. Type `.invest <amount>` to invest some coins")
                 return
-            if ctx.message.author.id not in no_invest_cooldown:
+            if ctx.message.author.id not in no_cooldowns:
                 i = datetime.datetime.now() - cd[str(ctx.message.author.id)]
                 if i is None or i.seconds > invest_time:
                     cd[str(ctx.message.author.id)] = datetime.datetime.now()
@@ -3049,7 +3129,7 @@ class MainCog(commands.Cog):
                     return
             else:
                 pass
-            rnd = ''.join(map(str, random.choices([1.25, 1.5, 1.75, 2, 2.5, 5], weights=[35, 10, 5, 3, 1, 0.5], k=1)))
+            rnd = ''.join(map(str, random.choices([0, 0.5, 0.75, 1.25, 1.5, 1.75, 2, 2.5, 5], weights=[0.5, 3, 5, 35, 10, 5, 3, 1, 0.5], k=1)))
             a = round(money[str(ctx.message.author.id)][2] * float(rnd))
             money[str(ctx.message.author.id)][0] += a
             money[str(ctx.message.author.id)][2] = 0
@@ -3063,10 +3143,6 @@ class MainCog(commands.Cog):
             else:
                 m = round(sys.maxsize / 5)
                 maxv = m - 1
-                # if money[str(ctx.message.author.id)][0] > maxv:
-                #     await ctx.reply("Warning: will invest 1844674407370955263, which is the max value for this command", mention_author=False)
-                # else:
-                #     pass
                 def check(msg):
                     return msg.author == ctx.message.author and msg.channel == ctx.message.channel and (msg.content)
 
@@ -3076,30 +3152,24 @@ class MainCog(commands.Cog):
                     await ctx.send("Ok guess you are not gonna invest today")
                     return
                 elif msg.content == "yes":
-                    if ctx.message.author.id not in no_invest_cooldown:
-                        try:
-                            i = datetime.datetime.now() - cd[str(ctx.message.author.id)]
-                        except KeyError:
-                            i = None
-                            cd[str(ctx.message.author.id)] = datetime.datetime.now()
-                        if i is None or i.seconds > invest_time:
-                            cd[str(ctx.message.author.id)] = datetime.datetime.now()
-                            pass
-                        else:
-                            await ctx.reply("You already have invested coins")
-                            return
-                    else:
+                    try:
+                        i = datetime.datetime.now() - cd[str(ctx.message.author.id)]
+                    except KeyError:
+                        i = None
+                        cd[str(ctx.message.author.id)] = datetime.datetime.now()
+                    if i is None or i.seconds > invest_time:
+                        cd[str(ctx.message.author.id)] = datetime.datetime.now()
                         pass
+                    else:
+                        await ctx.reply("You already have invested coins")
+                        return
                     if money[str(ctx.message.author.id)][2] == 0:
                         pass
                     else:
                         await ctx.send("There are unclaimed coins. Type `.invest claim` to claim them")
                         return
                     money[str(ctx.message.author.id)][2] += money[str(ctx.message.author.id)][0]
-                    if ctx.message.author.id not in no_invest_cooldown:
-                        await ctx.send(f"You invested {action} coins. Come back in {round(invest_time / 3600)} hours to claim your coins")
-                    else:
-                        await ctx.send(f"You invested {money[str(ctx.message.author.id)][0]} coins. You have no cooldown so you can claim your coins now")
+                    await ctx.send(f"You invested {action} coins. Come back in {round(invest_time / 3600)} hours to claim your coins")
                     money[str(ctx.message.author.id)][0] = 0
                     self.save()
                     return
@@ -3131,20 +3201,17 @@ class MainCog(commands.Cog):
                             await ctx.send("Ok guess you are not gonna invest today")
                             return
                         elif msg.content == "yes":
-                            if ctx.message.author.id not in no_invest_cooldown:
-                                try:
-                                    i = datetime.datetime.now() - cd[str(ctx.message.author.id)]
-                                except KeyError:
-                                    i = None
-                                    cd[str(ctx.message.author.id)] = datetime.datetime.now()
-                                if i is None or i.seconds > invest_time:
-                                    cd[str(ctx.message.author.id)] = datetime.datetime.now()
-                                    pass
-                                else:
-                                    await ctx.reply("You already have invested coins")
-                                    return
-                            else:
+                            try:
+                                i = datetime.datetime.now() - cd[str(ctx.message.author.id)]
+                            except KeyError:
+                                i = None
+                                cd[str(ctx.message.author.id)] = datetime.datetime.now()
+                            if i is None or i.seconds > invest_time:
+                                cd[str(ctx.message.author.id)] = datetime.datetime.now()
                                 pass
+                            else:
+                                await ctx.reply("You already have invested coins")
+                                return
                             if money[str(ctx.message.author.id)][2] == 0:
                                 pass
                             else:
@@ -3153,7 +3220,7 @@ class MainCog(commands.Cog):
                             money[str(ctx.message.author.id)][2] += int(action)
                             money[str(ctx.message.author.id)][0] -= int(action)
                             self.save()
-                            if ctx.message.author.id not in no_invest_cooldown:
+                            if ctx.message.author.id not in no_cooldowns:
                                 await ctx.send(f"You invested {action} coins. Come back in {round(invest_time / 3600)} hours to claim your coins")
                             else:
                                 await ctx.send(f"You invested {action} coins. You have no cooldown so you can claim your coins now")
@@ -3166,24 +3233,26 @@ class MainCog(commands.Cog):
 
     @commands.command(aliases=["job"])
     async def work(self, ctx, *, arg1=None):
-        self.load()
         if arg1 == None:
             if str(ctx.message.author.id) not in jobs:
                 await ctx.reply("You dont have a job yet. Type `.work list` to see the list of jobs")
                 return
             else:
-                try:
-                    last_work = datetime.datetime.now() - on_cooldown[str(ctx.message.author.id)]
-                except KeyError:
-                    last_work = None
-                    on_cooldown[str(ctx.message.author.id)] = datetime.datetime.now()
                 j = jobs[str(ctx.message.author.id)]
-                if last_work is None or last_work.seconds > work_cooldown:
-                      on_cooldown[str(ctx.message.author.id)] = datetime.datetime.now()
-                      pass
+                if ctx.message.author.id not in no_cooldowns:
+                    try:
+                        last_work = datetime.datetime.now() - on_cooldown[str(ctx.message.author.id)]
+                    except KeyError:
+                        last_work = None
+                        on_cooldown[str(ctx.message.author.id)] = datetime.datetime.now()
+                    if last_work is None or last_work.seconds > work_cooldown:
+                        on_cooldown[str(ctx.message.author.id)] = datetime.datetime.now()
+                        pass
+                    else:
+                        await ctx.reply("This command is on cooldown")
+                        return 
                 else:
-                    await ctx.reply("This command is on cooldown")
-                    return
+                    pass
                 if j == "mod":
                     await ctx.reply("You earned 5000 coins from Discord Moderator job")
                     money[str(ctx.message.author.id)][0] += 5000
@@ -3739,6 +3808,65 @@ class MainCog(commands.Cog):
             await ctx.reply(f'Undefined status code: {r.status_code}\nsend this to {owner}') #possible status codes: 400, bad request
 
     @commands.command()
+    async def serverinfo(self, ctx):
+        name = str(ctx.guild.name)
+        description = str(ctx.guild.description)
+        gowner = str(ctx.guild.owner)
+        gid = str(ctx.guild.id)
+        memberCount = str(ctx.guild.member_count)
+
+        icon = str(ctx.guild.icon_url)
+    
+        embed = discord.Embed(
+            title=name + " Server Information",
+            description=description,
+            color=discord.Color.random()
+        )
+        embed.set_thumbnail(url=icon)
+        embed.add_field(name="Owner", value=gowner, inline=True)
+        embed.add_field(name="Server ID", value=gid, inline=True)
+        embed.add_field(name="Member Count", value=memberCount, inline=True)
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def userinfo(self, ctx, member:discord.Member = None):
+        if member == None:
+                member = ctx.message.author
+
+        embed=discord.Embed(
+            title="User Information", 
+            timestamp=datetime.datetime.utcnow(),
+            color=discord.Color.random()
+        )
+        embed.set_thumbnail(url=member.avatar_url)
+        embed.add_field(name="Username:", value=member.name, inline=False)
+        embed.add_field(name="Display name:", value=member.nick, inline=False)
+        embed.add_field(name="User ID:", value=member.id, inline=False)
+        embed.add_field(name="Account Created At:",value=member.created_at.strftime("%a %#d %B %Y, %I:%M %p UTC"), inline=False)
+        embed.add_field(name="Joined Server At:",value=member.joined_at.strftime("%a %#d %B %Y, %I:%M %p UTC"), inline=False)
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    @commands.has_permissions(manage_channels=True)
+    async def lock(self, ctx, channel : discord.TextChannel=None):
+        channel = channel or ctx.channel
+        overwrite = channel.overwrites_for(ctx.guild.default_role)
+        overwrite.send_messages = False
+        await channel.set_permissions(ctx.guild.default_role, overwrite=overwrite)
+        em = discord.Embed(title=':white_check_mark: channel locked successfully.', color=discord.Colour.random())
+        await ctx.send(embed=em)
+
+    @commands.command()
+    @commands.has_permissions(manage_channels=True)
+    async def unlock(self, ctx, channel : discord.TextChannel=None):
+        channel = channel or ctx.channel
+        overwrite = channel.overwrites_for(ctx.guild.default_role)
+        overwrite.send_messages = True
+        await channel.set_permissions(ctx.guild.default_role, overwrite=overwrite)
+        em = discord.Embed(title=':white_check_mark: channel unlocked successfully.', color=discord.Colour.random())
+        await ctx.send(embed=em)
+
+    @commands.command()
     async def lbin(self, ctx, *, arg1):
         url = f'https://nariah-dev.com/api/auctions/statistics/{arg1}'
         r = requests.get(url)
@@ -3756,6 +3884,102 @@ class MainCog(commands.Cog):
             await ctx.reply('An internal error occured')
         else:
             await ctx.reply(f'Undefined status code: {r.status_code}\nsend this to {owner}')
+
+    def cleanup_code(self, content):
+        if content.startswith('```') and content.endswith('```'):
+            return '\n'.join(content.split('\n')[1:-1])
+
+        return content.strip('` \n')
+
+    def get_syntax_error(self, e):
+        if e.text is None:
+            return f'```py\n{e.__class__.__name__}: {e}\n```'
+        return f'```py\n{e.text}{"^":>{e.offset}}\n{e.__class__.__name__}: {e}```'
+
+    @commands.command(name='eval')
+    async def _eval(self, ctx, *, body):
+        blocked_words = ['while', 'quit', 'exit', 'SystemExit', 'open', '.delete()', 'os', 'subprocess', 'history()', '("token")', "('token')",
+                        'aW1wb3J0IG9zCnJldHVybiBvcy5lbnZpcm9uLmdldCgndG9rZW4nKQ==', 'aW1wb3J0IG9zCnByaW50KG9zLmVudmlyb24uZ2V0KCd0b2tlbicpKQ==']
+        if ctx.message.author.id != 705462972415213588:
+            for x in blocked_words:
+                if x in body:
+                    return await ctx.send('Your code contains certain blocked words.')
+        env = {
+            'ctx': ctx,
+            'channel': ctx.channel,
+            'author': ctx.author,
+            'guild': ctx.guild,
+            'message': ctx.message,
+            'source': inspect.getsource,
+        }
+
+        env.update(globals())
+
+        body = self.cleanup_code(body)
+        stdout = io.StringIO()
+        err = out = None
+
+        to_compile = f'async def func():\n{textwrap.indent(body, "  ")}'
+
+        def paginate(text: str):
+            '''Simple generator that paginates text.'''
+            last = 0
+            pages = []
+            for curr in range(0, len(text)):
+                if curr % 1980 == 0:
+                    pages.append(text[last:curr])
+                    last = curr
+                    appd_index = curr
+            if appd_index != len(text)-1:
+                pages.append(text[last:curr])
+            return list(filter(lambda a: a != '', pages))
+        
+        try:
+            exec(to_compile, env)
+        except Exception as e:
+            err = await ctx.send(f'```py\n{e.__class__.__name__}: {e}\n```')
+            return await ctx.message.add_reaction('\u2049')
+
+        func = env['func']
+        try:
+            with redirect_stdout(stdout):
+                ret = await func()
+        except Exception as e:
+            value = stdout.getvalue()
+            err = await ctx.send(f'```py\n{value}{traceback.format_exc()}\n```')
+        else:
+            value = stdout.getvalue()
+            if ret is None:
+                if value:
+                    try:
+                        
+                        out = await ctx.send(f'```py\n{value}\n```')
+                    except:
+                        paginated_text = paginate(value)
+                        for page in paginated_text:
+                            if page == paginated_text[-1]:
+                                out = await ctx.send(f'```py\n{page}\n```')
+                                break
+                            await ctx.send(f'```py\n{page}\n```')
+            else:
+                self.client._last_result = ret
+                try:
+                    out = await ctx.send(f'```py\n{value}{ret}\n```')
+                except:
+                    paginated_text = paginate(f"{value}{ret}")
+                    for page in paginated_text:
+                        if page == paginated_text[-1]:
+                            out = await ctx.send(f'```py\n{page}\n```')
+                            break
+                        await ctx.send(f'```py\n{page}\n```')
+
+        if out:
+            await ctx.message.add_reaction('\u2705')
+        elif err:
+            await ctx.message.add_reaction('\u2049')
+        else:
+            await ctx.message.add_reaction('\u2705')
+
 ### Commands end ###
 
 ### Command exceptions ###

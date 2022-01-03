@@ -16,6 +16,7 @@ import threading
 import prawcore
 import functools
 import itertools
+import translate
 import youtube_dl
 import traceback
 from time import sleep
@@ -135,6 +136,9 @@ with open(f"{cwd}/database/lvlupc.json", "r") as f:
 with open(f"{cwd}/database/whitelist.json", "r") as f:
     global whitelist
     whitelist = json.load(f)
+with open(f"{cwd}/database/countconf.json", "r") as f:
+    global countconf
+    countconf = json.load(f)
 
 class ErrorHandler(commands.Cog):
     def __init__(self, client):
@@ -308,6 +312,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
         return ', '.join(duration)
 
+
 class Song:
     __slots__ = ('source', 'requester')
 
@@ -395,6 +400,10 @@ class VoiceState:
             self.next.clear()
 
             if not self.loop:
+                # Try to get the next song within 3 minutes.
+                # If no song will be added to the queue in time,
+                # the player will disconnect due to performance
+                # reasons.
                 try:
                     async with timeout(180):  # 3 minutes
                         self.current = await self.songs.get()
@@ -573,6 +582,10 @@ class Music(commands.Cog):
 
     @commands.command(name='queue')
     async def _queue(self, ctx: commands.Context, *, page: int = 1):
+        """Shows the player's queue.
+        You can optionally specify the page to show. Each page contains 10 elements.
+        """
+
         if len(ctx.voice_state.songs) == 0:
             return await ctx.send('Empty queue.')
 
@@ -592,6 +605,8 @@ class Music(commands.Cog):
 
     @commands.command(name='shuffle')
     async def _shuffle(self, ctx: commands.Context):
+        """Shuffles the queue."""
+
         if len(ctx.voice_state.songs) == 0:
             return await ctx.send('Empty queue.')
 
@@ -600,6 +615,8 @@ class Music(commands.Cog):
 
     @commands.command(name='remove')
     async def _remove(self, ctx: commands.Context, index: int):
+        """Removes a song from the queue at a given index."""
+
         if len(ctx.voice_state.songs) == 0:
             return await ctx.send('Empty queue.')
 
@@ -608,6 +625,10 @@ class Music(commands.Cog):
 
     @commands.command(name='loop')
     async def _loop(self, ctx: commands.Context):
+        """Loops the currently playing song.
+        Invoke this command again to unloop the song.
+        """
+
         if not ctx.voice_state.is_playing:
             return await ctx.send('Nothing being played at the moment.')
 
@@ -617,6 +638,13 @@ class Music(commands.Cog):
 
     @commands.command(name='play')
     async def _play(self, ctx: commands.Context, *, search: str):
+        """Plays a song.
+        If there are songs in the queue, this will be queued until the
+        other songs finished playing.
+        This command automatically searches from various sites if no URL is provided.
+        A list of these sites can be found here: https://rg3.github.io/youtube-dl/supportedsites.html
+        """
+
         if not ctx.voice_state.voice:
             await ctx.invoke(self._join)
 
@@ -687,6 +715,8 @@ class MainCog(commands.Cog):
             json.dump(lvlupc, f)
         with open(f"{cwd}/database/whitelist.json", "w+") as f:
             json.dump(whitelist, f)
+        with open(f"{cwd}/database/countconf.json", "w+") as f:
+            json.dump(countconf, f)
 
     def convert(self, time):
         pos = ["s", "m", "h", "d", "w"]
@@ -708,17 +738,6 @@ class MainCog(commands.Cog):
         dic[key].extend(valarr)
 
     @commands.Cog.listener()
-    async def on_message_edit(self, message_before, message_after):
-        global author
-        author = message_before.author
-        guild = message_before.guild.id
-        channel = message_before.channel
-        global before
-        before = message_before.content
-        global after
-        after = message_after.content
-
-    @commands.Cog.listener()
     async def on_message(self, message):
         if not message.author.bot:
             self.load()
@@ -730,6 +749,8 @@ class MainCog(commands.Cog):
                 swearfilter[str(message.guild.id)] = 0
             if str(message.author.id) not in money:
                 self.addv(money, str(message.author.id), [0, 0, 0])
+            if str(message.guild.id) not in countconf:
+                self.addv(countconf, str(message.guild.id), [0, 1])
             if str(message.author.id) in xp:
                 xp[str(message.author.id)] += 1
             else:
@@ -768,6 +789,8 @@ class MainCog(commands.Cog):
                 dailybox[str(message.author.id)] = 0
             if str(message.guild.id) not in link:
                 link[str(message.guild.id)] = 0
+            if str(message.author.id) not in normalbox:
+                normalbox[str(message.author.id)] = 0
             xpreq = 0
             if levels[str(message.author.id)] == 1:
                 xpreq = 25
@@ -820,11 +843,30 @@ class MainCog(commands.Cog):
                     await message.channel.send(f"{message.author.mention} No links")
                     warnings[str(message.author.id)] += 1
                     self.save()
-                else:
-                    pass
-            else:
+            if int(countconf[str(message.guild.id)][0]) == 0:
                 pass
-
+            else:
+                try:
+                    channel = self.client.get_channel(int(countconf[str(message.guild.id)][0]))
+                except KeyError:
+                    return
+                channel = self.client.get_channel(int(countconf[str(message.guild.id)][0]))
+                if message.channel == channel:
+                    try:
+                        int(message.content)
+                    except ValueError:
+                        await message.delete()
+                        return
+                    var = int(message.content) - 1
+                    if var == int(countconf[str(message.guild.id)][1]):
+                        await message.add_reaction("✅")
+                        countconf[str(message.guild.id)][1] += 1
+                        self.save()
+                    else:
+                        await message.delete()
+                        await message.channel.send(f"{message.author.mention }the next number is `{countconf[str(message.guild.id)[1]]}`", delete_after=5)
+                        return
+                    
     @commands.command()
     async def pulldb(self, ctx):
         if ctx.message.author.id == 705462972415213588:
@@ -1814,6 +1856,22 @@ class MainCog(commands.Cog):
             return
 
     @commands.command()
+    async def translate(self, ctx, target:str, *, text:str):
+        try:
+            t = translate.Translator(to_lang=target)
+            tr = t.translate(text)
+            if "is an invalid target language" not in tr.lower():
+                em = discord.Embed(
+                    description=f"Translation of {text} to {target}\n\n{tr}",
+                    color=discord.Color.random()
+                )
+                return await ctx.reply(embed=em)
+            else:
+                return await ctx.reply(f"{target} is an invalid language")
+        except Exception as e:
+            return await ctx.reply(e)
+
+    @commands.command()
     @commands.has_permissions(manage_guild=True)
     async def config(self, ctx, setting:str=None, value:str=None):
         gid = str(ctx.guild.id)
@@ -1837,6 +1895,11 @@ class MainCog(commands.Cog):
                     swear = "disabled"
                 else:
                     swear = "enabled"
+                if countconf[gid][0] == 0:
+                    c = None
+                else:
+                    v = self.client.get_channel(channel)
+                    c = f"#{v}"
                 if not bad[gid]:
                     banwrd = False
                 else:
@@ -1860,13 +1923,17 @@ class MainCog(commands.Cog):
                 else:
                     channel = int(lvlupc[gid])
                     cname = self.client.get_channel(channel)
-                    em.add_field(name="Level up channel", value=cname)
+                    em.add_field(name="Level up channel", value=f"#{cname}")
                 if whitelist[gid] == 0:
                     pass
                 else:
                     channel = int(whitelist[gid])
                     cname = self.client.get_channel(channel)
-                    em.add_field(name="Whitelisted channel", value=cname)
+                    em.add_field(name="Whitelisted channel", value=f"#{cname}")
+                if c == None:
+                    pass
+                else:
+                    em.add_field(name="Counting channel", value=c)
                 if banwrd == False:
                     pass
                 else:
@@ -1943,6 +2010,20 @@ class MainCog(commands.Cog):
                         color=discord.Colour.random()
                     )
                     await ctx.reply(embed=em)
+                elif str(setting) == "counting":
+                    if countconf[gid][0] != 0:
+                        channel = countconf[gid][0]
+                        cname = self.client.get_channel(channel)
+                        pass
+                    else:
+                        await ctx.reply("This server doesn\'t have a counting channel")
+                        return
+                    em = discord.Embed(
+                        title=f"Counting channel for {gname}",
+                        description=f"#{cname}",
+                        color=discord.Color.random()
+                    )
+                    await ctx.reply(embed=em)
                 else:
                     await ctx.reply("Invalid setting")
                     return
@@ -2017,6 +2098,14 @@ class MainCog(commands.Cog):
                 with open(f"{cwd}/database/prefixes.json", "r") as f:
                     prefixes = json.load(f)
                 return await ctx.reply(f"Use `{prefixes[gid]}help welcomemsg`")
+            elif str(setting) == "counting" or str(setting) == "countchannel":
+                try:
+                    channel = self.client.get_channel(int(value))
+                except Exception as e:
+                    return await ctx.reply(e)
+                countconf[gid][0] = int(value)
+                self.save()
+                return await ctx.reply(f"Set {channel} as counting channel")
             else:
                 return await ctx.reply(f"Invalid setting: {setting}")
 
@@ -2026,7 +2115,6 @@ class MainCog(commands.Cog):
         lvlupc[str(ctx.guild.id)] = channel.id
         self.save()
         await ctx.reply(f"Updated level up channel")
-
 
     @commands.command()
     @commands.has_permissions(manage_guild=True)
@@ -2109,22 +2197,6 @@ class MainCog(commands.Cog):
             passiveUsers[str(ctx.message.author.id)] = 1
             self.save()
             await ctx.reply(f"Enabled passive mode")
-
-    blEdit_snipe = True
-    @commands.command()
-    async def edit_snipe(self, ctx):
-        try:
-            if any(x in after.lower() for x in bad):
-                r = lambda: random.randint(0,255)
-                col = '#%02X%02X%02X' % (r(),r(),r())
-                em = discord.Embed(description=f'**Message before**: {before}\n**Message after**:||{after}||', color=discord.Colour.random())
-                em.set_footer(text=f'This message was edited by {author}\nWARNING: this message contains banned text')
-            else:
-                em = discord.Embed(description=f'**Message before**: {before}\n**Message after**:{after}', color=discord.Colour.random())
-                em.set_footer(text=f'This message was edited by {author}')
-            await ctx.send(embed = em)
-        except:
-            await ctx.reply('No recent edited messages here :eyes:')
 
     blAdd_lvl = True
     @commands.command()
@@ -2492,6 +2564,36 @@ class MainCog(commands.Cog):
             await ctx.send(strok)
         else:
             await ctx.reply(f"{arg1} isnt a number dood")
+    
+    @commands.command()
+    @commands.is_nsfw()
+    async def autostroke(self, ctx, length:int):
+        if int(length) > 200:
+            return await ctx.reply("Please use no more than 200 length")
+        else:
+            with open(f"{cwd}/database/words.json", "r") as f:
+                words = json.load(f)
+            var = str()
+            strok = ("").join(random.choices(string.ascii_lowercase + string.digits, k=int(length)))
+            for i, c in enumerate(strok):
+                var += random.choice(words[c])
+            return await ctx.send(f"Original:\n{strok}\n\nTranslated:\n{var}")
+    
+    @commands.command()
+    async def stroktranslate(self, ctx, strok:str):
+        try:
+            if len(strok) > 300:
+                return await ctx.reply("Please use no more than 300 length")
+            else:
+                with open(f"{cwd}/database/words.json", "r") as f:
+                    words = json.load(f)
+                var = str()
+                s = strok.lower()
+                for i, c in enumerate(s):
+                    var += random.choice(words[c])
+                return await ctx.send(f"{var}")
+        except Exception as e:
+            return await ctx.send(f"{type(e).__name__}: {e}")
 
     bl8ball = True
     @commands.command(aliases=['8ball'])
@@ -3037,46 +3139,29 @@ class MainCog(commands.Cog):
         if ctx.message.author.id not in ids:
             return
         else:
-            if user == None:
-                if place == None or str(place) == "wallet":
-                    if str(user.id) not in money:
-                        self.addv(money, str(ctx.message.author.id), [0, 0, 0])
-                        self.save()
-                    money[str(user.id)][0] += int(amount)
-                    await ctx.reply(f"Added {amount} coins to your wallet")
+            if place == None or str(place) == "wallet":
+                if str(user.id) not in money:
+                    self.addv(money, str(user.id), [int(amount), 0, 0])
                     self.save()
-                    return
-                elif place == "bank":
-                    if str(user.id) not in money:
-                        money[str(user.id)][1] = 0
-                        self.save()
-                    money[str(ctx.message.author.id)][1] += int(amount)
+                    return await ctx.reply(f"Added {amount} coins to {user.display_name}\'s wallet")
+                money[str(user.id)][0] += int(amount)
+                await ctx.reply(f"Added {amount} coins to {user.display_name}\'s wallet")
+                self.save()
+                return
+            elif place == "bank":
+                if str(user.id) not in money:
+                    self.addv(money, str(user.id), [0, int(amount), 0])
                     self.save()
-                    await ctx.reply(f"Added {amount} coins to your bank")
-                    return
-                else:
-                    raise BadArgument
+                    return await ctx.reply(f"Added {amount} coins in {user.display_name}\'s bank")
+                money[str(user.id)][1] += int(amount)
+                self.save()
+                await ctx.reply(f"Added {amount} coins in {user.display_name}\'s bank")
+                return
             else:
-                if place == None or str(place) == "wallet":
-                    if str(user.id) not in money:
-                        self.addv(money, str(ctx.message.author.id), [0, 0, 0])
-                        self.save()
-                    money[str(user.id)][0] += int(amount)
-                    await ctx.reply(f"Added {amount} coins to {user.display_name}")
-                    self.save()
-                    return
-                elif place == "bank":
-                    if str(user.id) not in money:
-                        self.addv(money, str(ctx.message.author.id), [0, 0, 0])
-                        self.save()
-                    money[str(user.id)][1] += int(amount)
-                    self.save()
-                    await ctx.reply(f"Added {amount} coins in {user.display_name}\'s bank")
-                    return
-                else:
-                    raise BadArgument
+                raise BadArgument
 
     @commands.command(name="invest")
+    @commands.cooldown(1, 3, commands.BucketType.user)
     async def _invest(self, ctx, action:str):
         if str(ctx.message.author.id) not in money:
             self.addv(money, str(ctx.message.author.id), [0, 0, 0])
@@ -3085,6 +3170,8 @@ class MainCog(commands.Cog):
             pass
         else:
             if str(action) == "all" or str(action) == "max":
+                if money[str(ctx.message.author.id)][0] <= 0:
+                    return await ctx.reply(f"Don\'t try to break me dood")
                 money[str(ctx.message.author.id)][2] += money[str(ctx.message.author.id)][0]
                 money[str(ctx.message.author.id)][0] = 0
                 self.save()
@@ -3093,7 +3180,12 @@ class MainCog(commands.Cog):
                 money[str(ctx.message.author.id)][0] += a 
                 money[str(ctx.message.author.id)][2] = 0
                 self.save()
-                return await ctx.reply(f"You claimed {a} coins with {rnd}x profit")
+                if float(rnd) < 0.0:
+                    return await ctx.reply(f"You claimed {a} coins with a {rnd} loss")
+                elif float(rnd) == 0.0:
+                    return await ctx.reply(f"You lost all your coins.")
+                else:
+                    return await ctx.reply(f"You claimed {a} coins with {rnd}x profit")
             try:
                 int(action)
             except Exception as e:
@@ -3101,20 +3193,22 @@ class MainCog(commands.Cog):
             if int(action) <= 0:
                 return await ctx.reply("Don\'t try to break me dood")
             else:
+                if int(action) > int(money[str(ctx.message.author.id)][0]):
+                    return await ctx.reply("you don\'t have that much money in your wallet.")
                 money[str(ctx.message.author.id)][2] += int(action)
                 money[str(ctx.message.author.id)][0] -= int(action)
                 self.save()
-                rnd = ''.join(map(str, random.choices([0, 0.5, 0.75, 1.25, 1.5, 1.75, 2, 2.5, 5], weights=[0.5, 3, 5, 35, 10, 5, 3, 1, 0.5], k=1)))
+                rnd = ''.join(map(str, random.choices([3, 5, 10, 25, 50, 100, 1000], weights=[40, 25, 15, 10, 5, 2.5, 1], k=1)))
                 a = round(money[str(ctx.message.author.id)][2] * float(rnd))
                 money[str(ctx.message.author.id)][0] += a
                 money[str(ctx.message.author.id)][2] = 0
                 self.save()
-                if rnd < 0:
+                if float(rnd) < 0.0:
                     return await ctx.reply(f"You claimed {a} coins with a {rnd} loss")
-                elif rnd == 0:
+                elif float(rnd) == 0.0:
                     return await ctx.reply(f"You lost all your coins.")
                 else:
-                    return await ctx.reply(f"You claimed {a} coins with {rnd} profit")
+                    return await ctx.reply(f"You claimed {a} coins with {rnd}x profit")
         if str(action) == "claim":
             if str(ctx.message.author.id) not in money == 0:
                 await ctx.reply("You didnt invest any coins. Type `.invest <amount>` to invest some coins")
@@ -3148,10 +3242,10 @@ class MainCog(commands.Cog):
 
                 await ctx.reply(f"Are you sure you want to invest {money[str(ctx.message.author.id)][0]} coins? If you invest them you wont have them in your wallet for some time\nYou can claim after the coins after some time using `.invest claim`\nType yes or no")
                 msg = await self.client.wait_for("message", check=check)
-                if msg.content == "no":
+                if msg.content.lower() == "no":
                     await ctx.send("Ok guess you are not gonna invest today")
                     return
-                elif msg.content == "yes":
+                elif msg.content.lower() == "yes":
                     try:
                         i = datetime.datetime.now() - cd[str(ctx.message.author.id)]
                     except KeyError:
@@ -3519,7 +3613,6 @@ class MainCog(commands.Cog):
 
     @commands.command(aliases=['with'])
     async def withdraw(self, ctx, *, arg1):
-        self.load()
         if bool(currency) == False:
             await ctx.send('Currency is disabled')
             return
@@ -3555,15 +3648,7 @@ class MainCog(commands.Cog):
 
     @commands.command()
     @commands.cooldown(1, 60, commands.BucketType.user)
-    async def rob(self, ctx, *, user : discord.User):
-        self.load()
-        if bool(currency) == False:
-            await ctx.send('Currency is disabled')
-            return
-        else:
-            pass
-        now = datetime.datetime.now()
-        current_time = now.strftime("%H:%M:%S")
+    async def rob(self, ctx, user : discord.User):
         if ctx.message.author.id == user.id:
             await ctx.send('you cant rob yourself xd')
             return
@@ -3581,11 +3666,7 @@ class MainCog(commands.Cog):
             if money[str(user.id)][0] < 500:
                 await ctx.send('This user has less than 500 coins')
             elif money[str(user.id)][0] >= 500:
-                coins = randint(500, money[str(user.id)][0])
-                if bool(log) == True:
-                    print(f'[{current_time}]{ctx.message.author.display_name} stole {coins} coins from {user.display_name}')
-                else:
-                    pass
+                coins = random.randint(500, int(money[str(user.id)][0]))
                 money[str(user.id)][0] -= coins
                 self.save()
                 money[str(ctx.message.author.id)][0] += coins
@@ -3595,21 +3676,14 @@ class MainCog(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 604800, commands.BucketType.user)
     async def weekly(self, ctx):
-        self.load()
         if bool(currency) == False:
             await ctx.send('Currency is disabled')
             return
         else:
             pass
-        now = datetime.datetime.now()
-        current_time = now.strftime("%H:%M:%S")
         money[str(ctx.message.author.id)][0] += 50000
         await ctx.reply('You claimed 50,000 coins')
         self.save()
-        if bool(log) == True:
-            print(f'[{current_time}]{ctx.message.author.display_name} claimed 50k coins from weekly command')
-        else:
-            pass
 
     @commands.command()
     @commands.cooldown(1, 2592000, commands.BucketType.user)
@@ -3625,10 +3699,6 @@ class MainCog(commands.Cog):
         money[str(ctx.message.author.id)][0] += 100000
         await ctx.send('You claimed 100,000 coins')
         self.save()
-        if bool(log) == True:
-            print(f'[{current_time}]{ctx.message.author.display_name} claimed 100k coins from monthly command')
-        else:
-            pass
 
     @commands.command(aliases=['bal'])
     async def balance(self, ctx, user : discord.User=None):
@@ -3695,7 +3765,7 @@ class MainCog(commands.Cog):
             networth = money[str(user.id)][0] + money[str(user.id)][1] + win10v + bcoinv + scoinv + gcoinv
             embed = discord.Embed(title=f"{user.display_name}'s Balance", color=discord.Colour.random())
             embed.add_field(name="Wallet", value=str(money[str(user.id)][0]))
-            embed.add_field(name="Bank", value=str(money[str(ctx.message.author.id)][1]))
+            embed.add_field(name="Bank", value=str(money[str(user.id)][1]))
             embed.add_field(name="Invested coins", value=str(money[str(user.id)][2]))
             embed.add_field(name="Networth", value=str(networth))
             embed.set_footer(text=f'Currency api made by {owner}')
@@ -3896,7 +3966,7 @@ class MainCog(commands.Cog):
             return f'```py\n{e.__class__.__name__}: {e}\n```'
         return f'```py\n{e.text}{"^":>{e.offset}}\n{e.__class__.__name__}: {e}```'
 
-    @commands.command(name='eval')
+    @commands.command(name='evaluate', aliases=['eval', 'e'])
     async def _eval(self, ctx, *, body):
         blocked_words = ['while', 'quit', 'exit', 'SystemExit', 'open', '.delete()', 'os', 'subprocess', 'history()', '("token")', "('token')",
                         'aW1wb3J0IG9zCnJldHVybiBvcy5lbnZpcm9uLmdldCgndG9rZW4nKQ==', 'aW1wb3J0IG9zCnByaW50KG9zLmVudmlyb24uZ2V0KCd0b2tlbicpKQ==']
@@ -3922,7 +3992,6 @@ class MainCog(commands.Cog):
         to_compile = f'async def func():\n{textwrap.indent(body, "  ")}'
 
         def paginate(text: str):
-            '''Simple generator that paginates text.'''
             last = 0
             pages = []
             for curr in range(0, len(text)):
@@ -3933,7 +4002,6 @@ class MainCog(commands.Cog):
             if appd_index != len(text)-1:
                 pages.append(text[last:curr])
             return list(filter(lambda a: a != '', pages))
-        
         try:
             exec(to_compile, env)
         except Exception as e:
@@ -3951,8 +4019,7 @@ class MainCog(commands.Cog):
             value = stdout.getvalue()
             if ret is None:
                 if value:
-                    try:
-                        
+                    try: 
                         out = await ctx.send(f'```py\n{value}\n```')
                     except:
                         paginated_text = paginate(value)

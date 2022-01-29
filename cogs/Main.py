@@ -1,4 +1,3 @@
-
 ### Modules ###
 import os
 import sys
@@ -743,7 +742,7 @@ class MainCog(commands.Cog):
         if confirm == None:
             var = 0
             for i in range(int(userdat[str(ctx.message.author.id)][16])): var += 500000
-            embed = discord.Embed(title="prestige", description=f"Coins needed: `{userdat[str(ctx.message.author.id)][0]}/{var}`", color=discord.Color.random())
+            embed = discord.Embed(title="prestige", description=f"Coins needed: `{userdat[str(ctx.message.author.id)][0]}/{var} {get_change(userdat[str(ctx.message.author.id)][0], var}`", color=discord.Color.random())
             await ctx.reply(embed=embed)
         elif confirm.lower() == "confirm":
             if int(userdat[str(ctx.message.author.id)][0]) >= var:
@@ -900,6 +899,15 @@ class MainCog(commands.Cog):
             if str(message.author.id) not in userdat: self.addv(userdat, str(message.author.id), list(to_append1))
             em = discord.Embed(title=f"{user.display_name}'s inventory", description=f"Windows 10 keys: {userdat[str(user.id)][9]}\nBronze coins: {userdat[str(user.id)][10]}\nSilver coins: {userdat[str(user.id)][11]}\nGold coins: {userdat[str(user.id)][12]}\nDaily boxes: {userdat[str(user.id)][14]}\nDeveloper boxes: {userdat[str(user.id)][15]}\nNormal boxes: {userdat[str(user.id)][13]}", color=discord.Colour.random())
             await ctx.reply(embed=em, mention_author=False)
+
+    @commands.command()
+    async def setbank(self, ctx, user:discord.User, amount):
+        if ctx.message.author.id not in ids: return
+        try: int(amount)
+        except ValueError: await ctx.send(".")
+        userdat[str(user.id)][19] = int(amount)
+        self.save()
+        await ctx.reply(".")
 
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)

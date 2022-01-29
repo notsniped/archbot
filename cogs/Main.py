@@ -742,7 +742,7 @@ class MainCog(commands.Cog):
         if confirm == None:
             var = 0
             for i in range(int(userdat[str(ctx.message.author.id)][16])): var += 500000
-            embed = discord.Embed(title="prestige", description=f"Coins needed: `{userdat[str(ctx.message.author.id)][0]}/{var} {get_change(userdat[str(ctx.message.author.id)][0], var}`", color=discord.Color.random())
+            embed = discord.Embed(title="prestige", description=f"Coins needed: `{userdat[str(ctx.message.author.id)][0]}/{var}` {round(self.get_change(var, userdat[str(ctx.message.author.id)][0]), 2)}%", color=discord.Color.random())
             await ctx.reply(embed=embed)
         elif confirm.lower() == "confirm":
             if int(userdat[str(ctx.message.author.id)][0]) >= var:

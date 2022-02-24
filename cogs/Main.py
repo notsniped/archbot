@@ -35,7 +35,7 @@ from discord.ext import tasks
 from discord import TextChannel
 from discord.ext import commands
 from discord.ext.commands import *
-from interpreter.interpreter.interpreter import Interpreter
+#from interpreter.interpreter.interpreter import Interpreter
 ### Modules end ###
 on_cooldown = {}
 cd = {}

@@ -260,4 +260,4 @@ async def reload(ctx, *, arg1):
         await ctx.send(e)
 
 keep_alive()
-client.run("ODU5ODY5OTQxNTM1OTk3OTcy.YNy-SQ.atzJwjb8kssaYgeDSDR_UYnQyHA")
+client.run("")

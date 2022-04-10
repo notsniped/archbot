@@ -152,6 +152,12 @@ async def on_member_remove(member):
     count = 0
     for guild in client.guilds:
         count += guild.member_count
+    with open(f"{os.getcwd()}/database/goodbye.json", "r") as f:
+        goodbye = json.load(f)
+    if str(guild.id) not in goodbye:
+        pass
+    else:
+        await member.send(f"{goodbye[str(guild.id)]}")
     await client.change_presence(status="idle", activity=discord.Activity(type=discord.ActivityType.watching, name=f"{str(len(client.guilds))} guilds, {count} users | .help"))
 
 @client.event
